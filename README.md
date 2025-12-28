@@ -1,10 +1,10 @@
-# 10x-cards
+# FishCards
 
 An intelligent flashcard learning platform that leverages AI to accelerate the creation and management of educational flashcards, making spaced repetition learning more accessible and efficient.
 
 ## Project Description
 
-10x-cards addresses the time-consuming challenge of manually creating high-quality flashcards for spaced repetition learning. By integrating Large Language Models (LLMs) via API, the platform enables users to quickly generate flashcard suggestions from any text input (such as textbook excerpts), dramatically reducing the effort required to build comprehensive study materials.
+FishCards addresses the time-consuming challenge of manually creating high-quality flashcards for spaced repetition learning. By integrating Large Language Models (LLMs) via API, the platform enables users to quickly generate flashcard suggestions from any text input (such as textbook excerpts), dramatically reducing the effort required to build comprehensive study materials.
 
 The application provides a complete flashcard management ecosystem including AI-powered generation, manual creation, editing capabilities, and learning sessions powered by proven spaced repetition algorithms.
 
@@ -43,7 +43,7 @@ The application provides a complete flashcard management ecosystem including AI-
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd 10x-cards
+   cd FishCards
    ```
 
 2. Install dependencies:
