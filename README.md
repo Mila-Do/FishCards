@@ -1,94 +1,103 @@
-# 10x Astro Starter
+# 10x-cards
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+An intelligent flashcard learning platform that leverages AI to accelerate the creation and management of educational flashcards, making spaced repetition learning more accessible and efficient.
+
+## Project Description
+
+10x-cards addresses the time-consuming challenge of manually creating high-quality flashcards for spaced repetition learning. By integrating Large Language Models (LLMs) via API, the platform enables users to quickly generate flashcard suggestions from any text input (such as textbook excerpts), dramatically reducing the effort required to build comprehensive study materials.
+
+The application provides a complete flashcard management ecosystem including AI-powered generation, manual creation, editing capabilities, and learning sessions powered by proven spaced repetition algorithms.
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+### Frontend
+- **Astro 5** - Fast, efficient web applications with minimal JavaScript
+- **React 19** - Interactive components where needed
+- **TypeScript 5** - Static typing for better IDE support and code quality
+- **Tailwind CSS 4** - Utility-first CSS framework for rapid styling
+- **Shadcn/ui** - Accessible React component library for consistent UI
 
-## Prerequisites
+### Backend
+- **Supabase** - Complete backend-as-a-service solution providing:
+  - PostgreSQL database
+  - Multi-language SDKs
+  - Built-in user authentication
+  - Open source, self-hostable
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+### AI Integration
+- **OpenRouter.ai** - Access to multiple LLM providers (OpenAI, Anthropic, Google, etc.) with:
+  - Cost-effective model selection
+  - Financial limits on API keys
 
-## Getting Started
+### CI/CD & Hosting
+- **GitHub Actions** - Automated CI/CD pipelines
+- **DigitalOcean** - Application hosting via Docker containers
 
+## Getting Started Locally
+
+### Prerequisites
+- Node.js 22.14.0 (use nvm or similar version manager)
+- Bun package manager (recommended)
+
+### Installation
 1. Clone the repository:
-
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+   ```bash
+   git clone <repository-url>
+   cd 10x-cards
+   ```
 
 2. Install dependencies:
+   ```bash
+   bun install
+   ```
 
-```bash
-npm install
-```
+3. Start the development server:
+   ```bash
+   bun run dev
+   ```
 
-3. Run the development server:
-
-```bash
-npm run dev
-```
-
-4. Build for production:
-
-```bash
-npm run build
-```
+4. Open [http://localhost:4321](http://localhost:4321) in your browser.
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+| Script | Description |
+|--------|-------------|
+| `bun run dev` | Start the development server |
+| `bun run build` | Build the project for production |
+| `bun run preview` | Preview the production build locally |
+| `bun run astro` | Run Astro CLI commands |
+| `bun run lint` | Run ESLint to check code quality |
+| `bun run lint:fix` | Automatically fix ESLint issues |
+| `bun run format` | Format code using Prettier |
+| `bun run check-mvp` | Run MVP validation checks |
 
-## Project Structure
+## Project Scope
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+### MVP Features
+- **User Authentication**: Registration and login system
+- **AI Flashcard Generation**: Generate flashcards from text input (1000-10000 characters)
+- **Manual Flashcard Creation**: Create custom flashcards with front/back content
+- **Flashcard Management**: Edit and delete existing flashcards
+- **Learning Sessions**: Spaced repetition algorithm integration
+- **Data Privacy**: GDPR-compliant user data storage and management
+- **Statistics**: Track AI-generated vs. accepted flashcards
 
-## AI Development Support
+### Out of Scope (Future Enhancements)
+- Mobile applications (web-only for MVP)
+- Gamification features
+- Flashcard sharing between users
+- Custom spaced repetition algorithms
+- Advanced search functionality
+- Public API
+- Document import (PDF, DOCX, etc.)
+- Advanced notifications
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+## Project Status
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+🚧 **MVP in Development**
 
-### Cursor IDE
-
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
-
-### GitHub Copilot
-
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+The project is currently in active development of the Minimum Viable Product (MVP). Core features are being implemented and tested. Key success metrics target 75% acceptance rate for AI-generated flashcards and 75% of new flashcards being created via AI assistance.
 
 ## License
 
-MIT
+MIT License - see the [LICENSE](LICENSE) file for details.
