@@ -283,7 +283,7 @@ Content-Type: application/json
 ```json
 {
   "generation_id": 123,
-  "flashcardsProposals": [
+  "flashcards_proposals": [
     {
       "front": "Generated question 1?",
       "back": "Generated answer 1",

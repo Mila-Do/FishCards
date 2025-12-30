@@ -218,7 +218,7 @@ export interface GenerationMetadata {
  *
  * Contains the generation session ID, AI-generated flashcard proposals, and generation metadata.
  *
- * Important: The flashcardsProposals are NOT yet saved to the database. They are suggestions
+ * Important: The flashcards_proposals are NOT yet saved to the database. They are suggestions
  * that require user approval. To save accepted proposals, the user must call POST /api/flashcards
  * with the selected flashcard proposals.
  *
@@ -227,7 +227,7 @@ export interface GenerationMetadata {
  */
 export interface GenerationProposalsResponse {
   generation_id: number;
-  flashcardsProposals: FlashcardProposal[];
+  flashcards_proposals: FlashcardProposal[];
   metadata: GenerationMetadata;
 }
 

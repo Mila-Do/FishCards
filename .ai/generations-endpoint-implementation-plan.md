@@ -42,7 +42,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 - `CreateGenerationCommand`: `{ source_text: string }`
 - `FlashcardProposal`: `{ front: string, back: string, source: "ai" }`
 - `GenerationMetadata`: `{ generated_count: number, source_text_length: number, generation_duration_ms: number }`
-- `GenerationProposalsResponse`: `{ generation_id: number, flashcardsProposals: FlashcardProposal[], metadata: GenerationMetadata }`
+- `GenerationProposalsResponse`: `{ generation_id: number, flashcards_proposals: FlashcardProposal[], metadata: GenerationMetadata }`
 - `GenerationDTO`: Pełny DTO sesji generowania
 - `GenerationErrorLogDTO`: DTO logów błędów
 - `PaginatedGenerationsResponse`: `{ data: GenerationDTO[], pagination: PaginationMeta }`
@@ -55,7 +55,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 ```json
 {
   "generation_id": 123,
-  "flashcardsProposals": [
+  "flashcards_proposals": [
     { "front": "Pytanie 1?", "back": "Odpowiedź 1", "source": "ai" }
   ],
   "metadata": {
