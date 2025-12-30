@@ -52,14 +52,14 @@ CREATE TABLE generations (
     accepted_edited_count INTEGER NOT NULL DEFAULT 0,
     source_text_hash VARCHAR(64) NOT NULL,
     source_text_length INTEGER NOT NULL,
-    generation_duration INTEGER NOT NULL,
+    generation_duration_ms INTEGER NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT generations_generated_count_check CHECK (generated_count >= 0),
     CONSTRAINT generations_accepted_unedited_count_check CHECK (accepted_unedited_count >= 0),
     CONSTRAINT generations_accepted_edited_count_check CHECK (accepted_edited_count >= 0),
     CONSTRAINT generations_source_text_length_check CHECK (source_text_length > 0),
-    CONSTRAINT generations_generation_duration_check CHECK (generation_duration >= 0)
+    CONSTRAINT generations_generation_duration_ms_check CHECK (generation_duration_ms >= 0)
 );
 ```
 

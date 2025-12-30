@@ -272,7 +272,7 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "source_text": "Long text content here...",
+  "source_text": "Long text content here..."
 }
 ```
 
@@ -286,11 +286,13 @@ Content-Type: application/json
   "flashcardsProposals": [
     {
       "front": "Generated question 1?",
-      "back": "Generated answer 1"
+      "back": "Generated answer 1",
+      "source": "ai"
     },
     {
       "front": "Generated question 2?",
-      "back": "Generated answer 2"
+      "back": "Generated answer 2",
+      "source": "ai"
     }
   ],
   "metadata": {
@@ -304,7 +306,7 @@ Content-Type: application/json
 **Note:** The returned flashcards are **proposals** that have not been saved to the database. The user must review, accept (optionally edit), or reject each proposal. To save accepted proposals, use `POST /api/flashcards` with the selected flashcards.
 
 **Error Responses:**
-- `400 Bad Request` - Validation error (text length constraints, invalid model)
+- `400 Bad Request` - Validation error (text length constraints)
 - `401 Unauthorized` - Missing or invalid authentication token
 - `429 Too Many Requests` - Rate limit exceeded for AI API
 - `500 Internal Server Error` - AI API error, database error, or server error, logs recorded in 'generation_error_logs'
@@ -348,7 +350,7 @@ Authorization: Bearer <supabase_jwt_token>
       "accepted_edited_count": 2,
       "source_text_hash": "abc123...",
       "source_text_length": 5000,
-      "generation_duration": 2500,
+      "generation_duration_ms": 2500,
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z"
     }
@@ -385,7 +387,7 @@ Authorization: Bearer <supabase_jwt_token>
   "accepted_edited_count": 2,
   "source_text_hash": "abc123...",
   "source_text_length": 5000,
-  "generation_duration": 2500,
+  "generation_duration_ms": 2500,
   "created_at": "2024-01-01T00:00:00Z",
   "updated_at": "2024-01-01T00:00:00Z"
 }
@@ -496,12 +498,14 @@ Authorization is enforced at two levels:
 
 **Create Validation:**
 - `source_text`: Required, string, min 1000 characters, max 10000 characters
-- `model`: Optional, string, validated against available OpenRouter.ai models
+
+**Model selection:**
+- The AI model is selected automatically by the backend (not provided by the client).
 
 **Business Logic:**
 - Calculate `source_text_hash` (SHA-256) for deduplication and tracking
 - Record `source_text_length` for statistics
-- Measure `generation_duration` in milliseconds
+- Measure `generation_duration_ms` in milliseconds
 - Parse AI response to extract flashcard pairs (front/back)
 - **Important:** AI generates **proposals** only - they are not automatically saved to the database
 - If AI generation fails:
