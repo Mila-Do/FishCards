@@ -1,6 +1,8 @@
 import { defineMiddleware } from "astro:middleware";
 
 import { supabaseClient } from "../db/supabase.client.ts";
+import { checkRateLimit, getRateLimitConfig } from "../lib/rate-limiter";
+import { errorResponse } from "../lib/response-helpers";
 
 function jsonResponse(body: unknown, options: { status: number }) {
   return new Response(JSON.stringify(body), {
@@ -39,5 +41,23 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   context.locals.userId = data.user.id;
+
+  // Apply rate limiting for API endpoints
+  const rateLimitConfig = getRateLimitConfig(context.url.pathname, context.request.method);
+  const rateLimitResult = checkRateLimit(
+    data.user.id,
+    context.url.pathname,
+    context.request.method,
+    rateLimitConfig
+  );
+
+  if (!rateLimitResult.allowed) {
+    return errorResponse(429, "RATE_LIMIT_EXCEEDED", "Too many requests", {
+      retryAfter: Math.ceil(rateLimitResult.resetTime / 1000),
+      limit: rateLimitConfig.maxRequests,
+      remaining: rateLimitResult.remaining
+    });
+  }
+
   return next();
 });

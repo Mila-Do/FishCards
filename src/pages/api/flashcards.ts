@@ -11,8 +11,14 @@ import { jsonResponse, errorResponse } from "../../lib/response-helpers";
  * Only returns flashcards belonging to the authenticated user.
  */
 export const GET: APIRoute = async (context) => {
+  const startTime = performance.now();
   const userId = context.locals.userId;
-  if (!userId) return errorResponse(401, "UNAUTHORIZED", "Unauthorized");
+  const endpoint = '/api/flashcards';
+  const method = 'GET';
+
+  if (!userId) {
+    return errorResponse(401, "UNAUTHORIZED", "Unauthorized", undefined, { method, endpoint, userId });
+  }
 
   const parsed = flashcardQuerySchema.safeParse({
     page: context.url.searchParams.get("page") ?? undefined,
@@ -24,7 +30,14 @@ export const GET: APIRoute = async (context) => {
   });
 
   if (!parsed.success) {
-    return errorResponse(400, "VALIDATION_ERROR", "Invalid query parameters", { issues: parsed.error.issues });
+    const duration = performance.now() - startTime;
+    return errorResponse(
+      400,
+      "VALIDATION_ERROR",
+      "Invalid query parameters",
+      { issues: parsed.error.issues },
+      { method, endpoint, userId, duration }
+    );
   }
 
   try {
@@ -38,10 +51,19 @@ export const GET: APIRoute = async (context) => {
       sort: parsed.data.sort,
       order: parsed.data.order,
     });
-    return jsonResponse(result, { status: 200 });
+
+    const duration = performance.now() - startTime;
+    return jsonResponse(result, { status: 200 }, { method, endpoint, userId, duration });
   } catch (err) {
+    const duration = performance.now() - startTime;
     const message = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(500, "DATABASE_ERROR", "Failed to fetch flashcards", { message });
+    return errorResponse(
+      500,
+      "DATABASE_ERROR",
+      "Failed to fetch flashcards",
+      { message },
+      { method, endpoint, userId, duration }
+    );
   }
 };
 

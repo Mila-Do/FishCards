@@ -80,6 +80,41 @@ The application provides a complete flashcard management ecosystem including AI-
 | `bun run format`    | Format code using Prettier           |
 | `bun run check-mvp` | Run MVP validation checks            |
 
+## API Documentation
+
+The FishCards API provides REST endpoints for managing flashcards and AI generations. All endpoints require JWT authentication via Bearer token.
+
+### Flashcards API
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/flashcards` | Get paginated list of flashcards with filtering |
+| `POST` | `/api/flashcards` | Create one or multiple flashcards |
+| `GET` | `/api/flashcards/:id` | Get single flashcard by ID |
+| `PATCH` | `/api/flashcards/:id` | Update existing flashcard |
+| `DELETE` | `/api/flashcards/:id` | Delete flashcard by ID |
+
+### Generations API
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/generations` | Get paginated list of generations |
+| `POST` | `/api/generations` | Create new AI flashcard generation |
+| `GET` | `/api/generations/:id` | Get single generation by ID |
+
+### Additional Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/generation-error-logs` | Get generation error logs |
+
+### Documentation & Testing
+
+- **Postman Collection**: See `POSTMAN_REQUESTS.md` for complete API examples
+- **Authentication**: JWT tokens via Supabase Auth
+- **Response Format**: JSON with consistent error handling
+- **Rate Limiting**: Built-in protection against abuse
+
 ## Project Scope
 
 ### MVP Features
