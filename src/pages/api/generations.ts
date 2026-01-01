@@ -81,8 +81,13 @@ export const POST: APIRoute = async (context) => {
   const sourceText = parsed.data.source_text;
   const sourceTextHash = hashSourceText(sourceText);
   const sourceTextLength = sourceText.length;
-  const apiKey = import.meta.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
+
+  // Check if mock mode is enabled
+  // Environment variables are always strings, so we check for "true" string
+  const mockMode = import.meta.env.MOCK_AI_GENERATION === "true";
+  const apiKey = mockMode ? "mock" : import.meta.env.OPENROUTER_API_KEY;
+
+  if (!mockMode && !apiKey) {
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "Server misconfiguration: missing OPENROUTER_API_KEY");
   }
 

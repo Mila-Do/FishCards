@@ -60,6 +60,85 @@ function normalizeProposals(items: unknown): FlashcardProposal[] {
   return flashcardProposalsSchema.parse(filtered);
 }
 
+/**
+ * Mock function that splits text into chunks and creates simple flashcards.
+ * Used for testing when MOCK_AI_GENERATION is enabled.
+ */
+function generateMockFlashcards(sourceText: string): FlashcardProposal[] {
+  const CHUNK_SIZE = 300; // ~300 characters per chunk
+  const MIN_CHUNK_SIZE = 100; // Minimum chunk size to avoid too small fragments
+
+  const chunks: string[] = [];
+  let currentIndex = 0;
+
+  // Split text into chunks, trying to break at sentence boundaries when possible
+  while (currentIndex < sourceText.length) {
+    const remaining = sourceText.length - currentIndex;
+
+    if (remaining <= MIN_CHUNK_SIZE) {
+      // Last chunk - take everything
+      chunks.push(sourceText.slice(currentIndex).trim());
+      break;
+    }
+
+    const chunkEnd = Math.min(currentIndex + CHUNK_SIZE, sourceText.length);
+    let chunk = sourceText.slice(currentIndex, chunkEnd);
+
+    // Try to break at sentence boundary (., !, ?)
+    if (chunkEnd < sourceText.length) {
+      const lastPeriod = chunk.lastIndexOf(".");
+      const lastExclamation = chunk.lastIndexOf("!");
+      const lastQuestion = chunk.lastIndexOf("?");
+      const lastBreak = Math.max(lastPeriod, lastExclamation, lastQuestion);
+
+      if (lastBreak > MIN_CHUNK_SIZE) {
+        chunk = sourceText.slice(currentIndex, currentIndex + lastBreak + 1);
+        currentIndex += lastBreak + 1;
+      } else {
+        // No good break point, use space
+        const lastSpace = chunk.lastIndexOf(" ");
+        if (lastSpace > MIN_CHUNK_SIZE) {
+          chunk = sourceText.slice(currentIndex, currentIndex + lastSpace);
+          currentIndex += lastSpace + 1;
+        } else {
+          currentIndex = chunkEnd;
+        }
+      }
+    } else {
+      currentIndex = chunkEnd;
+    }
+
+    if (chunk.trim().length >= MIN_CHUNK_SIZE) {
+      chunks.push(chunk.trim());
+    }
+  }
+
+  // Create flashcards from chunks
+  const proposals: FlashcardProposal[] = chunks.map((chunk, index) => {
+    // Take first ~100 chars for front (question), rest for back (answer)
+    const frontLength = Math.min(100, Math.floor(chunk.length * 0.3));
+    const front = chunk.slice(0, frontLength).trim();
+    const back = chunk.slice(frontLength).trim();
+
+    return {
+      front: front || `Fragment ${index + 1}`,
+      back: back || chunk,
+      source: "ai" as const,
+    };
+  });
+
+  // Ensure we have at least 1 and at most 50 flashcards
+  if (proposals.length === 0) {
+    proposals.push({
+      front: "Tekst źródłowy",
+      back: sourceText.slice(0, 500),
+      source: "ai" as const,
+    });
+  }
+
+  return flashcardProposalsSchema.parse(proposals.slice(0, 50));
+}
+
 export async function generateFlashcardsFromText(options: {
   sourceText: string;
   model: string;
@@ -68,6 +147,24 @@ export async function generateFlashcardsFromText(options: {
 }): Promise<{ proposals: FlashcardProposal[]; generationDurationMs: number; rawModelResponse: unknown }> {
   const { sourceText, model, apiKey } = options;
   const timeoutMs = options.timeoutMs ?? 30_000;
+
+  // Check if mock mode is enabled
+  // Environment variables are always strings, so we check for "true" string
+  const mockMode = import.meta.env.MOCK_AI_GENERATION === "true";
+
+  if (mockMode) {
+    const startedAt = performance.now();
+    // Simulate some processing time
+    await new Promise((resolve) => setTimeout(resolve, 100 + Math.random() * 200));
+    const generationDurationMs = Math.max(0, Math.round(performance.now() - startedAt));
+
+    const proposals = generateMockFlashcards(sourceText);
+    return {
+      proposals,
+      generationDurationMs,
+      rawModelResponse: { mock: true, model, chunkCount: proposals.length },
+    };
+  }
 
   const startedAt = performance.now();
   const controller = new AbortController();
