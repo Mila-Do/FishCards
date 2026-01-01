@@ -25,9 +25,9 @@ const TextInputSection: React.FC<TextInputProps> = ({ value, onChange, onGenerat
     <div className="space-y-4">
       {/* Section Header */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Tekst ĹşrĂłdĹ‚owy</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Wklej lub wpisz tekst, z ktĂłrego AI wygeneruje propozycje fiszek
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Tekst źródłowy</h2>
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+          Wklej lub wpisz tekst, z którego AI wygeneruje propozycje fiszek
         </p>
       </div>
 
@@ -37,8 +37,8 @@ const TextInputSection: React.FC<TextInputProps> = ({ value, onChange, onGenerat
           <Textarea
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Wklej tutaj tekst do nauki... (minimum 1000 znakĂłw)"
-            className={`min-h-[200px] resize-y transition-colors ${
+            placeholder="Wklej tutaj tekst do nauki... (minimum 1000 znaków)"
+            className={`min-h-[150px] sm:min-h-[200px] transition-colors ${
               hasErrors
                 ? "border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-500"
                 : validation.isValid && value.length > 0
@@ -114,11 +114,11 @@ const TextInputSection: React.FC<TextInputProps> = ({ value, onChange, onGenerat
                 />
               </svg>
               <div className="text-sm text-blue-700 dark:text-blue-300">
-                <p className="font-medium mb-1">WskazĂłwki dotyczÄ…ce tekstu ĹşrĂłdĹ‚owego:</p>
+                <p className="font-medium mb-1">Wskazówki dotyczące tekstu źródłowego:</p>
                 <ul className="space-y-1 text-blue-600 dark:text-blue-400">
-                  <li>â€˘ UĹĽyj tekstu z materiaĹ‚Ăłw edukacyjnych, artykuĹ‚Ăłw lub notatek</li>
-                  <li>â€˘ Im bardziej uporzÄ…dkowany tekst, tym lepsze propozycje fiszek</li>
-                  <li>â€˘ AI najlepiej radzi sobie z definicjami, faktami i pojÄ™ciami</li>
+                  <li>• Użyj tekstu z materiałów edukacyjnych, artykułów lub notatek</li>
+                  <li>• Im bardziej uporządkowany tekst, tym lepsze propozycje fiszek</li>
+                  <li>• AI najlepiej radzi sobie z definicjami, faktami i pojęciami</li>
                 </ul>
               </div>
             </div>

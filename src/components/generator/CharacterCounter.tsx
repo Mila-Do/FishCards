@@ -11,7 +11,7 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
       return {
         color: "text-gray-500 dark:text-gray-400",
         icon: null,
-        message: "WprowadĹş tekst",
+        message: "Wprowadź tekst",
       };
     }
 
@@ -27,7 +27,7 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
             />
           </svg>
         ),
-        message: "Poprawna dĹ‚ugoĹ›Ä‡",
+        message: "Poprawna długość",
       };
     }
 
@@ -42,7 +42,7 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
           />
         </svg>
       ),
-      message: count < min ? "Za maĹ‚o znakĂłw" : "Za duĹĽo znakĂłw",
+      message: count < min ? "Za mało znaków" : "Za dużo znaków",
     };
   };
 
@@ -53,15 +53,15 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
   const isNearLimit = progress > 90;
 
   return (
-    <div className="flex items-center justify-between text-sm">
+    <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 text-xs sm:text-sm">
       <div className={`flex items-center space-x-2 ${status.color}`}>
         {status.icon}
         <span className="font-medium">{status.message}</span>
       </div>
 
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Progress bar for visual feedback */}
-        <div className="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="w-12 sm:w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-200 ${
               isValid ? "bg-green-500" : isNearLimit ? "bg-red-500" : "bg-yellow-500"

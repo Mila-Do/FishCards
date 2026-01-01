@@ -4,16 +4,18 @@ import GeneratorView from "../components/generator/GeneratorView";
 ---
 
 <Layout title="Generator fiszek">
-  <main class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <header class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Generator fiszek</h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          Wklej tekst ĹşrĂłdĹ‚owy (1000-10000 znakĂłw) i wygeneruj propozycje fiszek przy pomocy AI
-        </p>
-      </header>
+  <div class="min-h-screen bg-background">
+    <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+      <div class="max-w-4xl mx-auto min-w-0">
+        <header class="mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Generator fiszek</h1>
+          <p class="text-gray-600 dark:text-gray-400">
+            Wklej tekst źródłowy (1000-10000 znaków) i wygeneruj propozycje fiszek przy pomocy AI
+          </p>
+        </header>
 
-      <GeneratorView client:load />
-    </div>
-  </main>
+        <GeneratorView client:load />
+      </div>
+    </main>
+  </div>
 </Layout>

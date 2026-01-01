@@ -31,7 +31,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isVisible, message }) =
           {/* Message */}
           <div>
             <p className="text-gray-900 dark:text-gray-100 font-medium">{message}</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">To moĹĽe potrwaÄ‡ chwilÄ™...</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">To może potrwać chwilę...</p>
           </div>
         </div>
       </div>

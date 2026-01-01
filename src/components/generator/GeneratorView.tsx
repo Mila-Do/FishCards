@@ -57,7 +57,7 @@ const GeneratorView: React.FC = () => {
 
       {/* Proposals Section */}
       {(hasProposals || state.isLoadingProposals) && (
-        <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-6">
           <ProposalsSection
             proposals={state.proposals}
             onSave={saveSelectedProposals}
@@ -83,8 +83,8 @@ const GeneratorView: React.FC = () => {
           <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Brak wygenerowanych propozycji</h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {isTextValid
-              ? 'Kliknij "Generuj fiszki" aby rozpoczÄ…Ä‡.'
-              : 'WprowadĹş tekst o odpowiedniej dĹ‚ugoĹ›ci i kliknij "Generuj fiszki".'}
+              ? 'Kliknij "Generuj fiszki" aby rozpocząć.'
+              : 'Wprowadź tekst o odpowiedniej długości i kliknij "Generuj fiszki".'}
           </p>
         </div>
       )}

@@ -1,104 +1,168 @@
-import React from "react";
-import type { ProposalsSectionProps } from "./types";
+import React, { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import ProposalCard from "./ProposalCard";
+import ProposalsSkeleton from "./ProposalsSkeleton";
+import type { ProposalsSectionProps, ProposalState } from "./types";
 
 /**
  * Section containing list of generated flashcard proposals and save button
- * TODO: Full implementation in next steps - this is a placeholder stub
+ * Integrates ProposalCard and ProposalsSkeleton components with full functionality
  */
 const ProposalsSection: React.FC<
-  ProposalsSectionProps & { onUpdateProposal: (id: string, updates: Partial<import("./types").ProposalState>) => void }
-> = ({ proposals, onSave, isVisible, selectedCount, isLoading, onUpdateProposal }) => {
+  ProposalsSectionProps & { onUpdateProposal: (id: string, updates: Partial<ProposalState>) => void }
+> = ({ proposals, onSave, isVisible, isLoading, onUpdateProposal }) => {
+  // Callback handlers for proposal actions - must be defined before any early returns
+  const handleAccept = useCallback(
+    (proposalId: string) => {
+      onUpdateProposal(proposalId, { status: "accepted" });
+    },
+    [onUpdateProposal]
+  );
+
+  const handleEdit = useCallback(
+    (proposalId: string) => {
+      onUpdateProposal(proposalId, { status: "editing" });
+    },
+    [onUpdateProposal]
+  );
+
+  const handleReject = useCallback(
+    (proposalId: string) => {
+      onUpdateProposal(proposalId, { status: "rejected" });
+    },
+    [onUpdateProposal]
+  );
+
+  const handleSave = useCallback(
+    (proposalId: string, front: string, back: string) => {
+      onUpdateProposal(proposalId, {
+        front,
+        back,
+        status: "accepted",
+        isEdited: true,
+        source: "mixed", // Automatically set to mixed when edited
+      });
+    },
+    [onUpdateProposal]
+  );
+
+  const acceptedCount = proposals.filter((p) => p.status === "accepted").length;
+  const canSave = acceptedCount > 0;
+
   if (!isVisible) return null;
 
+  // Show skeleton loading state
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Propozycje fiszek</h2>
-
-        {/* Skeleton loader - placeholder */}
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 animate-pulse"
-          >
-            <div className="space-y-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-              <div className="flex space-x-2">
-                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <ProposalsSkeleton count={4} />;
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Propozycje fiszek ({proposals.length})
         </h2>
-        {selectedCount > 0 && (
-          <span className="text-sm text-gray-600 dark:text-gray-400">Wybrano: {selectedCount}</span>
-        )}
+        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+          {acceptedCount > 0 && (
+            <span className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 px-2 py-1 rounded-full">
+              Zaakceptowane: {acceptedCount}
+            </span>
+          )}
+          <span>Łącznie: {proposals.length}</span>
+        </div>
       </div>
 
-      {/* TODO: Implement ProposalCard components */}
+      {/* Proposals List */}
       {proposals.length > 0 ? (
         <div className="space-y-4">
-          {proposals.map((proposal) => (
-            <div
-              key={proposal.id}
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4"
-            >
-              <div className="space-y-2">
-                <div>
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">PrzĂłd:</span>
-                  <p className="text-gray-900 dark:text-gray-100">{proposal.front}</p>
+          {/* Filter out rejected proposals from display */}
+          {proposals
+            .filter((proposal) => proposal.status !== "rejected")
+            .map((proposal) => (
+              <ProposalCard
+                key={proposal.id}
+                proposal={proposal}
+                onAccept={() => handleAccept(proposal.id)}
+                onEdit={() => handleEdit(proposal.id)}
+                onReject={() => handleReject(proposal.id)}
+                onSave={(front, back) => handleSave(proposal.id, front, back)}
+              />
+            ))}
+
+          {/* Empty state if all proposals are rejected */}
+          {proposals.filter((p) => p.status !== "rejected").length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-2">
+                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                Wszystkie propozycje zostały odrzucone
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Wygeneruj nowe propozycje lub przywróć odrzucone
+              </p>
+            </div>
+          )}
+
+          {/* Save Section */}
+          {canSave && (
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+              <div className="flex flex-col items-center space-y-3">
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Gotowe do zapisania:{" "}
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{acceptedCount}</span> fiszek
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500">
+                    Zaakceptowane fiszki zostaną dodane do Twojej kolekcji
+                  </p>
                 </div>
-                <div>
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">TyĹ‚:</span>
-                  <p className="text-gray-900 dark:text-gray-100">{proposal.back}</p>
-                </div>
-                <div className="flex space-x-2 pt-2">
-                  <button
-                    onClick={() => onUpdateProposal(proposal.id, { status: "accepted" })}
-                    className="px-3 py-1 bg-green-100 text-green-800 rounded text-sm hover:bg-green-200"
-                  >
-                    âś“ Akceptuj
-                  </button>
-                  <button
-                    onClick={() => onUpdateProposal(proposal.id, { status: "rejected" })}
-                    className="px-3 py-1 bg-red-100 text-red-800 rounded text-sm hover:bg-red-200"
-                  >
-                    âś— OdrzuÄ‡
-                  </button>
-                  <span className="text-xs text-gray-500 px-2 py-1">
-                    Status: {proposal.status} | ĹąrĂłdĹ‚o: {proposal.source}
+                <Button
+                  onClick={onSave}
+                  size="lg"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Zapisz wybrane fiszki ({acceptedCount})
                   </span>
-                </div>
+                </Button>
               </div>
             </div>
-          ))}
+          )}
 
-          {/* Save Button */}
-          {selectedCount > 0 && (
-            <div className="flex justify-center pt-4">
-              <button
-                onClick={onSave}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-              >
-                Zapisz wybrane fiszki ({selectedCount})
-              </button>
+          {/* Helper text when no proposals accepted */}
+          {!canSave && proposals.filter((p) => p.status !== "rejected").length > 0 && (
+            <div className="text-center py-6">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                ⬆️ Zaakceptuj co najmniej jedną fiszkę aby móc je zapisać
+              </p>
             </div>
           )}
         </div>
       ) : (
-        <p className="text-center text-gray-500 dark:text-gray-400 py-8">Brak propozycji do wyĹ›wietlenia</p>
+        /* Empty state - no proposals */
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-2">
+            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Brak propozycji do wyświetlenia</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Wygeneruj propozycje fiszek używając tekstu źródłowego
+          </p>
+        </div>
       )}
     </div>
   );

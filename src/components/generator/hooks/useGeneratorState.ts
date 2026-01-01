@@ -1,11 +1,5 @@
 import { useState, useCallback } from "react";
-import type {
-  GeneratorViewState,
-  ProposalState,
-  GenerationProposalsResponse,
-  FlashcardDTO,
-  CreateFlashcardsCommand,
-} from "../types";
+import type { GeneratorViewState, ProposalState, GenerationProposalsResponse, CreateFlashcardsCommand } from "../types";
 import { VALIDATION_LIMITS } from "../types";
 
 /**
@@ -29,11 +23,11 @@ export const useGeneratorState = () => {
     const errors: string[] = [];
 
     if (text.length < VALIDATION_LIMITS.SOURCE_TEXT_MIN) {
-      errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znakĂłw`);
+      errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znaków`);
     }
 
     if (text.length > VALIDATION_LIMITS.SOURCE_TEXT_MAX) {
-      errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znakĂłw`);
+      errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znaków`);
     }
 
     setState((prev) => ({
@@ -78,7 +72,7 @@ export const useGeneratorState = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || "BĹ‚Ä…d generowania propozycji");
+        throw new Error(errorData.error?.message || "Błąd generowania propozycji");
       }
 
       const result: GenerationProposalsResponse = await response.json();
@@ -104,11 +98,11 @@ export const useGeneratorState = () => {
         selectedCount: 0,
       }));
     } catch (error) {
-      let errorMessage = "WystÄ…piĹ‚ bĹ‚Ä…d podczas generowania propozycji";
+      let errorMessage = "Wystąpił błąd podczas generowania propozycji";
 
       if (error instanceof Error) {
         if (error.name === "TimeoutError") {
-          errorMessage = "Generowanie trwa zbyt dĹ‚ugo. SprĂłbuj ponownie.";
+          errorMessage = "Generowanie trwa zbyt długo. Spróbuj ponownie.";
         } else {
           errorMessage = error.message;
         }
@@ -165,7 +159,7 @@ export const useGeneratorState = () => {
         ...prev,
         errors: {
           ...prev.errors,
-          api: "Wybierz co najmniej jednÄ… fiszkÄ™ do zapisania",
+          api: "Wybierz co najmniej jedną fiszkę do zapisania",
         },
       }));
       return;
@@ -196,10 +190,10 @@ export const useGeneratorState = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || "BĹ‚Ä…d zapisywania fiszek");
+        throw new Error(errorData.error?.message || "Błąd zapisywania fiszek");
       }
 
-      const savedFlashcards: FlashcardDTO[] = await response.json();
+      await response.json();
 
       // Reset state after successful save
       setState((prev) => ({
@@ -214,11 +208,11 @@ export const useGeneratorState = () => {
       // TODO: Show success message and potentially redirect
       // Success state handled by parent component
     } catch (error) {
-      let errorMessage = "WystÄ…piĹ‚ bĹ‚Ä…d podczas zapisywania fiszek";
+      let errorMessage = "Wystąpił błąd podczas zapisywania fiszek";
 
       if (error instanceof Error) {
         if (error.name === "TimeoutError") {
-          errorMessage = "Zapisywanie trwa zbyt dĹ‚ugo. SprĂłbuj ponownie.";
+          errorMessage = "Zapisywanie trwa zbyt długo. Spróbuj ponownie.";
         } else {
           errorMessage = error.message;
         }

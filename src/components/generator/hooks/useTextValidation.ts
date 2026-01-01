@@ -25,17 +25,17 @@ export const useTextValidation = (text: string) => {
 
     // Check minimum length
     if (characterCount > 0 && characterCount < VALIDATION_LIMITS.SOURCE_TEXT_MIN) {
-      errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znakĂłw`);
+      errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znaków`);
     }
 
     // Check maximum length
     if (characterCount > VALIDATION_LIMITS.SOURCE_TEXT_MAX) {
-      errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znakĂłw`);
+      errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znaków`);
     }
 
     // Check if empty (different message)
     if (characterCount === 0) {
-      errors.push("Tekst nie moĹĽe byÄ‡ pusty");
+      errors.push("Tekst nie może być pusty");
     }
 
     const isValid =
