@@ -22,10 +22,10 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **Kluczowe komponenty:** `StatCard`, `QuickActionButtons` (Start Nauki, Nowy Generator).
 - **UX, dostępność i bezpieczeństwo:** Priorytetyzacja najważniejszej akcji (Nauka) poprzez wizualne wyróżnienie (Primary Button).
 
-### Generator AI (Input + Staging)
+### widok generowania fiszek
 - **Ścieżka:** `/generator`
-- **Główny cel:** Przetwarzanie tekstu źródłowego na propozycje fiszek i ich weryfikacja.
-- **Kluczowe informacje:** Pole tekstowe (1k-10k znaków), licznik znaków, lista propozycji AI (Staging).
+- **Główny cel:** umożliwia użytkownikowi generowanie propozycji fiszek poprzez AI i ich rewizję (zaakceptuj, edytuj lub odrzuć)
+- **Kluczowe informacje:** Pole tekstowe (1k-10k znaków), licznik znaków, lista propozycji AI (Staging).przycisk akceptacji, edycji lub odrzucenia dla każdej fiszki
 - **Kluczowe komponenty:** `Textarea`, `CharacterCounter`, `ProposalCard` (z opcją edycji in-place), `LoadingOverlay` (nieblokujący).
 - **UX, dostępność i bezpieczeństwo:** Możliwość nawigacji po aplikacji podczas generowania (powiadomienie Toast po zakończeniu), walidacja długości tekstu blokująca przycisk "Generuj".
 
@@ -52,9 +52,9 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 ### Profil Użytkownika / Ustawienia
 - **Ścieżka:** `/profile`
 - **Główny cel:** Zarządzanie kontem i danymi.
-- **Kluczowe informacje:** Adres e-mail, opcje eksportu/usunięcia danych (RODO).
+- **Kluczowe informacje:** dane urżytkownika, opcjie edycji profilu, o przycisk wylogowania 
 - **Kluczowe komponenty:** `UserProfileForm`, `DangerZone` (usuwanie konta).
-- **UX, dostępność i bezpieczeństwo:** Podwójna weryfikacja przy usuwaniu konta.
+- **UX, dostępność i bezpieczeństwo:** Podwójna weryfikacja przy usuwaniu konta, prosty i czytelny interfejs, bezpieczne wylogowanie 
 
 ## 3. Mapa podróży użytkownika
 
@@ -64,7 +64,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
    - Wkleja tekst (np. 5000 znaków).
    - Klika "Generuj". Podczas gdy AI pracuje, użytkownik przechodzi do Biblioteki, by przejrzeć stare fiszki.
    - Otrzymuje Toast: "Fiszki wygenerowane!".
-   - Wraca do Generatora, edytuje 2 propozycje, odrzuca 1, akceptuje resztę.
+   - Wraca do Generatora, edytuje  propozycje, odrzuca i akceptuje resztę.
    - Klika "Zapisz", fiszki trafiają do bazy.
 3. **Nauka:**
    - Klika "Rozpocznij Naukę" na Dashboardzie.
