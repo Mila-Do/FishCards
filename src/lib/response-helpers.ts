@@ -22,9 +22,11 @@ function logApiEvent(
   error?: string
 ) {
   const timestamp = new Date().toISOString();
-  const logLevel = status >= 500 ? 'ERROR' : status >= 400 ? 'WARN' : 'INFO';
+  const logLevel = status >= 500 ? "ERROR" : status >= 400 ? "WARN" : "INFO";
 
-  console.log(`[${timestamp}] ${logLevel} ${method} ${endpoint} ${status} ${userId ? `user:${userId}` : ''} ${duration ? `${duration}ms` : ''} ${error ? `error:${error}` : ''}`);
+  console.log(
+    `[${timestamp}] ${logLevel} ${method} ${endpoint} ${status} ${userId ? `user:${userId}` : ""} ${duration ? `${duration}ms` : ""} ${error ? `error:${error}` : ""}`
+  );
 }
 
 // ============================================================================

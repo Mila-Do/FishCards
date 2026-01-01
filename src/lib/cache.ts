@@ -36,7 +36,7 @@ class SimpleCache {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      ttl
+      ttl,
     });
   }
 
@@ -60,7 +60,7 @@ class SimpleCache {
   getStats() {
     return {
       entries: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      keys: Array.from(this.cache.keys()),
     };
   }
 }
@@ -73,15 +73,18 @@ export const cache = new SimpleCache();
 // ============================================================================
 
 export const CACHE_KEYS = {
-  FLASHCARD_STATS: 'flashcard_stats',
-  GENERATION_STATS: 'generation_stats',
+  FLASHCARD_STATS: "flashcard_stats",
+  GENERATION_STATS: "generation_stats",
   USER_PREFERENCES: (userId: string) => `user_prefs_${userId}`,
 } as const;
 
 /**
  * Cache flashcard statistics for a user
  */
-export function cacheFlashcardStats(userId: string, stats: { total: number; byStatus: Record<string, number>; bySource: Record<string, number> }) {
+export function cacheFlashcardStats(
+  userId: string,
+  stats: { total: number; byStatus: Record<string, number>; bySource: Record<string, number> }
+) {
   cache.set(`${CACHE_KEYS.FLASHCARD_STATS}_${userId}`, stats, 10 * 60 * 1000); // 10 minutes
 }
 
@@ -95,7 +98,10 @@ export function getCachedFlashcardStats(userId: string) {
 /**
  * Cache generation statistics for a user
  */
-export function cacheGenerationStats(userId: string, stats: { total: number; avgDuration: number; successRate: number }) {
+export function cacheGenerationStats(
+  userId: string,
+  stats: { total: number; avgDuration: number; successRate: number }
+) {
   cache.set(`${CACHE_KEYS.GENERATION_STATS}_${userId}`, stats, 15 * 60 * 1000); // 15 minutes
 }
 

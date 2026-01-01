@@ -30,14 +30,14 @@ class RateLimiter {
       // Create new entry or reset expired window
       entry = {
         requests: [now],
-        resetTime: now + windowMs
+        resetTime: now + windowMs,
       };
       this.limits.set(identifier, entry);
       return true;
     }
 
     // Clean old requests outside the current window
-    entry.requests = entry.requests.filter(timestamp => timestamp > windowStart);
+    entry.requests = entry.requests.filter((timestamp) => timestamp > windowStart);
 
     if (entry.requests.length >= maxRequests) {
       return false;
@@ -63,7 +63,7 @@ class RateLimiter {
     const windowStart = now - windowMs;
 
     // Clean old requests
-    entry.requests = entry.requests.filter(timestamp => timestamp > windowStart);
+    entry.requests = entry.requests.filter((timestamp) => timestamp > windowStart);
 
     return Math.max(0, maxRequests - entry.requests.length);
   }
@@ -97,7 +97,7 @@ class RateLimiter {
   getStats() {
     return {
       activeLimits: this.limits.size,
-      identifiers: Array.from(this.limits.keys())
+      identifiers: Array.from(this.limits.keys()),
     };
   }
 }
@@ -113,27 +113,32 @@ export const RATE_LIMITS = {
   // General API endpoints - moderate limits
   GENERAL_API: {
     maxRequests: 60, // 60 requests per minute
-    windowMs: 60 * 1000
+    windowMs: 60 * 1000,
   },
 
   // Write operations (POST, PATCH, DELETE) - stricter limits
   WRITE_OPERATIONS: {
     maxRequests: 30, // 30 requests per minute
-    windowMs: 60 * 1000
+    windowMs: 60 * 1000,
   },
 
   // AI generation endpoints - strictest limits due to cost
   AI_GENERATION: {
     maxRequests: 10, // 10 requests per minute
-    windowMs: 60 * 1000
+    windowMs: 60 * 1000,
   },
 
   // Batch operations - moderate limits
   BATCH_OPERATIONS: {
     maxRequests: 20, // 20 requests per minute
-    windowMs: 60 * 1000
-  }
+    windowMs: 60 * 1000,
+  },
 } as const;
+
+/**
+ * Rate limit configuration type
+ */
+export type RateLimitConfig = (typeof RATE_LIMITS)[keyof typeof RATE_LIMITS];
 
 /**
  * Create rate limit identifier for user and endpoint
@@ -149,7 +154,7 @@ export function checkRateLimit(
   userId: string,
   endpoint: string,
   method: string,
-  config = RATE_LIMITS.GENERAL_API
+  config: RateLimitConfig = RATE_LIMITS.GENERAL_API
 ): { allowed: boolean; remaining: number; resetTime: number } {
   const key = createRateLimitKey(userId, endpoint, method);
   const allowed = rateLimiter.isAllowed(key, config.maxRequests, config.windowMs);
@@ -162,16 +167,16 @@ export function checkRateLimit(
 /**
  * Get rate limit config based on endpoint and method
  */
-export function getRateLimitConfig(endpoint: string, method: string) {
+export function getRateLimitConfig(endpoint: string, method: string): RateLimitConfig {
   // AI generation endpoints
-  if (endpoint.includes('/generations') && method === 'POST') {
+  if (endpoint.includes("/generations") && method === "POST") {
     return RATE_LIMITS.AI_GENERATION;
   }
 
   // Write operations
-  if (['POST', 'PATCH', 'DELETE'].includes(method)) {
+  if (["POST", "PATCH", "DELETE"].includes(method)) {
     // Batch operations (array payloads)
-    if (endpoint.includes('/flashcards') && method === 'POST') {
+    if (endpoint.includes("/flashcards") && method === "POST") {
       return RATE_LIMITS.BATCH_OPERATIONS;
     }
     return RATE_LIMITS.WRITE_OPERATIONS;

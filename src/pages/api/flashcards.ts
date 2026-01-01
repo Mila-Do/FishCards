@@ -13,8 +13,8 @@ import { jsonResponse, errorResponse } from "../../lib/response-helpers";
 export const GET: APIRoute = async (context) => {
   const startTime = performance.now();
   const userId = context.locals.userId;
-  const endpoint = '/api/flashcards';
-  const method = 'GET';
+  const endpoint = "/api/flashcards";
+  const method = "GET";
 
   if (!userId) {
     return errorResponse(401, "UNAUTHORIZED", "Unauthorized", undefined, { method, endpoint, userId });

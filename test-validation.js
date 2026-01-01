@@ -4,108 +4,114 @@
  * Test validation schemas for Flashcards API
  */
 
-import { createFlashcardSchema, createFlashcardsSchema, updateFlashcardSchema, flashcardQuerySchema, flashcardIdSchema } from './src/lib/validation/flashcard.ts';
+import {
+  createFlashcardSchema,
+  createFlashcardsSchema,
+  updateFlashcardSchema,
+  flashcardQuerySchema,
+  flashcardIdSchema,
+} from "./src/lib/validation/flashcard.ts";
 
-console.log('🧪 Testing Flashcard Validation Schemas\n');
+console.log("đź§Ş Testing Flashcard Validation Schemas\n");
 
 // Test data
 const testCases = [
   {
-    name: 'Valid create flashcard',
+    name: "Valid create flashcard",
     schema: createFlashcardSchema,
     data: {
-      front: 'What is React?',
-      back: 'A JavaScript library for building user interfaces',
-      source: 'manual'
+      front: "What is React?",
+      back: "A JavaScript library for building user interfaces",
+      source: "manual",
     },
-    shouldPass: true
+    shouldPass: true,
   },
   {
-    name: 'Create flashcard with generation_id',
+    name: "Create flashcard with generation_id",
     schema: createFlashcardSchema,
     data: {
-      front: 'What is TypeScript?',
-      back: 'A typed superset of JavaScript',
-      source: 'ai',
-      generation_id: 123
+      front: "What is TypeScript?",
+      back: "A typed superset of JavaScript",
+      source: "ai",
+      generation_id: 123,
     },
-    shouldPass: true
+    shouldPass: true,
   },
   {
-    name: 'Invalid create flashcard - empty front',
+    name: "Invalid create flashcard - empty front",
     schema: createFlashcardSchema,
     data: {
-      front: '',
-      back: 'Some answer'
+      front: "",
+      back: "Some answer",
     },
-    shouldPass: false
+    shouldPass: false,
   },
   {
-    name: 'Invalid create flashcard - front too long',
+    name: "Invalid create flashcard - front too long",
     schema: createFlashcardSchema,
     data: {
-      front: 'a'.repeat(201),
-      back: 'Some answer'
+      front: "a".repeat(201),
+      back: "Some answer",
     },
-    shouldPass: false
+    shouldPass: false,
   },
   {
-    name: 'Valid update flashcard',
+    name: "Valid update flashcard",
     schema: updateFlashcardSchema,
     data: {
-      status: 'learning',
-      repetition_count: 5
+      status: "learning",
+      repetition_count: 5,
     },
-    shouldPass: true
+    shouldPass: true,
   },
   {
-    name: 'Valid query params',
+    name: "Valid query params",
     schema: flashcardQuerySchema,
     data: {
       page: 2,
       limit: 50,
-      status: 'review',
-      sort: 'updated_at',
-      order: 'desc'
+      status: "review",
+      sort: "updated_at",
+      order: "desc",
     },
-    shouldPass: true
+    shouldPass: true,
   },
   {
-    name: 'Invalid query params - negative page',
+    name: "Invalid query params - negative page",
     schema: flashcardQuerySchema,
     data: {
       page: -1,
-      limit: 50
+      limit: 50,
     },
-    shouldPass: false
+    shouldPass: false,
   },
   {
-    name: 'Valid flashcard ID',
+    name: "Valid flashcard ID",
     schema: flashcardIdSchema,
-    data: '123',
-    shouldPass: true
+    data: "123",
+    shouldPass: true,
   },
   {
-    name: 'Invalid flashcard ID',
+    name: "Invalid flashcard ID",
     schema: flashcardIdSchema,
-    data: 'abc',
-    shouldPass: false
+    data: "abc",
+    shouldPass: false,
   },
   {
-    name: 'Valid batch create',
+    name: "Valid batch create",
     schema: createFlashcardsSchema,
     data: [
-      { front: 'Q1', back: 'A1' },
-      { front: 'Q2', back: 'A2', source: 'ai' }
+      { front: "Q1", back: "A1" },
+      { front: "Q2", back: "A2", source: "ai" },
     ],
-    shouldPass: true
+    shouldPass: true,
   },
   {
-    name: 'Invalid batch create - empty array',
+    name: "Invalid batch create - empty array",
     schema: createFlashcardsSchema,
     data: [],
-    shouldPass: false
-  }
+    shouldPass: false,
+  },
 ];
 
 let passed = 0;
@@ -119,27 +125,27 @@ for (const testCase of testCases) {
     const success = result.success === testCase.shouldPass;
 
     if (success) {
-      console.log('  ✅ PASS');
+      console.log("  âś… PASS");
       passed++;
     } else {
-      console.log('  ❌ FAIL');
+      console.log("  âťŚ FAIL");
       if (!result.success) {
-        console.log('     Errors:', result.error.issues.map(i => i.message).join(', '));
+        console.log("     Errors:", result.error.issues.map((i) => i.message).join(", "));
       }
     }
   } catch (error) {
-    console.log('  ❌ ERROR:', error.message);
+    console.log("  âťŚ ERROR:", error.message);
   }
 
-  console.log('');
+  console.log("");
 }
 
-console.log(`📊 Results: ${passed}/${total} tests passed`);
+console.log(`đź“Š Results: ${passed}/${total} tests passed`);
 
 if (passed === total) {
-  console.log('🎉 All validation tests passed!');
+  console.log("đźŽ‰ All validation tests passed!");
   process.exit(0);
 } else {
-  console.log('💥 Some tests failed!');
+  console.log("đź’Ą Some tests failed!");
   process.exit(1);
 }

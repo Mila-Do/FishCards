@@ -44,18 +44,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Apply rate limiting for API endpoints
   const rateLimitConfig = getRateLimitConfig(context.url.pathname, context.request.method);
-  const rateLimitResult = checkRateLimit(
-    data.user.id,
-    context.url.pathname,
-    context.request.method,
-    rateLimitConfig
-  );
+  const rateLimitResult = checkRateLimit(data.user.id, context.url.pathname, context.request.method, rateLimitConfig);
 
   if (!rateLimitResult.allowed) {
     return errorResponse(429, "RATE_LIMIT_EXCEEDED", "Too many requests", {
       retryAfter: Math.ceil(rateLimitResult.resetTime / 1000),
       limit: rateLimitConfig.maxRequests,
-      remaining: rateLimitResult.remaining
+      remaining: rateLimitResult.remaining,
     });
   }
 
