@@ -9,27 +9,9 @@ import {
   hashSourceText,
   logGenerationError,
 } from "../../lib/services/generation.service";
+import { jsonResponse, errorResponse } from "../../lib/response-helpers";
 
 const DEFAULT_MODEL = "openai/gpt-4o-mini";
-
-function jsonResponse(body: unknown, options: { status: number }) {
-  return new Response(JSON.stringify(body), {
-    status: options.status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  });
-}
-
-function errorResponse(
-  status: number,
-  code: ErrorResponse["error"]["code"],
-  message: string,
-  details?: Record<string, unknown>
-) {
-  const payload: ErrorResponse = { error: { code, message, details } };
-  return jsonResponse(payload, { status });
-}
 
 export const GET: APIRoute = async (context) => {
   const userId = context.locals.userId;

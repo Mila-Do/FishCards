@@ -31,7 +31,7 @@ CREATE TABLE flashcards (
     status VARCHAR(20) NOT NULL DEFAULT 'new',
     repetition_count INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),    
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT flashcards_source_check CHECK (source IN ('manual', 'ai', 'mixed')),
     CONSTRAINT flashcards_status_check CHECK (status IN ('new', 'learning', 'review', 'mastered')),
     CONSTRAINT flashcards_repetition_count_check CHECK (repetition_count >= 0)
@@ -63,9 +63,6 @@ CREATE TABLE generations (
 );
 ```
 
-
-
-
 ### 1.4. Tabela `generation_error_logs`
 
 Tabela przechowująca logi błędów podczas generowania fiszek.
@@ -83,9 +80,6 @@ CREATE TABLE generation_error_logs (
     CONSTRAINT generation_error_logs_source_text_length_check CHECK (source_text_length > 0)
 );
 ```
-
-
-
 
 ## 2. Relacje między tabelami
 
@@ -120,12 +114,12 @@ CREATE TABLE generation_error_logs (
 
 ### Opis relacji:
 
-| Relacja | Kardynalność | Opis |
-|---------|--------------|------|
-| auth.users → flashcards | 1:N | Jeden użytkownik może mieć wiele fiszek |
-| auth.users → generations | 1:N | Jeden użytkownik może mieć wiele sesji generowania |
-| auth.users → generation_error_logs | 1:N | Jeden użytkownik może mieć wiele logów błędów |
-| generations → flashcards | 1:N (opcjonalnie) | Jedna sesja generowania może być powiązana z wieloma fiszkami (tylko dla fiszek AI) |
+| Relacja                            | Kardynalność      | Opis                                                                                |
+| ---------------------------------- | ----------------- | ----------------------------------------------------------------------------------- |
+| auth.users → flashcards            | 1:N               | Jeden użytkownik może mieć wiele fiszek                                             |
+| auth.users → generations           | 1:N               | Jeden użytkownik może mieć wiele sesji generowania                                  |
+| auth.users → generation_error_logs | 1:N               | Jeden użytkownik może mieć wiele logów błędów                                       |
+| generations → flashcards           | 1:N (opcjonalnie) | Jedna sesja generowania może być powiązana z wieloma fiszkami (tylko dla fiszek AI) |
 
 ## 3. Indeksy
 
@@ -134,12 +128,8 @@ CREATE TABLE generation_error_logs (
 - index na kolumnie "user_id" w tabeli generation
 - index na kolumnie "user_id" w tabeli generation_error_logs
 
-
-
-
 ## 4. Zasady Row Level Security (RLS)
 
 ### 4.1. Włączenie RLS na tabelach
-w tabeli flashcards, generation oraz generation_error_logs wdrożyć polityki RLS ktore pozwolą użytkowniko na dostęp tylko do rekordów, gdzie user_id odpowiada identyfikatorowi użytkownika z supabase.auth 
 
-
+w tabeli flashcards, generation oraz generation_error_logs wdrożyć polityki RLS ktore pozwolą użytkowniko na dostęp tylko do rekordów, gdzie user_id odpowiada identyfikatorowi użytkownika z supabase.auth

@@ -18,9 +18,11 @@ Note: Authentication is handled by Supabase Auth. These endpoints are provided b
 ### 2.2. Flashcards Endpoints
 
 #### GET /api/flashcards
+
 Retrieve a paginated list of flashcards for the authenticated user.
 
 **Query Parameters:**
+
 - `page` (optional, integer, default: 1) - Page number for pagination
 - `limit` (optional, integer, default: 20, max: 100) - Number of items per page
 - `status` (optional, string) - Filter by status: `new`, `learning`, `review`, `mastered`
@@ -29,11 +31,13 @@ Retrieve a paginated list of flashcards for the authenticated user.
 - `order` (optional, string, default: `desc`) - Sort order: `asc`, `desc`
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "data": [
@@ -60,18 +64,22 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `500 Internal Server Error` - Database or server error
 
 #### GET /api/flashcards/:id
+
 Retrieve a single flashcard by ID.
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "id": 1,
@@ -88,16 +96,20 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `404 Not Found` - Flashcard not found or user doesn't have access
 - `500 Internal Server Error` - Database or server error
 
 #### POST /api/flashcards
+
 Create one or more new flashcards. This endpoint is used for:
+
 - Creating manual flashcards
 - Saving AI-generated flashcard proposals after user approval (from `POST /api/generations`)
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 Content-Type: application/json
@@ -105,6 +117,7 @@ Content-Type: application/json
 
 **Request Body (single or multiple flashcards):**
 _Single flashcard:_
+
 ```json
 {
   "front": "What is TypeScript?",
@@ -114,6 +127,7 @@ _Single flashcard:_
 ```
 
 _Array of flashcards:_
+
 ```json
 [
   {
@@ -130,14 +144,17 @@ _Array of flashcards:_
 ```
 
 **Validation Rules:**
+
 - Request body may be a single object or an array of objects.
 - For each object:
-    - `front` (required, string, max 200 characters)
-    - `back` (required, string, max 500 characters)
-    - `source` (optional, string, default: `manual`, must be one of: `manual`, `ai`, `mixed`)
+  - `front` (required, string, max 200 characters)
+  - `back` (required, string, max 500 characters)
+  - `source` (optional, string, default: `manual`, must be one of: `manual`, `ai`, `mixed`)
 
 **Response Body (201 Created):**
-- If single flashcard was created:  
+
+- If single flashcard was created:
+
 ```json
 {
   "id": 2,
@@ -152,7 +169,9 @@ _Array of flashcards:_
   "updated_at": "2024-01-01T00:00:00Z"
 }
 ```
-- If multiple flashcards were created:  
+
+- If multiple flashcards were created:
+
 ```json
 [
   {
@@ -183,20 +202,24 @@ _Array of flashcards:_
 ```
 
 **Error Responses:**
+
 - `400 Bad Request` - Validation error (missing required fields, invalid values, or length constraints)
 - `401 Unauthorized` - Missing or invalid authentication token
 - `500 Internal Server Error` - Database or server error
 
 #### PATCH /api/flashcards/:id
+
 Update an existing flashcard.
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "front": "Updated question?",
@@ -207,6 +230,7 @@ Content-Type: application/json
 ```
 
 **Validation Rules:**
+
 - All fields are optional
 - `front` (string, max 200 characters if provided)
 - `back` (string, max 500 characters if provided)
@@ -215,6 +239,7 @@ Content-Type: application/json
 - `repetition_count` (integer, must be >= 0 if provided)
 
 **Response Body (200 OK):**
+
 ```json
 {
   "id": 1,
@@ -231,20 +256,24 @@ Content-Type: application/json
 ```
 
 **Error Responses:**
+
 - `400 Bad Request` - Validation error (invalid values, length constraints)
 - `401 Unauthorized` - Missing or invalid authentication token
 - `404 Not Found` - Flashcard not found or user doesn't have access
 - `500 Internal Server Error` - Database or server error
 
 #### DELETE /api/flashcards/:id
+
 Delete a flashcard.
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "message": "Flashcard deleted successfully",
@@ -253,23 +282,26 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `404 Not Found` - Flashcard not found or user doesn't have access
 - `500 Internal Server Error` - Database or server error
 
-
 ### 2.3. AI Generation Endpoints
 
 #### POST /api/generations
+
 Generate flashcard proposals from text using AI (OpenRouter.ai). The generated flashcards are proposals that require user approval before being saved to the database.
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "source_text": "Long text content here..."
@@ -277,9 +309,11 @@ Content-Type: application/json
 ```
 
 **Validation Rules:**
+
 - `source_text` (required, string, min 1000 characters, max 10000 characters)
 
 **Response Body (200 OK):**
+
 ```json
 {
   "generation_id": 123,
@@ -306,6 +340,7 @@ Content-Type: application/json
 **Note:** The returned flashcards are **proposals** that have not been saved to the database. The user must review, accept (optionally edit), or reject each proposal. To save accepted proposals, use `POST /api/flashcards` with the selected flashcards.
 
 **Error Responses:**
+
 - `400 Bad Request` - Validation error (text length constraints)
 - `401 Unauthorized` - Missing or invalid authentication token
 - `429 Too Many Requests` - Rate limit exceeded for AI API
@@ -313,6 +348,7 @@ Content-Type: application/json
 - `502 Bad Gateway` - AI API unavailable
 
 **Business Logic:**
+
 1. Validate source text length (1000-10000 characters)
 2. Calculate hash of source text for deduplication
 3. Call OpenRouter.ai API with the source text
@@ -324,20 +360,24 @@ Content-Type: application/json
 9. If AI API fails, log error to generation_error_logs table and do not create generation record
 
 #### GET /api/generations
+
 Retrieve generation history for the authenticated user.
 
 **Query Parameters:**
+
 - `page` (optional, integer, default: 1) - Page number for pagination
 - `limit` (optional, integer, default: 20, max: 100) - Number of items per page
 - `sort` (optional, string, default: `created_at`) - Sort field: `created_at`, `updated_at`
 - `order` (optional, string, default: `desc`) - Sort order: `asc`, `desc`
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "data": [
@@ -365,18 +405,22 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `500 Internal Server Error` - Database or server error
 
 #### GET /api/generations/:id
+
 Retrieve a single generation session by ID.
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "id": 123,
@@ -394,25 +438,28 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `404 Not Found` - Generation not found or user doesn't have access
 - `500 Internal Server Error` - Database or server error
-
 
 #### GET /api/generation-error-logs
 
 Retrieve a paginated list of generation error logs for the authenticated user.
 
 **Query Parameters:**
+
 - `page` (optional, integer, default: 1) - Page number for pagination
 - `limit` (optional, integer, default: 20, max: 100) - Number of items per page
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Response Body (200 OK):**
+
 ```json
 {
   "data": [
@@ -435,9 +482,9 @@ Authorization: Bearer <supabase_jwt_token>
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Missing or invalid authentication token
 - `500 Internal Server Error` - Database or server error
-
 
 ## 3. Authentication and Authorization
 
@@ -478,6 +525,7 @@ Authorization is enforced at two levels:
 ### 4.1. Flashcard Validation
 
 **Create/Update Validation:**
+
 - `front`: Required, string, max 200 characters (VARCHAR(200))
 - `back`: Required, string, max 500 characters (VARCHAR(500))
 - `source`: Optional, must be one of: `manual`, `ai`, `mixed` (CHECK constraint)
@@ -486,6 +534,7 @@ Authorization is enforced at two levels:
 - `generation_id`: Optional, must reference existing generation or be null
 
 **Business Logic:**
+
 - `user_id` is automatically set from authenticated user (never accepted in request)
 - `created_at` and `updated_at` are automatically managed by database
 - When creating flashcards that were previously AI-generated proposals (with `generation_id`), update generation statistics:
@@ -497,12 +546,15 @@ Authorization is enforced at two levels:
 ### 4.2. Generation Validation
 
 **Create Validation:**
+
 - `source_text`: Required, string, min 1000 characters, max 10000 characters
 
 **Model selection:**
+
 - The AI model is selected automatically by the backend (not provided by the client).
 
 **Business Logic:**
+
 - Calculate `source_text_hash` (SHA-256) for deduplication and tracking
 - Record `source_text_length` for statistics
 - Measure `generation_duration_ms` in milliseconds
@@ -522,6 +574,7 @@ Authorization is enforced at two levels:
 ### 4.3. Study Session Business Logic
 
 **Spaced Repetition Algorithm:**
+
 - Use external open-source library (not specified in PRD, implementation detail)
 - Algorithm considers:
   - Current `status` of flashcard
@@ -536,6 +589,7 @@ Authorization is enforced at two levels:
   - Algorithm determines next review interval (stored in algorithm's state, not in database for MVP)
 
 **Session Logic:**
+
 - Prioritize flashcards by status: `new` > `learning` > `review` > `mastered`
 - Return flashcards in random order to prevent pattern recognition
 - Limit number of flashcards per session to prevent cognitive overload
@@ -543,6 +597,7 @@ Authorization is enforced at two levels:
 ### 4.4. Statistics Business Logic
 
 **Calculation Rules:**
+
 - Total flashcards: Count all flashcards for user
 - By status: Group by `status` field
 - By source: Group by `source` field
@@ -559,6 +614,7 @@ Authorization is enforced at two levels:
 ### 4.5. Error Handling
 
 **Standard Error Response Format:**
+
 ```json
 {
   "error": {
@@ -570,6 +626,7 @@ Authorization is enforced at two levels:
 ```
 
 **Common Error Codes:**
+
 - `VALIDATION_ERROR` - Request validation failed
 - `UNAUTHORIZED` - Authentication required or invalid token
 - `NOT_FOUND` - Resource not found or user doesn't have access
@@ -581,12 +638,14 @@ Authorization is enforced at two levels:
 ### 4.6. Rate Limiting and Security
 
 **Rate Limiting:**
+
 - AI generation endpoint (`POST /api/generations`): Limit to prevent abuse and control costs
   - Suggested: 10 requests per hour per user
   - Return `429 Too Many Requests` if exceeded
 - General API endpoints: Standard rate limiting (e.g., 100 requests per minute per user)
 
 **Security Measures:**
+
 - All endpoints require authentication (except health check if implemented)
 - RLS policies provide database-level security
 - Input validation prevents SQL injection and XSS
@@ -596,6 +655,7 @@ Authorization is enforced at two levels:
 ### 4.7. Pagination
 
 All list endpoints support pagination:
+
 - Default page size: 20 items
 - Maximum page size: 100 items (configurable per endpoint)
 - Response includes pagination metadata:
@@ -607,11 +667,12 @@ All list endpoints support pagination:
 ### 4.8. Data Consistency
 
 **Transaction Handling:**
+
 - Batch operations (e.g., `POST /api/flashcards/batch`) use database transactions
 - If any flashcard in batch fails validation, entire batch is rolled back
 - Generation statistics updates are atomic with flashcard creation
 
 **Timestamps:**
+
 - `created_at` and `updated_at` are managed by database defaults and triggers
 - `updated_at` is automatically updated on record modification
-

@@ -11,6 +11,7 @@ The application provides a complete flashcard management ecosystem including AI-
 ## Tech Stack
 
 ### Frontend
+
 - **Astro 5** - Fast, efficient web applications with minimal JavaScript
 - **React 19** - Interactive components where needed
 - **TypeScript 5** - Static typing for better IDE support and code quality
@@ -18,6 +19,7 @@ The application provides a complete flashcard management ecosystem including AI-
 - **Shadcn/ui** - Accessible React component library for consistent UI
 
 ### Backend
+
 - **Supabase** - Complete backend-as-a-service solution providing:
   - PostgreSQL database
   - Multi-language SDKs
@@ -25,33 +27,40 @@ The application provides a complete flashcard management ecosystem including AI-
   - Open source, self-hostable
 
 ### AI Integration
+
 - **OpenRouter.ai** - Access to multiple LLM providers (OpenAI, Anthropic, Google, etc.) with:
   - Cost-effective model selection
   - Financial limits on API keys
 
 ### CI/CD & Hosting
+
 - **GitHub Actions** - Automated CI/CD pipelines
 - **DigitalOcean** - Application hosting via Docker containers
 
 ## Getting Started Locally
 
 ### Prerequisites
+
 - Node.js 22.14.0 (use nvm or similar version manager)
 - Bun package manager (recommended)
 
 ### Installation
+
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd FishCards
    ```
 
 2. Install dependencies:
+
    ```bash
    bun install
    ```
 
 3. Start the development server:
+
    ```bash
    bun run dev
    ```
@@ -60,20 +69,21 @@ The application provides a complete flashcard management ecosystem including AI-
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start the development server |
-| `bun run build` | Build the project for production |
-| `bun run preview` | Preview the production build locally |
-| `bun run astro` | Run Astro CLI commands |
-| `bun run lint` | Run ESLint to check code quality |
-| `bun run lint:fix` | Automatically fix ESLint issues |
-| `bun run format` | Format code using Prettier |
-| `bun run check-mvp` | Run MVP validation checks |
+| Script              | Description                          |
+| ------------------- | ------------------------------------ |
+| `bun run dev`       | Start the development server         |
+| `bun run build`     | Build the project for production     |
+| `bun run preview`   | Preview the production build locally |
+| `bun run astro`     | Run Astro CLI commands               |
+| `bun run lint`      | Run ESLint to check code quality     |
+| `bun run lint:fix`  | Automatically fix ESLint issues      |
+| `bun run format`    | Format code using Prettier           |
+| `bun run check-mvp` | Run MVP validation checks            |
 
 ## Project Scope
 
 ### MVP Features
+
 - **User Authentication**: Registration and login system
 - **AI Flashcard Generation**: Generate flashcards from text input (1000-10000 characters)
 - **Manual Flashcard Creation**: Create custom flashcards with front/back content
@@ -83,6 +93,7 @@ The application provides a complete flashcard management ecosystem including AI-
 - **Statistics**: Track AI-generated vs. accepted flashcards
 
 ### Out of Scope (Future Enhancements)
+
 - Mobile applications (web-only for MVP)
 - Gamification features
 - Flashcard sharing between users

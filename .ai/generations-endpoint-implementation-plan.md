@@ -1,11 +1,13 @@
 # API Endpoint Implementation Plan: Generations
 
 ## 1. Przegląd punktu końcowego
+
 Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzystaniem OpenRouter.ai, zarządzanie historią generowania oraz obsługę błędów. Kluczowym aspektem jest to, że AI generuje propozycje fiszek, które wymagają akceptacji użytkownika przed zapisaniem do bazy danych.
 
 ## 2. Szczegóły żądania
 
 ### POST /api/generations
+
 - **Metoda HTTP**: POST
 - **Struktura URL**: `/api/generations`
 - **Parametry**: Brak parametrów URL
@@ -17,6 +19,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
   ```
 
 ### GET /api/generations
+
 - **Metoda HTTP**: GET
 - **Struktura URL**: `/api/generations`
 - **Parametry**:
@@ -24,12 +27,14 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 - **Request Body**: Brak
 
 ### GET /api/generations/:id
+
 - **Metoda HTTP**: GET
 - **Struktura URL**: `/api/generations/:id`
 - **Parametry**: `id` (integer, wymagany w URL)
 - **Request Body**: Brak
 
 ### GET /api/generation-error-logs
+
 - **Metoda HTTP**: GET
 - **Struktura URL**: `/api/generation-error-logs`
 - **Parametry**:
@@ -39,6 +44,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 **Nagłówek autoryzacji**: `Authorization: Bearer <supabase_jwt_token>` (wymagany dla wszystkich endpointów)
 
 ## 3. Wykorzystywane typy
+
 - `CreateGenerationCommand`: `{ source_text: string }`
 - `FlashcardProposal`: `{ front: string, back: string, source: "ai" }`
 - `GenerationMetadata`: `{ generated_count: number, source_text_length: number, generation_duration_ms: number }`
@@ -52,12 +58,11 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 ## 4. Szczegóły odpowiedzi
 
 ### POST /api/generations (200 OK)
+
 ```json
 {
   "generation_id": 123,
-  "flashcards_proposals": [
-    { "front": "Pytanie 1?", "back": "Odpowiedź 1", "source": "ai" }
-  ],
+  "flashcards_proposals": [{ "front": "Pytanie 1?", "back": "Odpowiedź 1", "source": "ai" }],
   "metadata": {
     "generated_count": 2,
     "source_text_length": 5000,
@@ -67,6 +72,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 ```
 
 ### GET /api/generations (200 OK)
+
 ```json
 {
   "data": [
@@ -96,12 +102,14 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 **Kody błędów**: 400, 401, 429, 500, 502
 
 ## 5. Przepływ danych
+
 1. **POST**: Walidacja → Hash tekstu źródłowego → Wywołanie OpenRouter.ai → Parsowanie odpowiedzi → Zapis rekordu generacji → Zwrot propozycji
 2. **GET /generations**: Walidacja parametrów → Paginacja + sortowanie → Pobranie z bazy → Formatowanie odpowiedzi
 3. **GET /generations/:id**: Walidacja ID → Pobranie rekordu → Sprawdzenie własności → Zwrot danych
 4. **GET /generation-error-logs**: Paginacja → Pobranie logów błędów → Formatowanie odpowiedzi
 
 ## 6. Względy bezpieczeństwa
+
 - **Autoryzacja**: JWT token validation przez Supabase
 - **Autoryzacja**: RLS policies zapewniają dostęp tylko do własnych danych
 - **Rate limiting**: Ograniczenie wywołań AI API (429)
@@ -110,6 +118,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 - **Error handling**: Bezpieczne logowanie błędów bez ujawniania wrażliwych danych
 
 ## 7. Obsługa błędów
+
 - **400 Bad Request**: Błąd walidacji (źle sformatowane dane, długość tekstu poza zakresem)
 - **401 Unauthorized**: Brak lub nieprawidłowy token JWT
 - **404 Not Found**: Generacja nie znaleziona lub brak dostępu
@@ -120,6 +129,7 @@ Endpointy `/api/generations` umożliwiają generowanie fiszek przez AI z wykorzy
 Wszystkie błędy zwracane w formacie `ErrorResponse` z odpowiednimi kodami błędów.
 
 ## 8. Rozważania dotyczące wydajności
+
 - **Cache**: Hash tekstu źródłowego umożliwia deduplikację
 - **Paginacja**: Ograniczona do 100 rekordów na stronę
 - **Timeout**: AI API wywołania z timeout protection

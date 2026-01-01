@@ -6,12 +6,12 @@
 
 Utwórz nowe środowisko w Postmanie i dodaj:
 
-| Variable | Initial Value | Current Value |
-|----------|---------------|---------------|
-| `base_url` | `http://localhost:3000` | `http://localhost:3000` |
-| `supabase_url` | `http://127.0.0.1:54321` | `http://127.0.0.1:54321` |
+| Variable       | Initial Value                                    | Current Value                                    |
+| -------------- | ------------------------------------------------ | ------------------------------------------------ |
+| `base_url`     | `http://localhost:3000`                          | `http://localhost:3000`                          |
+| `supabase_url` | `http://127.0.0.1:54321`                         | `http://127.0.0.1:54321`                         |
 | `supabase_key` | `sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH` | `sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH` |
-| `auth_token` | *(puste na początku)* | *(wkleisz token później)* |
+| `auth_token`   | _(puste na początku)_                            | _(wkleisz token później)_                        |
 
 ---
 
@@ -20,17 +20,20 @@ Utwórz nowe środowisko w Postmanie i dodaj:
 ### Metoda 1: Logowanie przez Supabase Auth API
 
 **Request:**
+
 - **Nazwa**: `Login - Get Token`
 - **Method**: `POST`
 - **URL**: `http://127.0.0.1:54321/auth/v1/token?grant_type=password`
 
 **Headers:**
+
 ```
 apikey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 Content-Type: application/json
 ```
 
 **Body** (raw JSON):
+
 ```json
 {
   "email": "user02@gmail.com",
@@ -60,22 +63,26 @@ Content-Type: application/json
 ### 1. GET /api/generations - Lista generacji
 
 **Request:**
+
 - **Nazwa**: `GET Generations`
 - **Method**: `GET`
 - **URL**: `{{base_url}}/api/generations`
 
 **Headers:**
+
 ```
 Authorization: Bearer {{auth_token}}
 ```
 
 **Query Params** (opcjonalne - dodaj w zakładce Params):
+
 - `page`: `1`
 - `limit`: `20`
 - `sort`: `created_at`
 - `order`: `desc`
 
 **Przykład pełnego URL z parametrami:**
+
 ```
 {{base_url}}/api/generations?page=1&limit=20&sort=created_at&order=desc
 ```
@@ -85,17 +92,20 @@ Authorization: Bearer {{auth_token}}
 ### 2. POST /api/generations - Utworzenie nowej generacji
 
 **Request:**
+
 - **Nazwa**: `POST Create Generation`
 - **Method**: `POST`
 - **URL**: `{{base_url}}/api/generations`
 
 **Headers:**
+
 ```
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 ```
 
 **Body** (raw JSON):
+
 ```json
 {
   "source_text": "To jest przykładowy tekst źródłowy do generacji fiszek. Tekst musi mieć co najmniej 1000 znaków, więc dodaję tutaj więcej treści. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
@@ -103,6 +113,7 @@ Content-Type: application/json
 ```
 
 **Wymagania:**
+
 - `source_text`: string, **min 1000 znaków**, max 10000 znaków
 
 ---
@@ -110,11 +121,13 @@ Content-Type: application/json
 ### 3. GET /api/generations/:id - Pojedyncza generacja
 
 **Request:**
+
 - **Nazwa**: `GET Generation by ID`
 - **Method**: `GET`
 - **URL**: `{{base_url}}/api/generations/1`
 
 **Headers:**
+
 ```
 Authorization: Bearer {{auth_token}}
 ```
@@ -122,6 +135,7 @@ Authorization: Bearer {{auth_token}}
 **Uwaga**: Zastąp `1` w URL rzeczywistym ID generacji (np. `123`).
 
 **Przykład:**
+
 ```
 {{base_url}}/api/generations/123
 ```
@@ -131,20 +145,24 @@ Authorization: Bearer {{auth_token}}
 ### 4. GET /api/generation-error-logs - Logi błędów
 
 **Request:**
+
 - **Nazwa**: `GET Generation Error Logs`
 - **Method**: `GET`
 - **URL**: `{{base_url}}/api/generation-error-logs`
 
 **Headers:**
+
 ```
 Authorization: Bearer {{auth_token}}
 ```
 
 **Query Params** (opcjonalne - dodaj w zakładce Params):
+
 - `page`: `1`
 - `limit`: `20`
 
 **Przykład pełnego URL z parametrami:**
+
 ```
 {{base_url}}/api/generation-error-logs?page=1&limit=20
 ```
@@ -160,6 +178,7 @@ Authorization: Bearer {{auth_token}}
    - Supabase działa lokalnie: `supabase status` (port 54321)
 
 3. **Format błędów**: Wszystkie błędy zwracają format:
+
 ```json
 {
   "error": {
@@ -192,6 +211,7 @@ Authorization: Bearer {{auth_token}}
 ## 📝 Przykładowe odpowiedzi
 
 ### Sukces - GET /api/generations
+
 ```json
 {
   "data": [
@@ -219,6 +239,7 @@ Authorization: Bearer {{auth_token}}
 ```
 
 ### Błąd - 401 Unauthorized
+
 ```json
 {
   "error": {
@@ -227,4 +248,3 @@ Authorization: Bearer {{auth_token}}
   }
 }
 ```
-
