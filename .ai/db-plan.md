@@ -1,4 +1,4 @@
-# Schemat bazy danych PostgreSQL – 10x-cards
+# Schemat bazy danych PostgreSQL – FishCards
 
 ## 1. Tabele
 

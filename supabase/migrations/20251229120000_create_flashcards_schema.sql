@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Migration: Create flashcards schema
--- Description: Creates core tables for 10x-cards flashcard application
+-- Description: Creates core tables for FishCards flashcard application
 -- Tables: generations, flashcards, generation_error_logs
 -- Author: AI Assistant
 -- Date: 2025-12-29
