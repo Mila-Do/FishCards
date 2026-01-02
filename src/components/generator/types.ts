@@ -1,6 +1,12 @@
 /**
  * Types for Generator View components
+ * Uses common types from lib/types/common.ts for consistency
  */
+
+import type { TextValidationResult, LoadingState, ErrorState, FieldValidationErrors } from "../../lib/types/common";
+
+// Re-export main types for backward compatibility
+import type { FlashcardSource } from "../../types";
 
 // ============================================================================
 // Main State Interfaces
@@ -11,7 +17,7 @@ export interface GeneratorViewState {
   proposals: ProposalState[];
   isLoadingProposals: boolean; // dla ProposalsSkeleton
   isSavingFlashcards: boolean; // dla LoadingOverlay
-  errors: ValidationErrors;
+  errors: GeneratorValidationErrors;
   generationId: number | null;
   selectedCount: number;
 }
@@ -20,28 +26,48 @@ export interface ProposalState {
   id: string; // lokalne UUID dla UI
   front: string;
   back: string;
-  source: "ai" | "mixed";
-  status: "pending" | "accepted" | "rejected" | "editing";
+  source: FlashcardSource;
+  status: ProposalStatus;
   isEdited: boolean;
   originalFront: string;
   originalBack: string;
-  validationErrors: {
-    front?: string[];
-    back?: string[];
-  };
+  validationErrors: FieldValidationErrors;
 }
 
-export interface TextInputState {
+export interface TextInputState extends TextValidationResult {
   value: string;
-  isValid: boolean;
-  characterCount: number;
-  errors: string[];
 }
 
-export interface ValidationErrors {
+export interface GeneratorValidationErrors {
   textInput?: string[];
   proposals?: Record<string, string[]>;
   api?: string;
+}
+
+// ============================================================================
+// Enhanced Types
+// ============================================================================
+
+/**
+ * Proposal status type - more explicit than string union
+ */
+export type ProposalStatus = "pending" | "accepted" | "rejected" | "editing";
+
+/**
+ * Generator loading states - more granular than simple boolean
+ */
+export interface GeneratorLoadingState extends LoadingState {
+  isGeneratingProposals?: boolean;
+  isSavingFlashcards?: boolean;
+  isValidating?: boolean;
+}
+
+/**
+ * Generator error state with recovery actions
+ */
+export interface GeneratorErrorState extends ErrorState {
+  type?: "validation" | "network" | "api" | "timeout";
+  field?: string; // For field-specific errors
 }
 
 // ============================================================================
@@ -113,40 +139,23 @@ export type {
 // Validation Constants
 // ============================================================================
 
+// Import common validation limits and extend with generator-specific ones
+import { VALIDATION_LIMITS as COMMON_LIMITS } from "../../lib/types/common";
+
 export const VALIDATION_LIMITS = {
+  ...COMMON_LIMITS,
   SOURCE_TEXT_MIN: 1000,
   SOURCE_TEXT_MAX: 10000,
   FLASHCARD_FRONT_MAX: 200,
   FLASHCARD_BACK_MAX: 500,
-  DEBOUNCE_MS: 300,
-  REQUEST_TIMEOUT_MS: 60000,
 } as const;
 
 // ============================================================================
 // Utility Types
 // ============================================================================
 
-export type ProposalStatus = ProposalState["status"];
-export type ProposalValidationError = keyof ProposalState["validationErrors"];
+export type ProposalValidationError = keyof FieldValidationErrors;
+export type ProposalValidationErrors = Record<"front" | "back", string[]>;
 
-/**
- * Result type for validation functions
- */
-export interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-}
-
-/**
- * Result type for API calls
- */
-export type ApiResult<T> =
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      details?: unknown;
-    };
+// Re-export common validation and API result types for backward compatibility
+export type { ValidationResult, ApiResult } from "../../lib/types/common";

@@ -7,12 +7,12 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import { Button } from "@/components/ui/button";
 import { FlashcardRow } from "./FlashcardRow";
 import EmptyState from "./EmptyState";
-import type { FlashcardViewModel, FlashcardSortField, SortState } from "./types";
+import type { FlashcardViewModel, FlashcardSortField, FlashcardSortState } from "./types";
 
 interface FlashcardsTableProps {
   flashcards: FlashcardViewModel[];
   loading: boolean;
-  sort: SortState;
+  sort: FlashcardSortState;
   onSortChange: (field: FlashcardSortField) => void;
   onEditClick: (flashcard: FlashcardViewModel) => void;
   onDeleteClick: (flashcard: FlashcardViewModel) => void;
@@ -22,7 +22,7 @@ interface FlashcardsTableProps {
 
 interface SortableHeaderProps {
   field: FlashcardSortField;
-  currentSort: SortState;
+  currentSort: FlashcardSortState;
   onSortChange: (field: FlashcardSortField) => void;
   children: React.ReactNode;
   className?: string;
