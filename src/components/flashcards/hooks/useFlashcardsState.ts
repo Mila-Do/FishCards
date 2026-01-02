@@ -81,7 +81,6 @@ export function useFlashcardsState() {
         loading: false,
       });
     } catch (error) {
-      // console.error("Error fetching flashcards:", error);
       updateState({
         loading: false,
         error: error instanceof Error ? error.message : "Błąd podczas pobierania fiszek",
@@ -116,7 +115,6 @@ export function useFlashcardsState() {
           },
         });
       } catch (error) {
-        // console.error("Error creating flashcard:", error);
         updateState({
           error: error instanceof Error ? error.message : "Błąd podczas tworzenia fiszki",
         });
@@ -154,7 +152,6 @@ export function useFlashcardsState() {
           },
         });
       } catch (error) {
-        // console.error("Error updating flashcard:", error);
         updateState({
           error: error instanceof Error ? error.message : "Błąd podczas aktualizacji fiszki",
         });
@@ -188,7 +185,6 @@ export function useFlashcardsState() {
           },
         });
       } catch (error) {
-        // console.error("Error deleting flashcard:", error);
         updateState({
           error: error instanceof Error ? error.message : "Błąd podczas usuwania fiszki",
         });

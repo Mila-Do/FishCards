@@ -3,11 +3,87 @@
  * Business logic validation for flashcard entities and operations
  */
 
+import { z } from "zod";
 import type { ValidationResult, FieldValidationErrors } from "../types/common";
 import { validateFlashcardFront, validateFlashcardBack, TEXT_VALIDATION_LIMITS } from "./text";
 
 // Re-export flashcard types from main types file
 import type { FlashcardStatus, FlashcardSource, CreateFlashcardCommand, UpdateFlashcardCommand } from "../../types";
+
+// ============================================================================
+// Zod Schemas for API validation
+// ============================================================================
+
+const toIntOrUndefined = (value: unknown) => {
+  if (typeof value !== "string") return undefined;
+  if (value.trim() === "") return undefined;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+/**
+ * Schema for validating flashcard ID
+ */
+export const flashcardIdSchema = z.preprocess(
+  (value) => {
+    if (typeof value === "string") {
+      const parsed = Number.parseInt(value, 10);
+      return Number.isFinite(parsed) ? parsed : value;
+    }
+    return value;
+  },
+  z.number().int().min(1, "Flashcard ID must be a positive integer")
+);
+
+/**
+ * Schema for creating a single flashcard
+ */
+export const createFlashcardSchema = z.object({
+  front: z.string().min(1, "Przód fiszki nie może być pusty").max(200, "Przód fiszki może mieć maksymalnie 200 znaków"),
+  back: z.string().min(1, "Tył fiszki nie może być pusty").max(500, "Tył fiszki może mieć maksymalnie 500 znaków"),
+  source: z.enum(["manual", "ai", "mixed"]).optional(),
+  generation_id: z.number().int().positive().nullable().optional(),
+});
+
+/**
+ * Schema for creating one or more flashcards
+ */
+export const createFlashcardsSchema = z.union([createFlashcardSchema, z.array(createFlashcardSchema)]);
+
+/**
+ * Schema for flashcard query parameters
+ */
+export const flashcardQuerySchema = z.object({
+  page: z.preprocess(toIntOrUndefined, z.number().int().min(1).default(1)),
+  limit: z.preprocess(toIntOrUndefined, z.number().int().min(1).max(100).default(20)),
+  status: z.enum(["new", "learning", "review", "mastered"]).optional(),
+  source: z.enum(["manual", "ai", "mixed"]).optional(),
+  sort: z.enum(["created_at", "updated_at", "repetition_count"]).optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+});
+
+/**
+ * Schema for updating a flashcard
+ */
+export const updateFlashcardSchema = z
+  .object({
+    front: z
+      .string()
+      .min(1, "Przód fiszki nie może być pusty")
+      .max(200, "Przód fiszki może mieć maksymalnie 200 znaków")
+      .optional(),
+    back: z
+      .string()
+      .min(1, "Tył fiszki nie może być pusty")
+      .max(500, "Tył fiszki może mieć maksymalnie 500 znaków")
+      .optional(),
+    status: z.enum(["new", "learning", "review", "mastered"]).optional(),
+    source: z.enum(["manual", "ai", "mixed"]).optional(),
+    repetition_count: z.number().int().min(0).optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "Przynajmniej jedno pole musi zostać podane do aktualizacji",
+  });
 
 // ============================================================================
 // Flashcard Data Validation

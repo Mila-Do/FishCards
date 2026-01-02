@@ -16,18 +16,10 @@ const TextInputSection: React.FC<TextInputProps> = ({ value, onChange, onGenerat
   const helpId = useId();
 
   const handleGenerate = () => {
-    console.log("🔍 [DEBUG] handleGenerate called!");
-    console.log("🔍 [DEBUG] validation.isValid:", validation.isValid);
-    console.log("🔍 [DEBUG] isLoading:", isLoading);
-    console.log("🔍 [DEBUG] validation:", validation);
-
     if (!validation.isValid || isLoading) {
-      console.log("❌ [DEBUG] Generation blocked - validation failed or loading");
       return;
     }
 
-    console.log("✅ [DEBUG] Calling onGenerate()...");
-    if (!validation.isValid || isLoading) return;
     onGenerate();
   };
 

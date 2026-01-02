@@ -43,7 +43,6 @@ const SOURCE_CONFIG: Record<
 export default function SourceBadge({ source }: SourceBadgeProps) {
   // Sprawdzenie czy źródło jest z dozwolonej listy
   if (!SOURCE_CONFIG[source]) {
-    // console.warn(`Invalid flashcard source: ${source}`);
     return (
       <Badge variant="outline" className="border-gray-300 text-gray-700">
         ❓ Nieznane

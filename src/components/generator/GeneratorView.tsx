@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useGeneratorState } from "./hooks/useGeneratorState";
 import { useTextValidation } from "./hooks/useTextValidation";
 import TextInputSection from "./TextInputSection";
@@ -9,7 +9,7 @@ import LoadingOverlay from "./LoadingOverlay";
  * Main container component for the flashcard generator view
  * Manages overall state and coordinates communication between subcomponents
  */
-const GeneratorView: React.FC = () => {
+const GeneratorView: React.FC = memo(() => {
   const { state, updateSourceText, generateProposals, updateProposal, saveSelectedProposals } = useGeneratorState();
   const textValidation = useTextValidation(state.sourceText);
 
@@ -87,6 +87,8 @@ const GeneratorView: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+GeneratorView.displayName = "GeneratorView";
 
 export default GeneratorView;

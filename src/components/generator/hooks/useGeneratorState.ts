@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import type { GeneratorViewState, ProposalState, GenerationProposalsResponse, CreateFlashcardsCommand } from "../types";
 import { VALIDATION_LIMITS } from "../types";
-import { validateSourceText } from "./useTextValidation";
+import { validateSourceText } from "../../../lib/validation/text";
 import { authenticatedFetch } from "../../../lib/auth-helper";
 
 /**
@@ -71,9 +71,6 @@ export const useGeneratorState = () => {
       }));
 
       try {
-        console.log("🚀 [DEBUG] Rozpoczynam generowanie...");
-        console.log("📝 [DEBUG] Tekst źródłowy:", currentSourceText.substring(0, 100) + "...");
-
         const response = await authenticatedFetch("/api/generations", {
           method: "POST",
           body: JSON.stringify({
@@ -82,17 +79,12 @@ export const useGeneratorState = () => {
           signal: AbortSignal.timeout(VALIDATION_LIMITS.REQUEST_TIMEOUT_MS),
         });
 
-        console.log("📡 [DEBUG] Odpowiedź serwera:", response.status, response.statusText);
-
         if (!response.ok) {
-          console.log("❌ [DEBUG] Request failed:", response.status);
           const errorData = await response.json();
-          console.log("📄 [DEBUG] Error data:", errorData);
           throw new Error(errorData.error?.message || "Błąd generowania propozycji");
         }
 
         const result: GenerationProposalsResponse = await response.json();
-        console.log("🎉 [DEBUG] Success! Got", result.flashcards_proposals.length, "proposals");
 
         // Convert API proposals to ProposalState with source: 'ai'
         const proposals: ProposalState[] = result.flashcards_proposals.map((proposal, index) => ({
@@ -115,17 +107,13 @@ export const useGeneratorState = () => {
           selectedCount: 0,
         }));
       } catch (error) {
-        console.log("💥 [DEBUG] Frontend error:", error);
-
         let errorMessage = "Wystąpił błąd podczas generowania propozycji";
 
         if (error instanceof Error) {
           if (error.name === "TimeoutError") {
             errorMessage = "Generowanie trwa zbyt długo. Spróbuj ponownie.";
-            console.log("⏰ [DEBUG] Request timed out");
           } else {
             errorMessage = error.message;
-            console.log("⚠️ [DEBUG] Error message:", error.message);
           }
         }
 

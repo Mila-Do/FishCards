@@ -46,12 +46,8 @@ export const GET: APIRoute = async (context) => {
 };
 
 export const POST: APIRoute = async (context) => {
-  console.log("🎯 [API] POST /api/generations - Request received!");
-
   const startTime = performance.now();
   const userId = context.locals.userId;
-
-  console.log("👤 [API] User ID:", userId);
 
   if (!userId) return errorResponse(401, "UNAUTHORIZED", "Unauthorized");
 
@@ -76,15 +72,9 @@ export const POST: APIRoute = async (context) => {
   const mockMode = import.meta.env.MOCK_AI_GENERATION === "true";
   const apiKey = mockMode ? "mock" : import.meta.env.OPENROUTER_API_KEY;
 
-  console.log("🎭 [API] Mock mode:", mockMode);
-  console.log("🔑 [API] API key exists:", !!apiKey);
-
   if (!mockMode && !apiKey) {
-    console.log("❌ [API] Missing API key");
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "Server misconfiguration: missing OPENROUTER_API_KEY");
   }
-
-  console.log("🚀 [API] Starting generation process...");
 
   try {
     const result = await createGeneration({
@@ -94,9 +84,6 @@ export const POST: APIRoute = async (context) => {
       model: DEFAULT_MODEL,
       apiKey,
     });
-
-    console.log("🎉 [API] Generation successful!");
-    console.log("📊 [API] Generated", result.flashcards_proposals.length, "proposals");
 
     const duration = Math.round(performance.now() - startTime);
     return jsonResponse(
@@ -110,14 +97,10 @@ export const POST: APIRoute = async (context) => {
       }
     );
   } catch (err) {
-    console.log("💥 [API] Generation failed:", err);
-
     const aiError = err instanceof AiApiError ? err : null;
     const status = aiError?.status ?? 500;
     const code = (aiError?.code ?? "INTERNAL_SERVER_ERROR") as ErrorResponse["error"]["code"];
     const message = aiError?.message ?? (err instanceof Error ? err.message : "Unknown error");
-
-    console.log("📋 [API] Error details:", { status, code, message });
 
     await logGenerationError({
       supabase: context.locals.supabase,

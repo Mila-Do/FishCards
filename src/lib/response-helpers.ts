@@ -24,6 +24,7 @@ function logApiEvent(
   const timestamp = new Date().toISOString();
   const logLevel = status >= 500 ? "ERROR" : status >= 400 ? "WARN" : "INFO";
 
+  // Production logging - structured API request logging
   console.log(
     `[${timestamp}] ${logLevel} ${method} ${endpoint} ${status} ${userId ? `user:${userId}` : ""} ${duration ? `${duration}ms` : ""} ${error ? `error:${error}` : ""}`
   );

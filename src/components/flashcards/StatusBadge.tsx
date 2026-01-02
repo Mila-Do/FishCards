@@ -37,7 +37,6 @@ const STATUS_CONFIG: Record<FlashcardStatus, { label: string; variant: "secondar
 export default function StatusBadge({ status }: StatusBadgeProps) {
   // Sprawdzenie czy status jest z dozwolonej listy
   if (!STATUS_CONFIG[status]) {
-    // console.warn(`Invalid flashcard status: ${status}`);
     return (
       <Badge variant="secondary" className="bg-gray-100 text-gray-800">
         Nieznany

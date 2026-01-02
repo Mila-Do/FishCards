@@ -139,16 +139,8 @@ export type {
 // Validation Constants
 // ============================================================================
 
-// Import common validation limits and extend with generator-specific ones
-import { VALIDATION_LIMITS as COMMON_LIMITS } from "../../lib/types/common";
-
-export const VALIDATION_LIMITS = {
-  ...COMMON_LIMITS,
-  SOURCE_TEXT_MIN: 1000,
-  SOURCE_TEXT_MAX: 10000,
-  FLASHCARD_FRONT_MAX: 200,
-  FLASHCARD_BACK_MAX: 500,
-} as const;
+// Re-export validation limits from centralized location
+export { TEXT_VALIDATION_LIMITS as VALIDATION_LIMITS } from "../../lib/validation/text";
 
 // ============================================================================
 // Utility Types

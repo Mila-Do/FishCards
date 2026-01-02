@@ -14,15 +14,12 @@
 export function getAuthToken(): string | null {
   // Try to get token from environment first
   const envToken = import.meta.env.PUBLIC_DEV_AUTH_TOKEN;
-  console.log("🔑 [AUTH] ENV token:", envToken);
 
   if (envToken) {
-    console.log("✅ [AUTH] Using ENV token:", envToken);
     return envToken;
   }
 
   // Fallback to default dev token for user1
-  console.log("⚠️ [AUTH] Using fallback token: dev-token-user1");
   return "dev-token-user1";
 }
 

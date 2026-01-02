@@ -1,63 +1,92 @@
-import { useState, useEffect, useMemo } from "react";
-import type { ValidationResult } from "../types";
+/**
+ * Improved hook for validating text input with better debounce management
+ * Enhanced version with more granular validation states
+ */
+
+import { useState, useEffect, useMemo, useRef } from "react";
+import { validateSourceText } from "../../../lib/validation/text";
 import { VALIDATION_LIMITS } from "../types";
 
-/**
- * Validates source text according to application rules
- */
-export const validateSourceText = (text: string): ValidationResult & { characterCount: number } => {
-  const characterCount = text.length;
-  const errors: string[] = [];
+interface UseTextValidationOptions {
+  debounceMs?: number;
+  validateOnMount?: boolean;
+}
 
-  // Check minimum length (only if not empty)
-  if (characterCount > 0 && characterCount < VALIDATION_LIMITS.SOURCE_TEXT_MIN) {
-    errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znaków`);
-  }
+export const useTextValidation = (text: string, options: UseTextValidationOptions = {}) => {
+  const { debounceMs = VALIDATION_LIMITS.DEBOUNCE_MS, validateOnMount = false } = options;
 
-  // Check maximum length
-  if (characterCount > VALIDATION_LIMITS.SOURCE_TEXT_MAX) {
-    errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znaków`);
-  }
+  const [debouncedText, setDebouncedText] = useState(() => (validateOnMount ? text : ""));
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check if empty (different message for empty state)
-  if (characterCount === 0) {
-    errors.push("Tekst nie może być pusty");
-  }
-
-  const isValid =
-    characterCount >= VALIDATION_LIMITS.SOURCE_TEXT_MIN && characterCount <= VALIDATION_LIMITS.SOURCE_TEXT_MAX;
-
-  return {
-    isValid,
-    errors,
-    characterCount,
-  };
-};
-
-/**
- * Hook for validating text input with debounce
- * Returns validation state and results using centralized validation logic
- */
-export const useTextValidation = (text: string) => {
-  const [debouncedText, setDebouncedText] = useState(text);
-
-  // Debounce text input changes
+  // Debounce text input changes with cleanup
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set new timeout
+    timeoutRef.current = setTimeout(() => {
       setDebouncedText(text);
-    }, VALIDATION_LIMITS.DEBOUNCE_MS);
+    }, debounceMs);
 
-    return () => clearTimeout(timer);
-  }, [text]);
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [text, debounceMs]);
 
-  // Use centralized validation logic
-  const validationResult = useMemo(() => validateSourceText(debouncedText), [debouncedText]);
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Memoized validation result
+  const validation = useMemo(() => {
+    return validateSourceText(debouncedText);
+  }, [debouncedText]);
+
+  // Additional computed properties for better UX
+  const computed = useMemo(
+    () => ({
+      // Character counts
+      currentLength: text.length,
+      debouncedLength: debouncedText.length,
+
+      // Validation states
+      isEmpty: debouncedText.length === 0,
+      hasMinLength: debouncedText.length >= VALIDATION_LIMITS.SOURCE_TEXT_MIN,
+      hasMaxLength: debouncedText.length <= VALIDATION_LIMITS.SOURCE_TEXT_MAX,
+      isLengthValid: validation.isValid,
+
+      // Progress indicators
+      progressPercentage: Math.min((debouncedText.length / VALIDATION_LIMITS.SOURCE_TEXT_MIN) * 100, 100),
+      charactersRemaining: VALIDATION_LIMITS.SOURCE_TEXT_MAX - text.length,
+
+      // Status flags
+      isValidating: text !== debouncedText,
+      hasChanged: text.length > 0,
+      needsMoreContent: debouncedText.length > 0 && debouncedText.length < VALIDATION_LIMITS.SOURCE_TEXT_MIN,
+      isNearLimit: text.length > VALIDATION_LIMITS.SOURCE_TEXT_MAX * 0.9,
+    }),
+    [text, debouncedText, validation.isValid]
+  );
 
   return {
-    ...validationResult,
-    isLengthValid: validationResult.isValid,
-    hasMinLength: debouncedText.length >= VALIDATION_LIMITS.SOURCE_TEXT_MIN,
-    hasMaxLength: debouncedText.length <= VALIDATION_LIMITS.SOURCE_TEXT_MAX,
-    isEmpty: debouncedText.length === 0,
+    // Validation results
+    ...validation,
+
+    // Computed properties
+    ...computed,
+
+    // Raw values for reference
+    text,
+    debouncedText,
   };
 };

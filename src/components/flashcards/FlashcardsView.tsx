@@ -3,7 +3,7 @@
  * Manages the overall layout and coordinates between all subcomponents
  */
 
-import React from "react";
+import React, { memo } from "react";
 import { useFlashcardsState } from "./hooks/useFlashcardsState";
 
 // Import components
@@ -15,7 +15,7 @@ import { PaginationControls } from "./PaginationControls";
 // import EditFlashcardModal from './EditFlashcardModal';
 // import DeleteAlertDialog from './DeleteAlertDialog';
 
-export default function FlashcardsView() {
+const FlashcardsView = memo(function FlashcardsView() {
   const { state, actions } = useFlashcardsState();
 
   const hasFilters = state.filters.status !== null || state.filters.source !== null;
@@ -160,4 +160,8 @@ export default function FlashcardsView() {
       </div>
     </div>
   );
-}
+});
+
+FlashcardsView.displayName = "FlashcardsView";
+
+export default FlashcardsView;
