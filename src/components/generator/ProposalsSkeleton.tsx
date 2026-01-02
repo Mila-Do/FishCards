@@ -75,11 +75,11 @@ const ProposalsSkeleton: React.FC<ProposalsSkeletonProps> = ({ count = 4 }) => {
 
       {/* Loading message */}
       <div className="text-center py-2">
-        <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-gray-600 dark:border-gray-600 dark:border-t-gray-300"></div>
+        <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-muted border-t-muted-foreground"></div>
           <span>Generuję propozycje fiszek...</span>
         </div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">To może potrwać 2-10 sekund</p>
+        <p className="text-xs text-muted-foreground mt-1">To może potrwać 2-10 sekund</p>
       </div>
     </div>
   );

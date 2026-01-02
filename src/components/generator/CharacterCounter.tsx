@@ -1,15 +1,16 @@
-import React from "react";
+import React, { memo } from "react";
 import type { CharacterCounterProps } from "./types";
 
 /**
  * Visual indicator for character count with validation status coloring
+ * Memoized to prevent re-renders when count/validation state unchanged
  */
-const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, isValid }) => {
+const CharacterCounter: React.FC<CharacterCounterProps> = memo(({ count, min, max, isValid }) => {
   // Determine status and styling
   const getStatusInfo = () => {
     if (count === 0) {
       return {
-        color: "text-gray-500 dark:text-gray-400",
+        color: "text-muted-foreground",
         icon: null,
         message: "Wprowadź tekst",
       };
@@ -17,7 +18,7 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
 
     if (isValid) {
       return {
-        color: "text-green-600 dark:text-green-400",
+        color: "text-success",
         icon: (
           <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -32,7 +33,7 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
     }
 
     return {
-      color: "text-red-600 dark:text-red-400",
+      color: "text-danger",
       icon: (
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -61,10 +62,10 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
 
       <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Progress bar for visual feedback */}
-        <div className="w-12 sm:w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="w-12 sm:w-16 h-1.5 bg-muted rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-200 ${
-              isValid ? "bg-green-500" : isNearLimit ? "bg-red-500" : "bg-yellow-500"
+              isValid ? "bg-success" : isNearLimit ? "bg-danger" : "bg-warning"
             }`}
             style={{ width: `${progress}%` }}
           />
@@ -72,11 +73,13 @@ const CharacterCounter: React.FC<CharacterCounterProps> = ({ count, min, max, is
 
         {/* Character count */}
         <span className={`font-mono tabular-nums ${status.color}`}>
-          {count.toLocaleString()} / {max.toLocaleString()}
+          {count.toLocaleString("en-US")} / {max.toLocaleString("en-US")}
         </span>
       </div>
     </div>
   );
-};
+});
+
+CharacterCounter.displayName = "CharacterCounter";
 
 export default CharacterCounter;

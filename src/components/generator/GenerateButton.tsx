@@ -1,11 +1,12 @@
-import React from "react";
-import { Button } from "../ui/button";
+import React, { memo } from "react";
+import { Button } from "@/components/ui/button";
 import type { GenerateButtonProps } from "./types";
 
 /**
  * Button that triggers AI proposal generation process
+ * Memoized to prevent re-renders when props unchanged
  */
-const GenerateButton: React.FC<GenerateButtonProps> = ({ onClick, isDisabled, isLoading }) => {
+const GenerateButton: React.FC<GenerateButtonProps> = memo(({ onClick, isDisabled, isLoading }) => {
   return (
     <Button
       onClick={onClick}
@@ -40,6 +41,8 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({ onClick, isDisabled, is
       )}
     </Button>
   );
-};
+});
+
+GenerateButton.displayName = "GenerateButton";
 
 export default GenerateButton;

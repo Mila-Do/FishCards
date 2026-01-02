@@ -9,12 +9,12 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isVisible, message }) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 mx-4 max-w-sm w-full">
+      <div className="bg-surface rounded-lg shadow-xl p-6 mx-4 max-w-sm w-full">
         <div className="flex items-center space-x-4">
           {/* Spinner */}
           <div className="flex-shrink-0">
             <svg
-              className="animate-spin h-8 w-8 text-blue-600"
+              className="animate-spin h-8 w-8 text-primary"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -30,8 +30,8 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isVisible, message }) =
 
           {/* Message */}
           <div>
-            <p className="text-gray-900 dark:text-gray-100 font-medium">{message}</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">To może potrwać chwilę...</p>
+            <p className="text-foreground font-medium">{message}</p>
+            <p className="text-muted-foreground text-sm mt-1">To może potrwać chwilę...</p>
           </div>
         </div>
       </div>

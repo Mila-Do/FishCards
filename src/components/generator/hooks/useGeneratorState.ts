@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import type { GeneratorViewState, ProposalState, GenerationProposalsResponse, CreateFlashcardsCommand } from "../types";
 import { VALIDATION_LIMITS } from "../types";
+import { validateSourceText } from "./useTextValidation";
+import { authenticatedFetch } from "../../../lib/auth-helper";
 
 /**
  * Main hook for managing generator view state
@@ -17,25 +19,17 @@ export const useGeneratorState = () => {
   });
 
   /**
-   * Updates source text with validation
+   * Updates source text with validation using centralized validation logic
    */
   const updateSourceText = useCallback((text: string) => {
-    const errors: string[] = [];
-
-    if (text.length < VALIDATION_LIMITS.SOURCE_TEXT_MIN) {
-      errors.push(`Minimum ${VALIDATION_LIMITS.SOURCE_TEXT_MIN} znaków`);
-    }
-
-    if (text.length > VALIDATION_LIMITS.SOURCE_TEXT_MAX) {
-      errors.push(`Maksimum ${VALIDATION_LIMITS.SOURCE_TEXT_MAX} znaków`);
-    }
+    const validation = validateSourceText(text);
 
     setState((prev) => ({
       ...prev,
       sourceText: text,
       errors: {
         ...prev.errors,
-        textInput: errors.length > 0 ? errors : undefined,
+        textInput: validation.errors.length > 0 ? validation.errors : undefined,
       },
     }));
   }, []);
@@ -43,81 +37,110 @@ export const useGeneratorState = () => {
   /**
    * Generates proposals from source text via API
    */
-  const generateProposals = useCallback(async (): Promise<void> => {
-    // Early return if text is invalid
-    if (
-      state.sourceText.length < VALIDATION_LIMITS.SOURCE_TEXT_MIN ||
-      state.sourceText.length > VALIDATION_LIMITS.SOURCE_TEXT_MAX
-    ) {
-      return;
-    }
+  const generateProposals = useCallback(
+    async (sourceText?: string): Promise<void> => {
+      // Get sourceText from parameter or current state
+      let currentSourceText = "";
 
-    setState((prev) => ({
-      ...prev,
-      isLoadingProposals: true,
-      errors: { ...prev.errors, api: undefined },
-    }));
-
-    try {
-      const response = await fetch("/api/generations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          source_text: state.sourceText,
-        }),
-        signal: AbortSignal.timeout(VALIDATION_LIMITS.REQUEST_TIMEOUT_MS),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || "Błąd generowania propozycji");
+      if (sourceText) {
+        currentSourceText = sourceText;
+      } else {
+        // Fallback to getting from state synchronously
+        const currentState = state;
+        currentSourceText = currentState.sourceText;
       }
 
-      const result: GenerationProposalsResponse = await response.json();
+      // Validation check
+      const validation = validateSourceText(currentSourceText);
 
-      // Convert API proposals to ProposalState with source: 'ai'
-      const proposals: ProposalState[] = result.flashcards_proposals.map((proposal, index) => ({
-        id: `proposal-${Date.now()}-${index}`,
-        front: proposal.front,
-        back: proposal.back,
-        source: "ai" as const,
-        status: "pending" as const,
-        isEdited: false,
-        originalFront: proposal.front,
-        originalBack: proposal.back,
-        validationErrors: {},
-      }));
+      if (!validation.isValid) {
+        setState((prev) => ({
+          ...prev,
+          errors: {
+            ...prev.errors,
+            api: "Tekst źródłowy jest nieprawidłowy lub za krótki",
+          },
+        }));
+        return;
+      }
 
       setState((prev) => ({
         ...prev,
-        proposals,
-        generationId: result.generation_id,
-        isLoadingProposals: false,
-        selectedCount: 0,
+        isLoadingProposals: true,
+        errors: { ...prev.errors, api: undefined },
       }));
-    } catch (error) {
-      let errorMessage = "Wystąpił błąd podczas generowania propozycji";
 
-      if (error instanceof Error) {
-        if (error.name === "TimeoutError") {
-          errorMessage = "Generowanie trwa zbyt długo. Spróbuj ponownie.";
-        } else {
-          errorMessage = error.message;
+      try {
+        console.log("🚀 [DEBUG] Rozpoczynam generowanie...");
+        console.log("📝 [DEBUG] Tekst źródłowy:", currentSourceText.substring(0, 100) + "...");
+
+        const response = await authenticatedFetch("/api/generations", {
+          method: "POST",
+          body: JSON.stringify({
+            source_text: currentSourceText,
+          }),
+          signal: AbortSignal.timeout(VALIDATION_LIMITS.REQUEST_TIMEOUT_MS),
+        });
+
+        console.log("📡 [DEBUG] Odpowiedź serwera:", response.status, response.statusText);
+
+        if (!response.ok) {
+          console.log("❌ [DEBUG] Request failed:", response.status);
+          const errorData = await response.json();
+          console.log("📄 [DEBUG] Error data:", errorData);
+          throw new Error(errorData.error?.message || "Błąd generowania propozycji");
         }
-      }
 
-      setState((prev) => ({
-        ...prev,
-        isLoadingProposals: false,
-        errors: {
-          ...prev.errors,
-          api: errorMessage,
-        },
-      }));
-    }
-  }, [state.sourceText]);
+        const result: GenerationProposalsResponse = await response.json();
+        console.log("🎉 [DEBUG] Success! Got", result.flashcards_proposals.length, "proposals");
+
+        // Convert API proposals to ProposalState with source: 'ai'
+        const proposals: ProposalState[] = result.flashcards_proposals.map((proposal, index) => ({
+          id: `proposal-${Date.now()}-${index}`,
+          front: proposal.front,
+          back: proposal.back,
+          source: "ai" as const,
+          status: "pending" as const,
+          isEdited: false,
+          originalFront: proposal.front,
+          originalBack: proposal.back,
+          validationErrors: {},
+        }));
+
+        setState((prev) => ({
+          ...prev,
+          proposals,
+          generationId: result.generation_id,
+          isLoadingProposals: false,
+          selectedCount: 0,
+        }));
+      } catch (error) {
+        console.log("💥 [DEBUG] Frontend error:", error);
+
+        let errorMessage = "Wystąpił błąd podczas generowania propozycji";
+
+        if (error instanceof Error) {
+          if (error.name === "TimeoutError") {
+            errorMessage = "Generowanie trwa zbyt długo. Spróbuj ponownie.";
+            console.log("⏰ [DEBUG] Request timed out");
+          } else {
+            errorMessage = error.message;
+            console.log("⚠️ [DEBUG] Error message:", error.message);
+          }
+        }
+
+        setState((prev) => ({
+          ...prev,
+          isLoadingProposals: false,
+          errors: {
+            ...prev.errors,
+            api: errorMessage,
+          },
+        }));
+      }
+    },
+    [state.sourceText]
+  ); // Depend on sourceText to get fresh value
 
   /**
    * Updates a single proposal with automatic source handling
@@ -179,11 +202,8 @@ export const useGeneratorState = () => {
         generation_id: state.generationId,
       }));
 
-      const response = await fetch("/api/flashcards", {
+      const response = await authenticatedFetch("/api/flashcards", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(flashcardsData),
         signal: AbortSignal.timeout(VALIDATION_LIMITS.REQUEST_TIMEOUT_MS),
       });

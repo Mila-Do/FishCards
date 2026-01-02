@@ -83,6 +83,7 @@ export interface ProposalsSectionProps {
   isVisible: boolean;
   selectedCount: number;
   isLoading: boolean; // dla wyĹ›wietlania skeleton
+  onUpdateProposal: (id: string, updates: Partial<ProposalState>) => void;
 }
 
 export interface ProposalsSkeletonProps {

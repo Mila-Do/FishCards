@@ -20,6 +20,11 @@ interface ImportMetaEnv {
   readonly SUPABASE_KEY: string;
   readonly OPENROUTER_API_KEY: string;
   readonly MOCK_AI_GENERATION?: string;
+  /**
+   * Development auth token for testing API endpoints
+   * Should be Bearer token or dev token like 'dev-token-user1'
+   */
+  readonly PUBLIC_DEV_AUTH_TOKEN?: string;
   // more env variables...
 }
 
