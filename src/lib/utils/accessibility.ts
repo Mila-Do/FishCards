@@ -35,11 +35,8 @@ export function prefersHighContrast(): boolean {
  * Check if the user is using a keyboard for navigation
  */
 export function detectKeyboardNavigation(): void {
-  let keyboardUser = false;
-
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Tab") {
-      keyboardUser = true;
       document.documentElement.classList.add("keyboard-user");
       document.removeEventListener("keydown", handleKeyDown);
       document.addEventListener("mousedown", handleMouseDown);
@@ -47,7 +44,6 @@ export function detectKeyboardNavigation(): void {
   };
 
   const handleMouseDown = () => {
-    keyboardUser = false;
     document.documentElement.classList.remove("keyboard-user");
     document.removeEventListener("mousedown", handleMouseDown);
     document.addEventListener("keydown", handleKeyDown);
@@ -198,14 +194,14 @@ export const ariaHelpers = {
   /**
    * Create hidden state
    */
-  hidden: (isHidden: boolean): { "aria-hidden": boolean } | {} => {
+  hidden: (isHidden: boolean): { "aria-hidden": boolean } | Record<string, never> => {
     return isHidden ? { "aria-hidden": true } : {};
   },
 
   /**
    * Create busy state
    */
-  busy: (isBusy: boolean): { "aria-busy": boolean } | {} => {
+  busy: (isBusy: boolean): { "aria-busy": boolean } | Record<string, never> => {
     return isBusy ? { "aria-busy": true } : {};
   },
 };

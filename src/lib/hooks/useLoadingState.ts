@@ -88,7 +88,7 @@ export function useLoadingState(config: LoadingStateConfig = {}): UseLoadingStat
     defaultPriority = "medium",
     autoCleanupAfter = 300000, // 5 minutes
     maxStates = 10,
-    mergeByPriority = false,
+    // mergeByPriority = false, // Reserved for future use
   } = config;
 
   const [loadingStates, setLoadingStates] = useState<Map<string, LoadingStateItem>>(new Map());
@@ -277,11 +277,12 @@ export function useLoadingState(config: LoadingStateConfig = {}): UseLoadingStat
   // Cleanup effect
   useEffect(() => {
     const interval = setInterval(cleanupOldStates, 60000); // Clean up every minute
+    const timeoutsToCleanup = cleanupTimeouts.current; // Capture ref value
     return () => {
       clearInterval(interval);
 
       // Clear all timeouts on unmount
-      for (const timeout of cleanupTimeouts.current.values()) {
+      for (const timeout of timeoutsToCleanup.values()) {
         clearTimeout(timeout);
       }
     };
@@ -389,7 +390,7 @@ export function useAsyncLoading<T, Args extends unknown[]>(
 
   return {
     execute,
-    isLoading: loadingState.isLoadingWithId(operationId.current),
+    isOperationLoading: loadingState.isLoadingWithId(operationId.current),
     ...loadingState,
   };
 }

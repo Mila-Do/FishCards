@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component } from "react";
+import type { ErrorInfo, ReactNode } from "react";
 import { Button } from "./button";
 import { Card } from "./card";
 import type { ErrorBoundaryProps } from "@/lib/types/components";
@@ -42,8 +43,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Call optional error handler
     this.props.onError?.(error, errorInfo);
 
-    // Log error details for debugging
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // In production, send to error reporting service
+    // console.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
   private handleRetry = () => {
