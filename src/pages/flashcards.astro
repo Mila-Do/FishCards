@@ -1,0 +1,16 @@
+---
+// flashcards.astro - Strona biblioteki fiszek użytkownika
+
+export const prerender = false; // Wymagana dla authenticated routes
+
+import Layout from "../layouts/Layout.astro";
+import FlashcardsView from "../components/flashcards/FlashcardsView.tsx";
+
+const title = "Biblioteka (Moje Fiszki)";
+---
+
+<Layout title={title}>
+  <main class="min-h-screen bg-background">
+    <FlashcardsView client:load />
+  </main>
+</Layout>
