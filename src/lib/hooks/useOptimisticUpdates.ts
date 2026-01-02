@@ -73,7 +73,7 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
     hasOptimisticUpdate: false,
   });
 
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingOperations = useRef<Set<string>>(new Set());
 
   /**
@@ -85,7 +85,7 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
       serverOperation: () => Promise<R>,
       operationId?: string
     ): Promise<R> => {
-      const id = operationId || Math.random().toString(36).substr(2, 9);
+      const id = operationId || Math.random().toString(36).substring(2, 11);
 
       try {
         // Store original data before any updates
@@ -108,7 +108,12 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
         if (autoRollback && timeout > 0) {
           timeoutRef.current = setTimeout(() => {
             if (pendingOperations.current.has(id)) {
-              rollback(originalData, optimisticData);
+              setState(() => ({
+                data: originalData,
+                originalData,
+                isPending: false,
+                hasOptimisticUpdate: false,
+              }));
               onError?.(new Error("Operacja przekroczyła limit czasu"), originalData, optimisticData);
             }
           }, timeout);
@@ -144,7 +149,12 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
         // Rollback optimistic update on error
         if (autoRollback) {
           const originalData = state.originalData;
-          rollback(originalData, state.data);
+          setState(() => ({
+            data: originalData,
+            originalData,
+            isPending: false,
+            hasOptimisticUpdate: false,
+          }));
           onError?.(error as Error, originalData, state.data);
         }
 
@@ -162,7 +172,7 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
       const dataToRestore = originalData || state.originalData;
       const failed = failedData || state.data;
 
-      setState((prev) => ({
+      setState(() => ({
         data: dataToRestore,
         originalData: dataToRestore,
         isPending: false,
@@ -246,7 +256,7 @@ export function useOptimisticUpdates<T>(initialData: T, config: OptimisticUpdate
     // Status flags
     isPending: state.isPending,
     hasOptimisticUpdate: state.hasOptimisticUpdate,
-    hasPendingOperations: pendingOperations.current.size > 0,
+    hasPendingOperations: state.isPending, // Use state instead of ref during render
 
     // Actions
     performOptimisticUpdate,

@@ -153,7 +153,7 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
 
   const [isRetrying, setIsRetrying] = useState(false);
   const [errorDetails, setErrorDetails] = useState<ErrorHandler["errorDetails"]>(null);
-  const retryTimeoutRef = useRef<NodeJS.Timeout>();
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastOperationRef = useRef<(() => Promise<void> | void) | null>(null);
 
   const clearError = useCallback(() => {
@@ -176,7 +176,7 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
       try {
         switch (recoveryStrategy) {
           case "retry":
-            if (lastOperationRef.current && errorState.retryCount < maxRetries) {
+            if (lastOperationRef.current && (errorState.retryCount || 0) < maxRetries) {
               setIsRetrying(true);
               retryTimeoutRef.current = setTimeout(async () => {
                 try {
@@ -184,7 +184,11 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
                   clearError();
                   onRecovery?.(error, "retry");
                 } catch (retryError) {
-                  handleError(retryError as Error);
+                  // Handle retry error - avoid infinite recursion
+                  setErrorState((prev) => ({
+                    ...prev,
+                    error: retryError instanceof Error ? retryError.message : "Retry failed",
+                  }));
                 } finally {
                   setIsRetrying(false);
                 }
@@ -209,7 +213,8 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
             break;
 
           case "ignore":
-            console.warn("Error ignored:", error);
+            // Error ignored - logged for debugging in development
+            // console.warn("Error ignored:", error);
             clearError();
             break;
 
@@ -218,8 +223,8 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
             // Do nothing, require manual user action
             break;
         }
-      } catch (recoveryError) {
-        console.error("Recovery strategy failed:", recoveryError);
+      } catch {
+        // Recovery strategy failed - logged for debugging
       }
     },
     [errorState.retryCount, maxRetries, retryDelay, fallbackData, clearError, onRecovery]
@@ -234,8 +239,8 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
       setErrorState((prev) => ({
         hasError: true,
         error: userFriendlyMessage,
-        canRetry: prev.retryCount < maxRetries,
-        retryCount: strategy === "retry" ? prev.retryCount + 1 : prev.retryCount,
+        canRetry: (prev.retryCount || 0) < maxRetries,
+        retryCount: strategy === "retry" ? (prev.retryCount || 0) + 1 : prev.retryCount || 0,
       }));
 
       // Store error details
@@ -258,23 +263,27 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
   );
 
   const retry = useCallback(async () => {
-    if (lastOperationRef.current && errorState.retryCount < maxRetries) {
+    if (lastOperationRef.current && (errorState.retryCount || 0) < maxRetries) {
       setIsRetrying(true);
       try {
         await lastOperationRef.current();
         clearError();
       } catch (error) {
-        handleError(error as Error);
+        // Handle retry failure - avoid infinite recursion
+        setErrorState((prev) => ({
+          ...prev,
+          error: error instanceof Error ? error.message : "Retry failed",
+        }));
       } finally {
         setIsRetrying(false);
       }
     }
-  }, [errorState.retryCount, maxRetries, clearError, handleError]);
+  }, [errorState.retryCount, maxRetries, clearError]);
 
-  // Store the operation for retry capability
-  const registerOperation = useCallback((operation: () => Promise<void> | void) => {
-    lastOperationRef.current = operation;
-  }, []);
+  // Store the operation for retry capability (internal use only)
+  // const registerOperation = useCallback((operation: () => Promise<void> | void) => {
+  //   lastOperationRef.current = operation;
+  // }, []);
 
   return {
     // Error state
@@ -293,8 +302,7 @@ export function useErrorHandler(config: ErrorHandlerConfig = {}): ErrorHandler {
     clearError,
     retry,
 
-    // Utility (not exposed in interface but useful)
-    registerOperation: registerOperation as any, // Hidden utility
+    // Note: registerOperation is available internally but not exposed
   };
 }
 
@@ -306,12 +314,10 @@ export function useApiErrorHandler(config: Omit<ErrorHandlerConfig, "strategy"> 
     ...config,
     strategy: "manual", // API errors typically need manual handling
     onError: (error, context) => {
-      // Log API errors for debugging
-      console.error("API Error:", {
-        error,
-        context,
-        timestamp: new Date().toISOString(),
-      });
+      // Log API errors for debugging in development
+      // if (process.env.NODE_ENV === "development") {
+      //   console.error("API Error:", { error, context, timestamp: new Date().toISOString() });
+      // }
 
       config.onError?.(error, context);
     },

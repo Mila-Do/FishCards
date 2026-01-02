@@ -57,7 +57,6 @@ export function useToast() {
  * Individual toast component
  */
 const Toast: React.FC<ToastNotification & { onClose: () => void }> = ({
-  id,
   title,
   description,
   variant = "default",
@@ -229,60 +228,60 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 };
 
 /**
- * Utility functions for common toast types
+ * Hook-based utility functions for common toast types
+ * Use these inside React components
  */
-export const toast = {
-  success: (title: string, description?: string, options?: Partial<ToastProps>) => {
-    const context = useToast();
-    return context.showToast({
-      title,
-      description,
-      variant: "success",
-      ...options,
-    });
-  },
+export function useToastHelpers() {
+  const context = useToast();
 
-  error: (title: string, description?: string, options?: Partial<ToastProps>) => {
-    const context = useToast();
-    return context.showToast({
-      title,
-      description,
-      variant: "error",
-      duration: 0, // Error toasts don't auto-dismiss by default
-      ...options,
-    });
-  },
+  return {
+    success: (title: string, description?: string, options?: Partial<ToastProps>) => {
+      return context.showToast({
+        title,
+        description,
+        variant: "success",
+        ...options,
+      });
+    },
 
-  warning: (title: string, description?: string, options?: Partial<ToastProps>) => {
-    const context = useToast();
-    return context.showToast({
-      title,
-      description,
-      variant: "warning",
-      ...options,
-    });
-  },
+    error: (title: string, description?: string, options?: Partial<ToastProps>) => {
+      return context.showToast({
+        title,
+        description,
+        variant: "error",
+        duration: 0, // Error toasts don't auto-dismiss by default
+        ...options,
+      });
+    },
 
-  info: (title: string, description?: string, options?: Partial<ToastProps>) => {
-    const context = useToast();
-    return context.showToast({
-      title,
-      description,
-      variant: "info",
-      ...options,
-    });
-  },
+    warning: (title: string, description?: string, options?: Partial<ToastProps>) => {
+      return context.showToast({
+        title,
+        description,
+        variant: "warning",
+        ...options,
+      });
+    },
 
-  default: (title: string, description?: string, options?: Partial<ToastProps>) => {
-    const context = useToast();
-    return context.showToast({
-      title,
-      description,
-      variant: "default",
-      ...options,
-    });
-  },
-};
+    info: (title: string, description?: string, options?: Partial<ToastProps>) => {
+      return context.showToast({
+        title,
+        description,
+        variant: "info",
+        ...options,
+      });
+    },
+
+    default: (title: string, description?: string, options?: Partial<ToastProps>) => {
+      return context.showToast({
+        title,
+        description,
+        variant: "default",
+        ...options,
+      });
+    },
+  };
+}
 
 // Note: The toast utility functions above won't work outside components
 // Instead, create a toast manager for programmatic access

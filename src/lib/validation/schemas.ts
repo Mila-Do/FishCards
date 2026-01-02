@@ -15,7 +15,7 @@ export const BaseSchemas = {
 /**
  * Flashcard validation schemas
  */
-export const FlashcardSchemas = {
+export const FlashcardSchemas: Record<string, z.ZodTypeAny> = {
   // Flashcard status enum
   status: z.enum(["active", "archived", "draft"], {
     errorMap: () => ({ message: "Status musi być jednym z: active, archived, draft" }),
@@ -31,8 +31,11 @@ export const FlashcardSchemas = {
     id: BaseSchemas.uuid.optional(),
     question: z.string().min(1, "Pytanie jest wymagane").max(1000, "Pytanie nie może przekraczać 1000 znaków"),
     answer: z.string().min(1, "Odpowiedź jest wymagana").max(2000, "Odpowiedź nie może przekraczać 2000 znaków"),
-    source: z.lazy(() => FlashcardSchemas.source),
-    status: z.lazy(() => FlashcardSchemas.status),
+    source: z.lazy((): z.ZodEnum<["ai", "manual"]> => FlashcardSchemas.source as z.ZodEnum<["ai", "manual"]>),
+    status: z.lazy(
+      (): z.ZodEnum<["active", "archived", "draft"]> =>
+        FlashcardSchemas.status as z.ZodEnum<["active", "archived", "draft"]>
+    ),
     tags: z.array(z.string()).optional().default([]),
     created_at: z.string().datetime().optional(),
     updated_at: z.string().datetime().optional(),
@@ -42,9 +45,12 @@ export const FlashcardSchemas = {
   createFlashcard: z.object({
     question: z.string().min(1, "Pytanie jest wymagane").max(1000, "Pytanie nie może przekraczać 1000 znaków"),
     answer: z.string().min(1, "Odpowiedź jest wymagana").max(2000, "Odpowiedź nie może przekraczać 2000 znaków"),
-    source: z.lazy(() => FlashcardSchemas.source),
+    source: z.lazy((): z.ZodEnum<["ai", "manual"]> => FlashcardSchemas.source as z.ZodEnum<["ai", "manual"]>),
     status: z
-      .lazy(() => FlashcardSchemas.status)
+      .lazy(
+        (): z.ZodEnum<["active", "archived", "draft"]> =>
+          FlashcardSchemas.status as z.ZodEnum<["active", "archived", "draft"]>
+      )
       .optional()
       .default("draft"),
     tags: z.array(z.string()).optional().default([]),
@@ -62,15 +68,29 @@ export const FlashcardSchemas = {
       .min(1, "Odpowiedź jest wymagana")
       .max(2000, "Odpowiedź nie może przekraczać 2000 znaków")
       .optional(),
-    source: z.lazy(() => FlashcardSchemas.source).optional(),
-    status: z.lazy(() => FlashcardSchemas.status).optional(),
+    source: z
+      .lazy((): z.ZodEnum<["ai", "manual"]> => FlashcardSchemas.source as z.ZodEnum<["ai", "manual"]>)
+      .optional(),
+    status: z
+      .lazy(
+        (): z.ZodEnum<["active", "archived", "draft"]> =>
+          FlashcardSchemas.status as z.ZodEnum<["active", "archived", "draft"]>
+      )
+      .optional(),
     tags: z.array(z.string()).optional(),
   }),
 
   // Flashcard filters
   filters: z.object({
-    status: z.lazy(() => FlashcardSchemas.status).optional(),
-    source: z.lazy(() => FlashcardSchemas.source).optional(),
+    status: z
+      .lazy(
+        (): z.ZodEnum<["active", "archived", "draft"]> =>
+          FlashcardSchemas.status as z.ZodEnum<["active", "archived", "draft"]>
+      )
+      .optional(),
+    source: z
+      .lazy((): z.ZodEnum<["ai", "manual"]> => FlashcardSchemas.source as z.ZodEnum<["ai", "manual"]>)
+      .optional(),
     search: z.string().optional(),
     tags: z.array(z.string()).optional(),
   }),
@@ -91,7 +111,7 @@ export const FlashcardSchemas = {
 /**
  * Generation validation schemas
  */
-export const GenerationSchemas = {
+export const GenerationSchemas: Record<string, z.ZodTypeAny> = {
   // Text input for generation
   sourceText: z
     .string()
@@ -101,7 +121,7 @@ export const GenerationSchemas = {
 
   // Generation request
   generateRequest: z.object({
-    source_text: z.lazy(() => GenerationSchemas.sourceText),
+    source_text: z.lazy((): z.ZodString => GenerationSchemas.sourceText as z.ZodString),
     max_proposals: z.number().int().positive().max(20).optional().default(10),
     difficulty_level: z.enum(["basic", "intermediate", "advanced"]).optional().default("intermediate"),
   }),
@@ -116,7 +136,7 @@ export const GenerationSchemas = {
 
   // Generation response
   generateResponse: z.object({
-    flashcards_proposals: z.array(z.lazy(() => GenerationSchemas.proposal)),
+    flashcards_proposals: z.array(z.lazy(() => GenerationSchemas.proposal as z.ZodType)),
     generation_id: BaseSchemas.uuid,
     source_text_length: z.number().int().nonnegative(),
     processing_time_ms: z.number().int().nonnegative(),

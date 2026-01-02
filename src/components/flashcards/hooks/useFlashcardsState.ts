@@ -23,12 +23,13 @@ const DEFAULT_STATE: FlashcardsViewState = {
   filters: { status: null, source: null },
   sort: { field: "created_at", order: "desc" },
   modals: {
-    isCreateModalOpen: false,
-    isEditModalOpen: false,
-    isDeleteDialogOpen: false,
-    selectedFlashcard: null,
+    create: { isOpen: false },
+    edit: { isOpen: false },
+    delete: { isOpen: false },
+    view: { isOpen: false },
   },
   selectedCount: 0,
+  validationErrors: {},
 };
 
 export function useFlashcardsState() {
@@ -111,7 +112,7 @@ export function useFlashcardsState() {
         updateState({
           modals: {
             ...state.modals,
-            isCreateModalOpen: false,
+            create: { isOpen: false },
           },
         });
       } catch (error) {
@@ -147,8 +148,7 @@ export function useFlashcardsState() {
         updateState({
           modals: {
             ...state.modals,
-            isEditModalOpen: false,
-            selectedFlashcard: null,
+            edit: { isOpen: false },
           },
         });
       } catch (error) {
@@ -180,8 +180,7 @@ export function useFlashcardsState() {
         updateState({
           modals: {
             ...state.modals,
-            isDeleteDialogOpen: false,
-            selectedFlashcard: null,
+            delete: { isOpen: false },
           },
         });
       } catch (error) {
@@ -231,7 +230,7 @@ export function useFlashcardsState() {
     updateState({
       modals: {
         ...state.modals,
-        isCreateModalOpen: true,
+        create: { isOpen: true },
       },
     });
   }, [state.modals, updateState]);
@@ -241,8 +240,7 @@ export function useFlashcardsState() {
       updateState({
         modals: {
           ...state.modals,
-          isEditModalOpen: true,
-          selectedFlashcard: flashcard,
+          edit: { isOpen: true, data: flashcard },
         },
       });
     },
@@ -254,8 +252,7 @@ export function useFlashcardsState() {
       updateState({
         modals: {
           ...state.modals,
-          isDeleteDialogOpen: true,
-          selectedFlashcard: flashcard,
+          delete: { isOpen: true, data: flashcard },
         },
       });
     },
@@ -265,10 +262,10 @@ export function useFlashcardsState() {
   const closeModals = useCallback(() => {
     updateState({
       modals: {
-        isCreateModalOpen: false,
-        isEditModalOpen: false,
-        isDeleteDialogOpen: false,
-        selectedFlashcard: null,
+        create: { isOpen: false },
+        edit: { isOpen: false },
+        delete: { isOpen: false },
+        view: { isOpen: false },
       },
     });
   }, [updateState]);
