@@ -1,3 +1,11 @@
+/**
+ * Enhanced Generation Service using OpenRouter Service
+ *
+ * This service replaces the direct fetch-based approach with the new
+ * type-safe OpenRouterService for improved error handling, rate limiting,
+ * and structured logging.
+ */
+
 import { createHash } from "node:crypto";
 import { performance } from "node:perf_hooks";
 
@@ -8,56 +16,86 @@ import type {
   GenerationProposalsResponse,
   PaginatedGenerationErrorLogsResponse,
   PaginatedGenerationsResponse,
+  JSONSchema,
 } from "../../types";
 import { flashcardProposalsSchema } from "../validation/generation";
+import {
+  OpenRouterService,
+  OpenRouterError,
+  ValidationError as OpenRouterValidationError,
+  RateLimitError,
+  ModelNotSupportedError,
+} from "./openrouter.service.js";
+import { OpenRouterLogger } from "./openrouter.logger.js";
 
-const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+// Re-export OpenRouter errors for consistent API usage
+export {
+  OpenRouterError as AiApiError, // Simple alias for API compatibility
+  RateLimitError,
+  ModelNotSupportedError,
+  OpenRouterValidationError as ValidationError,
+};
 
-export class AiApiError extends Error {
-  public readonly code: string;
-  public readonly status: number;
-  public readonly details?: Record<string, unknown>;
+// ============================================================================
+// Service Configuration
+// ============================================================================
 
-  constructor(message: string, options: { code: string; status: number; details?: Record<string, unknown> }) {
-    super(message);
-    this.name = "AiApiError";
-    this.code = options.code;
-    this.status = options.status;
-    this.details = options.details;
-  }
+const FLASHCARD_GENERATION_SCHEMA: JSONSchema = {
+  type: "object",
+  properties: {
+    flashcards: {
+      type: "array",
+      description: "Array of generated flashcards with front and back content",
+      items: {
+        type: "object",
+        properties: {
+          front: {
+            type: "string",
+            description: "The question or prompt side of the flashcard",
+          },
+          back: {
+            type: "string",
+            description: "The answer or explanation side of the flashcard",
+          },
+        },
+        required: ["front", "back"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["flashcards"],
+  additionalProperties: false,
+};
+
+interface FlashcardGenerationResponse {
+  flashcards: {
+    front: string;
+    back: string;
+  }[];
 }
 
-export function hashSourceText(sourceText: string) {
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+export function hashSourceText(sourceText: string): string {
   return createHash("sha256").update(sourceText, "utf8").digest("hex");
 }
 
-function extractJsonObjectMaybe(text: string) {
-  const firstBrace = text.indexOf("{");
-  const lastBrace = text.lastIndexOf("}");
-  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) return null;
-  return text.slice(firstBrace, lastBrace + 1);
-}
+/**
+ * Normalize AI response to FlashcardProposal format
+ */
+function normalizeProposals(response: FlashcardGenerationResponse): FlashcardProposal[] {
+  const proposals = response.flashcards
+    .map((card) => {
+      const front = card.front?.trim();
+      const back = card.back?.trim();
+      if (!front || !back) return null;
+      return { front, back, source: "ai" as const };
+    })
+    .filter(Boolean) as FlashcardProposal[];
 
-function normalizeProposals(items: unknown): FlashcardProposal[] {
-  const normalized = Array.isArray(items)
-    ? items
-    : typeof items === "object" && items !== null && "flashcards" in items
-      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (items as any).flashcards
-      : null;
-
-  const proposals = (Array.isArray(normalized) ? normalized : []).map((p) => {
-    if (!p || typeof p !== "object") return null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const maybe = p as any;
-    const front = typeof maybe.front === "string" ? maybe.front.trim() : "";
-    const back = typeof maybe.back === "string" ? maybe.back.trim() : "";
-    if (!front || !back) return null;
-    return { front, back, source: "ai" as const };
-  });
-
-  const filtered = proposals.filter(Boolean) as FlashcardProposal[];
-  return flashcardProposalsSchema.parse(filtered);
+  return flashcardProposalsSchema.parse(proposals);
 }
 
 /**
@@ -139,17 +177,29 @@ function generateMockFlashcards(sourceText: string): FlashcardProposal[] {
   return flashcardProposalsSchema.parse(proposals.slice(0, 50));
 }
 
+// ============================================================================
+// Enhanced Generation Service
+// ============================================================================
+
+/**
+ * Generate flashcards from text using OpenRouter Service
+ */
 export async function generateFlashcardsFromText(options: {
   sourceText: string;
   model: string;
   apiKey: string;
   timeoutMs?: number;
-}): Promise<{ proposals: FlashcardProposal[]; generationDurationMs: number; rawModelResponse: unknown }> {
-  const { sourceText, model, apiKey } = options;
+  userId?: string;
+  requestId?: string;
+}): Promise<{
+  proposals: FlashcardProposal[];
+  generationDurationMs: number;
+  rawModelResponse: unknown;
+}> {
+  const { sourceText, model, apiKey, userId, requestId } = options;
   const timeoutMs = options.timeoutMs ?? 30_000;
 
   // Check if mock mode is enabled
-  // Environment variables are always strings, so we check for "true" string
   const mockMode = import.meta.env.MOCK_AI_GENERATION === "true";
 
   if (mockMode) {
@@ -166,85 +216,81 @@ export async function generateFlashcardsFromText(options: {
     };
   }
 
+  // Initialize OpenRouter service
+  const openRouterService = new OpenRouterService({
+    apiKey,
+    timeout: timeoutMs,
+    logger: new OpenRouterLogger(),
+  });
+
   const startedAt = performance.now();
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(OPENROUTER_API_URL, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+    const result = await openRouterService.chatCompletion<FlashcardGenerationResponse>({
+      messages: [
+        openRouterService.createSystemMessage(
+          "Jesteś ekspertem od tworzenia fiszek edukacyjnych. " +
+            "Twoim zadaniem jest wygenerowanie wysokiej jakości fiszek na podstawie dostarczonego tekstu. " +
+            "Zasady tworzenia fiszek: " +
+            "- Pytania powinny być konkretne i precyzyjne " +
+            "- Odpowiedzi powinny być zwięzłe ale kompletne " +
+            "- Unikaj duplikowania informacji " +
+            "- Skup się na kluczowych konceptach " +
+            "- Wygeneruj około 5-15 fiszek w zależności od długości tekstu"
+        ),
+        openRouterService.createUserMessage(`Wygeneruj fiszki z poniższego tekstu:\n\n${sourceText}`),
+      ],
+      responseSchema: FLASHCARD_GENERATION_SCHEMA,
+      model,
+      modelParams: {
+        temperature: 0.2, // Lower temperature for more consistent output
+        max_tokens: 2000,
       },
-      body: JSON.stringify({
-        model,
-        temperature: 0.2,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              'You generate flashcards from a given text. Return ONLY valid JSON with shape: {"flashcards":[{"front":"...","back":"..."}]}. Do not include markdown.',
-          },
-          {
-            role: "user",
-            content: `Generate 10 concise Q/A flashcards from the text below.\n\nTEXT:\n${sourceText}`,
-          },
-        ],
-      }),
+      userId,
+      requestId,
     });
 
-    const json = (await res.json().catch(() => null)) as unknown;
+    const generationDurationMs = Math.max(0, Math.round(performance.now() - startedAt));
+    const proposals = normalizeProposals(result);
+
+    return {
+      proposals,
+      generationDurationMs,
+      rawModelResponse: result,
+    };
+  } catch (error) {
     const generationDurationMs = Math.max(0, Math.round(performance.now() - startedAt));
 
-    if (!res.ok) {
-      throw new AiApiError("AI API request failed", {
-        code: "AI_API_ERROR",
-        status: res.status === 429 ? 429 : 502,
-        details: {
-          upstream_status: res.status,
-          upstream_body: json,
-        },
-      });
+    // Enrich OpenRouter errors with generation context
+    if (error instanceof RateLimitError) {
+      // Add generation context to existing error
+      error.apiResponse = { ...(error.apiResponse || {}), generationDurationMs };
+      throw error;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const content = (json as any)?.choices?.[0]?.message?.content;
-    if (typeof content !== "string" || content.trim() === "") {
-      throw new AiApiError("AI API returned empty response", { code: "AI_API_ERROR", status: 502, details: { json } });
+    if (error instanceof ModelNotSupportedError) {
+      error.apiResponse = { ...(error.apiResponse || {}), generationDurationMs };
+      throw error;
     }
 
-    let parsed: unknown = null;
-    try {
-      parsed = JSON.parse(content);
-    } catch {
-      const maybeJson = extractJsonObjectMaybe(content);
-      if (maybeJson) {
-        parsed = JSON.parse(maybeJson);
-      }
+    if (error instanceof OpenRouterValidationError) {
+      throw error;
     }
 
-    if (!parsed) {
-      throw new AiApiError("AI API returned non-JSON content", {
-        code: "AI_API_ERROR",
-        status: 502,
-        details: { content_preview: content.slice(0, 500) },
-      });
+    if (error instanceof OpenRouterError) {
+      error.apiResponse = { ...(error.apiResponse || {}), generationDurationMs };
+      throw error;
     }
 
-    const proposals = normalizeProposals(parsed);
-    return { proposals, generationDurationMs, rawModelResponse: json };
-  } catch (err) {
-    if (err instanceof AiApiError) throw err;
-    const generationDurationMs = Math.max(0, Math.round(performance.now() - startedAt));
-    const message = err instanceof Error ? err.message : "Unknown error";
-    throw new AiApiError(message, { code: "AI_API_ERROR", status: 502, details: { generationDurationMs } });
-  } finally {
-    clearTimeout(timeoutId);
+    // Unknown error - wrap in OpenRouterError
+    const message = error instanceof Error ? error.message : "Unknown error";
+    throw new OpenRouterError(message, 502, { generationDurationMs });
   }
 }
+
+// ============================================================================
+// Database Operations (unchanged from original)
+// ============================================================================
 
 export async function createGenerationRecord(options: {
   supabase: SupabaseClient;
@@ -254,7 +300,7 @@ export async function createGenerationRecord(options: {
   sourceTextHash: string;
   sourceTextLength: number;
   generationDurationMs: number;
-}) {
+}): Promise<GenerationDTO> {
   const { supabase, userId, model, generatedCount, sourceTextHash, sourceTextLength, generationDurationMs } = options;
 
   const { data, error } = await supabase
@@ -287,7 +333,7 @@ export async function logGenerationError(options: {
   sourceTextLength: number;
   errorCode: string;
   errorMessage: string;
-}) {
+}): Promise<void> {
   const { supabase, userId, model, sourceTextHash, sourceTextLength, errorCode, errorMessage } = options;
 
   // Best-effort logging only.
@@ -400,14 +446,18 @@ export async function getGenerationErrorLogs(options: {
   };
 }
 
+/**
+ * Enhanced createGeneration function using OpenRouterService
+ */
 export async function createGeneration(options: {
   supabase: SupabaseClient;
   userId: string;
   sourceText: string;
   model: string;
   apiKey: string;
+  requestId?: string;
 }): Promise<GenerationProposalsResponse> {
-  const { supabase, userId, sourceText, model, apiKey } = options;
+  const { supabase, userId, sourceText, model, apiKey, requestId } = options;
 
   const sourceTextHash = hashSourceText(sourceText);
   const sourceTextLength = sourceText.length;
@@ -416,6 +466,8 @@ export async function createGeneration(options: {
     sourceText,
     model,
     apiKey,
+    userId,
+    requestId,
   });
 
   const generation = await createGenerationRecord({

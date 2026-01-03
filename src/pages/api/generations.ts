@@ -5,6 +5,9 @@ import type { ErrorResponse } from "../../types";
 import { createGenerationSchema, generationQuerySchema } from "../../lib/validation/generation";
 import {
   AiApiError,
+  RateLimitError,
+  ModelNotSupportedError,
+  ValidationError,
   createGeneration,
   getGenerations,
   hashSourceText,
@@ -12,7 +15,7 @@ import {
 } from "../../lib/services/generation.service";
 import { jsonResponse, errorResponse } from "../../lib/response-helpers";
 
-const DEFAULT_MODEL = "openai/gpt-4o-mini";
+const DEFAULT_MODEL = "openai/gpt-4o";
 
 export const GET: APIRoute = async (context) => {
   const userId = context.locals.userId;
@@ -97,37 +100,43 @@ export const POST: APIRoute = async (context) => {
       }
     );
   } catch (err) {
-    const aiError = err instanceof AiApiError ? err : null;
-    const status = aiError?.status ?? 500;
-    const code = (aiError?.code ?? "INTERNAL_SERVER_ERROR") as ErrorResponse["error"]["code"];
-    const message = aiError?.message ?? (err instanceof Error ? err.message : "Unknown error");
+    const duration = Math.round(performance.now() - startTime);
+    let status = 500;
+    let code: ErrorResponse["error"]["code"] = "INTERNAL_SERVER_ERROR";
+    const message = err instanceof Error ? err.message : "Unknown error";
+    let details: Record<string, unknown> | undefined;
 
+    // Handle specific OpenRouter error types
+    if (err instanceof RateLimitError) {
+      status = 429;
+      code = "RATE_LIMIT_EXCEEDED";
+      details = { retryAfter: err.retryAfter, ...(err.apiResponse || {}) };
+    } else if (err instanceof ModelNotSupportedError) {
+      status = 400;
+      code = "AI_API_ERROR";
+      details = { model: err.model, ...(err.apiResponse || {}) };
+    } else if (err instanceof ValidationError) {
+      status = 400;
+      code = "VALIDATION_ERROR";
+      details = err.apiResponse ? (err.apiResponse as Record<string, unknown>) : undefined;
+    } else if (err instanceof AiApiError) {
+      status = err.statusCode || 502;
+      code = "AI_API_ERROR";
+      details = err.apiResponse ? (err.apiResponse as Record<string, unknown>) : undefined;
+    }
+
+    // Log the error
     await logGenerationError({
       supabase: context.locals.supabase,
       userId,
       model: DEFAULT_MODEL,
       sourceTextHash,
       sourceTextLength,
-      errorCode: code,
+      errorCode: code as string, // logGenerationError expects string, not ErrorCode
       errorMessage: message,
     });
 
-    const duration = Math.round(performance.now() - startTime);
-    if (status === 429)
-      return errorResponse(429, "RATE_LIMIT_EXCEEDED", message, aiError?.details, {
-        method: "POST",
-        endpoint: "/api/generations",
-        userId,
-        duration,
-      });
-    if (status === 502)
-      return errorResponse(502, "AI_API_ERROR", message, aiError?.details, {
-        method: "POST",
-        endpoint: "/api/generations",
-        userId,
-        duration,
-      });
-    return errorResponse(500, "INTERNAL_SERVER_ERROR", message, aiError?.details, {
+    return errorResponse(status, code, message, details, {
       method: "POST",
       endpoint: "/api/generations",
       userId,

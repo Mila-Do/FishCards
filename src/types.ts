@@ -334,7 +334,7 @@ export type PaginatedGenerationErrorLogsResponse = PaginatedResponse<GenerationE
  */
 export interface ErrorResponse {
   error: {
-    code: string;
+    code: ErrorCode;
     message: string;
     details?: Record<string, unknown>;
   };
@@ -351,3 +351,110 @@ export type ErrorCode =
   | "AI_API_ERROR"
   | "DATABASE_ERROR"
   | "INTERNAL_SERVER_ERROR";
+
+// ============================================================================
+// OpenRouter Service Types
+// ============================================================================
+
+/**
+ * OpenRouter chat message types
+ */
+export interface ChatMessage {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
+/**
+ * JSON Schema definition for structured outputs
+ */
+export interface JSONSchema {
+  type: string;
+  properties?: Record<string, JSONSchema | { type: string; [key: string]: unknown }>;
+  required?: string[];
+  items?: JSONSchema;
+  [key: string]: unknown;
+}
+
+/**
+ * OpenRouter model parameters
+ */
+export interface ModelParameters {
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+  seed?: number;
+}
+
+/**
+ * OpenRouter service configuration
+ */
+export interface OpenRouterConfig {
+  apiKey: string;
+  baseURL?: string;
+  defaultModel?: string;
+  timeout?: number;
+}
+
+/**
+ * OpenRouter chat completion request
+ */
+export interface ChatCompletionRequest {
+  messages: ChatMessage[];
+  responseSchema?: JSONSchema;
+  model?: string;
+  modelParams?: ModelParameters;
+  userId?: string;
+  requestId?: string;
+}
+
+/**
+ * OpenRouter response format for structured outputs
+ */
+export interface ResponseFormat {
+  type: "json_schema";
+  json_schema: {
+    name: string;
+    strict: boolean;
+    schema: JSONSchema;
+  };
+}
+
+/**
+ * OpenRouter API request body
+ */
+export interface OpenRouterRequestBody {
+  model: string;
+  messages: ChatMessage[];
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+  seed?: number;
+  response_format?: ResponseFormat;
+}
+
+/**
+ * OpenRouter API response structure
+ */
+export interface OpenRouterResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  choices: {
+    index: number;
+    message: {
+      role: string;
+      content: string;
+    };
+    finish_reason: string;
+  }[];
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+}
