@@ -22,7 +22,11 @@ export function useFlashcardsState() {
   const { flashcards, loading, error, pagination, actions: dataActions } = useFlashcardsData(filters, sort);
 
   // CRUD operations with callbacks for success/error handling
-  const { createFlashcard, updateFlashcard, deleteFlashcard } = useFlashcardsCRUD({
+  const {
+    createFlashcard: crudCreateFlashcard,
+    updateFlashcard: crudUpdateFlashcard,
+    deleteFlashcard: crudDeleteFlashcard,
+  } = useFlashcardsCRUD({
     onSuccess: () => {
       // Refresh data after successful operation
       dataActions.fetchFlashcards();
@@ -34,6 +38,28 @@ export function useFlashcardsState() {
       // Error is passed to the calling components for appropriate handling
     },
   });
+
+  // Wrapper functions that return Promise<void> for compatibility with modal components
+  const createFlashcard = useCallback(
+    async (data: Parameters<typeof crudCreateFlashcard>[0]): Promise<void> => {
+      await crudCreateFlashcard(data);
+    },
+    [crudCreateFlashcard]
+  );
+
+  const updateFlashcard = useCallback(
+    async (id: number, data: Parameters<typeof crudUpdateFlashcard>[1]): Promise<void> => {
+      await crudUpdateFlashcard(id, data);
+    },
+    [crudUpdateFlashcard]
+  );
+
+  const deleteFlashcard = useCallback(
+    async (id: number): Promise<void> => {
+      await crudDeleteFlashcard(id);
+    },
+    [crudDeleteFlashcard]
+  );
 
   // Enhanced filter application that resets pagination
   const applyFilters = useCallback(
@@ -86,10 +112,10 @@ export function useFlashcardsState() {
     validationErrors: {}, // TODO: Implement validation errors handling
   };
 
-  // Effect to fetch initial data
+  // Effect to fetch initial data on mount
   useEffect(() => {
     dataActions.fetchFlashcards();
-  }, [dataActions]); // Include dataActions dependency
+  }, []); // Remove dataActions dependency to prevent infinite loop
 
   return {
     state: legacyState,

@@ -33,6 +33,7 @@ GeneratorView (React)
 ## 4. Szczegóły komponentów
 
 ### GeneratorView
+
 - **Opis komponentu:** Główny kontener widoku generowania fiszek, zarządza całym stanem aplikacji i koordynuje komunikację między podkomponentami
 - **Główne elementy:** Container div z układem grid/flex, zawiera wszystkie sekcje widoku
 - **Obsługiwane interakcje:** Koordynuje wszystkie interakcje użytkownika poprzez funkcje callback
@@ -41,10 +42,11 @@ GeneratorView (React)
 - **Propsy:** Brak (główny komponent)
 
 ### TextInputSection
+
 - **Opis komponentu:** Sekcja zawierająca pole tekstowe do wprowadzania tekstu źródłowego wraz z licznikiem znaków i przyciskiem generowania
 - **Główne elementy:** `<div>` z `<Textarea>`, `<CharacterCounter>`, `<GenerateButton>`
 - **Obsługiwane interakcje:** `onChange` (zmiana tekstu), `onGenerate` (rozpoczęcie generowania)
-- **Obsługiwana walidacja:** 
+- **Obsługiwana walidacja:**
   - Długość tekstu: minimum 1000 znaków, maksimum 10000 znaków
   - Walidacja w czasie rzeczywistym z debounce 300ms
   - Blokada przycisku generowania przy niepoprawnej długości
@@ -52,33 +54,36 @@ GeneratorView (React)
 - **Propsy:** `value: string`, `onChange: (value: string) => void`, `onGenerate: () => void`, `isLoading: boolean`, `errors: string[]`
 
 ### CharacterCounter
+
 - **Opis komponentu:** Wizualny wskaźnik liczby znaków z kolorowym oznaczeniem statusu walidacji
 - **Główne elementy:** `<span>` z tekstem licznika i ikonami stanu
 - **Obsługiwane interakcje:** Brak (tylko wyświetlanie)
-- **Obsługiwana walidacja:** 
+- **Obsługiwana walidacja:**
   - Wizualne oznaczenie: czerwony (za mało/za dużo), zielony (poprawnie)
   - Wyświetlanie progresu: "1250 / 10000 znaków"
 - **Typy:** `CharacterCounterProps`
 - **Propsy:** `count: number`, `min: number`, `max: number`, `isValid: boolean`
 
 ### GenerateButton
+
 - **Opis komponentu:** Przycisk uruchamiający proces generowania propozycji przez AI
 - **Główne elementy:** Shadcn/ui `<Button>` z ikoną i tekstem
 - **Obsługiwane interakcje:** `onClick` (uruchomienie generowania)
-- **Obsługiwana walidacja:** 
+- **Obsługiwana walidacja:**
   - Aktywny tylko gdy tekst ma poprawną długość (1000-10000 znaków)
   - Wyłączony podczas trwającego generowania
 - **Typy:** `GenerateButtonProps`
 - **Propsy:** `onClick: () => void`, `isDisabled: boolean`, `isLoading: boolean`
 
 ### ProposalsSection
+
 - **Opis komponentu:** Sekcja zawierająca listę wygenerowanych propozycji fiszek i przycisk zapisu wybranych
 - **Główne elementy:** `<div>` z nagłówkiem, ProposalsSkeleton (podczas ładowania) lub listą `<ProposalCard>` i `<SaveSection>`
 - **Obsługiwane interakcje:** `onSave` (zapis wybranych propozycji)
-- **Obsługiwana walidacja:** 
+- **Obsługiwana walidacja:**
   - Minimum jedna propozycja musi być zaakceptowana przed zapisem
   - Walidacja edytowanych propozycji (długość front/back)
-- **Logika wyświetlania:** 
+- **Logika wyświetlania:**
   - `isLoading: true` → wyświetla ProposalsSkeleton
   - `isLoading: false` + `proposals.length > 0` → wyświetla ProposalCard
   - `isLoading: false` + `proposals.length === 0` → komunikat o braku propozycji
@@ -86,9 +91,10 @@ GeneratorView (React)
 - **Propsy:** `proposals: ProposalState[]`, `onSave: () => void`, `isVisible: boolean`, `isLoading: boolean`, `selectedCount: number`
 
 ### ProposalCard
+
 - **Opis komponentu:** Karta reprezentująca pojedynczą propozycję fiszki z możliwością akceptacji, edycji lub odrzucenia
 - **Główne elementy:** Shadcn/ui `<Card>` z polami front/back, przyciskami akcji i statusem
-- **Obsługiwane interakcje:** 
+- **Obsługiwane interakcje:**
   - `onAccept` (akceptacja propozycji - zachowuje `source: 'ai'`)
   - `onEdit` (przełączenie trybu edycji)
   - `onReject` (odrzucenie propozycji)
@@ -105,6 +111,7 @@ GeneratorView (React)
 - **Propsy:** `proposal: ProposalState`, `onAccept: () => void`, `onEdit: () => void`, `onReject: () => void`, `onSave: (front: string, back: string) => void`
 
 ### ProposalsSkeleton
+
 - **Opis komponentu:** Skeleton UI wyświetlający szablon kart propozycji podczas ładowania danych z API
 - **Główne elementy:** 4 skeleton cards imitujących strukturę ProposalCard, używa Shadcn/ui Skeleton component z animacją pulsowania
 - **Struktura skeleton card:** Card container + 2 skeleton rectangles (front/back) + 3 skeleton buttons (actions)
@@ -116,6 +123,7 @@ GeneratorView (React)
 - **Propsy:** `count?: number` (liczba skeleton cards, domyślnie 4)
 
 ### LoadingOverlay
+
 - **Opis komponentu:** Nieblokujący indicator ładowania wyświetlany podczas krótkich operacji API
 - **Główne elementy:** Półprzezroczysty overlay z spinnerem i komunikatem
 - **Obsługiwane interakcje:** Brak (tylko wyświetlanie)
@@ -143,8 +151,8 @@ interface ProposalState {
   id: string; // lokalne UUID dla UI
   front: string;
   back: string;
-  source: 'ai' | 'mixed';
-  status: 'pending' | 'accepted' | 'rejected' | 'editing';
+  source: "ai" | "mixed";
+  status: "pending" | "accepted" | "rejected" | "editing";
   isEdited: boolean;
   originalFront: string;
   originalBack: string;
@@ -217,8 +225,8 @@ import type {
   FlashcardProposal,
   CreateFlashcardsCommand,
   FlashcardDTO,
-  ErrorResponse
-} from '../types';
+  ErrorResponse,
+} from "../types";
 ```
 
 ## 6. Zarządzanie stanem
@@ -228,24 +236,30 @@ import type {
 ```typescript
 const useGeneratorState = () => {
   const [state, setState] = useState<GeneratorViewState>({
-    sourceText: '',
+    sourceText: "",
     proposals: [],
     isLoading: false,
     errors: {},
     generationId: null,
-    selectedCount: 0
+    selectedCount: 0,
   });
 
-  const updateSourceText = (text: string) => { /* walidacja i aktualizacja */ };
-  const generateProposals = async () => { /* wywołanie API generowania - propozycje inicjalizowane z source: 'ai' */ };
-  const updateProposal = (id: string, updates: Partial<ProposalState>) => { 
+  const updateSourceText = (text: string) => {
+    /* walidacja i aktualizacja */
+  };
+  const generateProposals = async () => {
+    /* wywołanie API generowania - propozycje inicjalizowane z source: 'ai' */
+  };
+  const updateProposal = (id: string, updates: Partial<ProposalState>) => {
     /* aktualizacja propozycji - przy edycji automatyczna zmiana source: 'mixed' */
     if (updates.front !== undefined || updates.back !== undefined) {
-      updates.source = 'mixed';
+      updates.source = "mixed";
       updates.isEdited = true;
     }
   };
-  const saveSelectedProposals = async () => { /* zapis wybranych fiszek z odpowiednim source */ };
+  const saveSelectedProposals = async () => {
+    /* zapis wybranych fiszek z odpowiednim source */
+  };
 
   return { state, updateSourceText, generateProposals, updateProposal, saveSelectedProposals };
 };
@@ -270,6 +284,7 @@ const useApiCalls = () => {
 ### POST /api/generations
 
 **Typ żądania:** `CreateGenerationCommand`
+
 ```typescript
 {
   source_text: string; // 1000-10000 znaków
@@ -277,6 +292,7 @@ const useApiCalls = () => {
 ```
 
 **Typ odpowiedzi:** `GenerationProposalsResponse`
+
 ```typescript
 {
   generation_id: number;
@@ -292,6 +308,7 @@ const useApiCalls = () => {
 ### POST /api/flashcards
 
 **Typ żądania:** `CreateFlashcardsCommand` (tablica)
+
 ```typescript
 [
   {
@@ -315,21 +332,25 @@ const useApiCalls = () => {
 ## 8. Interakcje użytkownika
 
 ### Wpisywanie tekstu źródłowego
+
 1. **Akcja:** Użytkownik wprowadza tekst w polu tekstowym
 2. **Obsługa:** `onChange` z debounce 300ms → walidacja długości → aktualizacja licznika znaków
 3. **Wynik:** Wizualne oznaczenie poprawności, aktywacja/dezaktywacja przycisku Generate
 
 ### Generowanie propozycji
+
 1. **Akcja:** Kliknięcie przycisku "Generuj fiszki"
 2. **Obsługa:** Walidacja → wywołanie API → wyświetlenie ProposalsSkeleton (4 skeleton cards) → przetworzenie odpowiedzi
 3. **Wynik:** Lista ProposalCard lub komunikat o błędzie
 
 ### Zarządzanie propozycjami
+
 1. **Akceptacja:** Kliknięcie ✓ → zmiana statusu na 'accepted' → zachowanie `source: 'ai'` → aktualizacja licznika wybranych
 2. **Edycja:** Kliknięcie ✏️ → tryb edycji → walidacja w czasie rzeczywistym → zapisanie zmian → automatyczna zmiana `source: 'mixed'` → zmiana statusu na 'accepted'
 3. **Odrzucenie:** Kliknięcie ✗ → zmiana statusu na 'rejected' → ukrycie karty
 
 ### Zapis fiszek
+
 1. **Akcja:** Kliknięcie "Zapisz wybrane fiszki"
 2. **Obsługa:** Walidacja wybranych → przygotowanie payload z odpowiednimi wartościami `source` ('ai' lub 'mixed') → wywołanie API POST /api/flashcards → feedback użytkownikowi
 3. **Wynik:** Komunikat o sukcesie i przekierowanie lub błąd z możliwością ponownej próby
@@ -337,22 +358,26 @@ const useApiCalls = () => {
 ## 9. Warunki i walidacja
 
 ### Walidacja tekstu źródłowego (TextInputSection)
+
 - **Warunek:** Długość 1000-10000 znaków
 - **Wpływ na UI:** Aktywność przycisku Generate, kolor licznika znaków
 - **Komunikaty:** "Minimum 1000 znaków", "Maksimum 10000 znaków"
 
 ### Walidacja propozycji (ProposalCard)
+
 - **Warunek Front:** 1-200 znaków, nie może być pusty
 - **Warunek Back:** 1-500 znaków, nie może być pusty
 - **Wpływ na UI:** Oznaczenie błędnych pól, blokada zapisywania edycji
 - **Komunikaty:** Wyświetlane pod polami w trybie edycji
 
 ### Walidacja zapisu (ProposalsSection)
+
 - **Warunek:** Minimum jedna propozycja ze statusem 'accepted'
 - **Wpływ na UI:** Aktywność przycisku "Zapisz wybrane fiszki"
 - **Komunikaty:** "Wybierz co najmniej jedną fiszkę do zapisania"
 
 ### Logika ustawiania pola source
+
 - **Inicjalizacja:** Wszystkie propozycje z API generowania otrzymują `source: 'ai'`
 - **Akceptacja bez zmian:** Propozycja zachowuje `source: 'ai'` przy zapisie
 - **Edycja treści:** Automatyczna zmiana na `source: 'mixed'` przy modyfikacji front/back
@@ -361,21 +386,25 @@ const useApiCalls = () => {
 ## 10. Obsługa błędów
 
 ### Błędy walidacji
+
 - **Lokalizacja:** Pod polami formularzy
 - **Styl:** Czerwony tekst, ikony ostrzeżenia
 - **Zachowanie:** Walidacja w czasie rzeczywistym z debounce
 
 ### Błędy API
+
 - **400 Bad Request:** Wyświetlenie szczegółów walidacji w odpowiednich polach
 - **429 Rate Limit:** Toast: "Przekroczono limit żądań. Spróbuj ponownie za chwilę"
 - **500/502 Server Error:** Toast z opcją "Spróbuj ponownie"
 - **Network Error:** Toast: "Błąd połączenia. Sprawdź internet i spróbuj ponownie"
 
 ### Błędy biznesowe
+
 - **Brak propozycji:** Komunikat: "AI nie wygenerowało propozycji. Spróbuj z innym tekstem"
 - **Timeout:** Automatyczne anulowanie po 60s z komunikatem
 
 ### Fallback states
+
 - **Częściowa utrata połączenia:** Zapisanie stanu w localStorage
 - **Odświeżenie strony:** Przywrócenie stanu z localStorage (jeśli < 1h)
 

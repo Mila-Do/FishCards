@@ -4,16 +4,15 @@
  */
 
 import React, { memo } from "react";
-import { useFlashcardsState } from "./hooks/useFlashcardsState";
+import { useFlashcardsState } from "./hooks/useFlashcardsState.new";
 
 // Import components
 import { FlashcardsTable } from "./FlashcardsTable";
 import { PaginationControls } from "./PaginationControls";
-// TODO: Will be implemented in next steps:
-// import FlashcardsHeader from './FlashcardsHeader';
-// import CreateFlashcardModal from './CreateFlashcardModal';
-// import EditFlashcardModal from './EditFlashcardModal';
-// import DeleteAlertDialog from './DeleteAlertDialog';
+import { FlashcardsHeader } from "./FlashcardsHeader";
+import { CreateFlashcardModal } from "./CreateFlashcardModal";
+import { EditFlashcardModal } from "./EditFlashcardModal";
+import { DeleteAlertDialog } from "./DeleteAlertDialog";
 
 const FlashcardsView = memo(function FlashcardsView() {
   const { state, actions } = useFlashcardsState();
@@ -23,14 +22,15 @@ const FlashcardsView = memo(function FlashcardsView() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      {/* Header with title and controls */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Biblioteka (Moje Fiszki)</h1>
-          <p className="text-muted-foreground mt-2">
-            Zarządzaj swoją kolekcją fiszek - przeglądaj, edytuj, usuwaj i twórz nowe fiszki.
-          </p>
-        </div>
+      {/* Header with filters and create button */}
+      <div className="mb-8">
+        <FlashcardsHeader
+          filters={state.filters}
+          onFiltersChange={actions.applyFilters}
+          onCreateClick={actions.openCreateModal}
+          totalCount={state.pagination.total}
+          filteredCount={state.flashcards.length}
+        />
       </div>
 
       {/* Error state */}
@@ -63,37 +63,19 @@ const FlashcardsView = memo(function FlashcardsView() {
       {/* Main content */}
       {!state.loading && (
         <>
-          {/* Placeholder for FlashcardsHeader */}
-          <div className="mb-6 p-4 border border-dashed border-muted-foreground/30 rounded-lg">
-            <p className="text-muted-foreground text-sm">
-              FlashcardsHeader (filtry i przycisk dodawania) - zostanie zaimplementowany w następnych krokach
-            </p>
-          </div>
-
           {/* Content area */}
           {isEmpty ? (
-            /* Placeholder for EmptyState */
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-8 h-8 bg-muted-foreground/20 rounded"></div>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">
-                  {hasFilters ? "Brak fiszek spełniających kryteria" : "Brak fiszek"}
-                </h3>
-                <p className="text-muted-foreground mb-4">
-                  {hasFilters
-                    ? "Spróbuj zmienić filtry lub wyczyść je, aby zobaczyć więcej fiszek."
-                    : "Rozpocznij budowanie swojej biblioteki fiszek dodając pierwszą fiszkę."}
-                </p>
-                <button
-                  onClick={actions.openCreateModal}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 font-medium"
-                >
-                  {hasFilters ? "Dodaj nową fiszkę" : "Dodaj pierwszą fiszkę"}
-                </button>
-              </div>
-            </div>
+            /* Empty state handled by FlashcardsTable */
+            <FlashcardsTable
+              flashcards={state.flashcards}
+              loading={state.loading}
+              sort={state.sort}
+              onSortChange={actions.applySort}
+              onEditClick={actions.openEditModal}
+              onDeleteClick={actions.openDeleteDialog}
+              onCreateClick={actions.openCreateModal}
+              hasFilters={hasFilters}
+            />
           ) : (
             <>
               {/* Main flashcards table */}
@@ -117,47 +99,26 @@ const FlashcardsView = memo(function FlashcardsView() {
         </>
       )}
 
-      {/* Placeholder for Modals */}
-      <div className="fixed bottom-4 right-4 space-y-2 max-w-xs">
-        {state.modals.isCreateModalOpen && (
-          <div className="p-3 bg-background border rounded-lg shadow-lg text-sm">
-            <p className="font-medium">CreateFlashcardModal</p>
-            <p className="text-muted-foreground">Modal do tworzenia fiszki</p>
-            <button
-              onClick={actions.closeModals}
-              className="mt-2 px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs"
-            >
-              Zamknij (placeholder)
-            </button>
-          </div>
-        )}
+      {/* Modals */}
+      <CreateFlashcardModal
+        isOpen={state.modals.create.isOpen}
+        onClose={actions.closeModals}
+        onSubmit={actions.createFlashcard}
+      />
 
-        {state.modals.isEditModalOpen && (
-          <div className="p-3 bg-background border rounded-lg shadow-lg text-sm">
-            <p className="font-medium">EditFlashcardModal</p>
-            <p className="text-muted-foreground">Modal do edycji fiszki</p>
-            <button
-              onClick={actions.closeModals}
-              className="mt-2 px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs"
-            >
-              Zamknij (placeholder)
-            </button>
-          </div>
-        )}
+      <EditFlashcardModal
+        flashcard={state.modals.edit.data || null}
+        isOpen={state.modals.edit.isOpen}
+        onClose={actions.closeModals}
+        onSubmit={actions.updateFlashcard}
+      />
 
-        {state.modals.isDeleteDialogOpen && (
-          <div className="p-3 bg-background border rounded-lg shadow-lg text-sm">
-            <p className="font-medium">DeleteAlertDialog</p>
-            <p className="text-muted-foreground">Dialog potwierdzenia usunięcia</p>
-            <button
-              onClick={actions.closeModals}
-              className="mt-2 px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs"
-            >
-              Zamknij (placeholder)
-            </button>
-          </div>
-        )}
-      </div>
+      <DeleteAlertDialog
+        flashcard={state.modals.delete.data || null}
+        isOpen={state.modals.delete.isOpen}
+        onClose={actions.closeModals}
+        onConfirm={actions.deleteFlashcard}
+      />
     </div>
   );
 });

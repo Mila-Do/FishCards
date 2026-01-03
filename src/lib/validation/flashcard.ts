@@ -51,7 +51,7 @@ export const createFlashcardSchema = z.object({
 export const createFlashcardsSchema = z.union([createFlashcardSchema, z.array(createFlashcardSchema)]);
 
 /**
- * Schema for flashcard query parameters
+ * Schema for flashcard query parameters (alias for listFlashcardsSchema)
  */
 export const flashcardQuerySchema = z.object({
   page: z.preprocess(toIntOrUndefined, z.number().int().min(1).default(1)),
@@ -61,6 +61,11 @@ export const flashcardQuerySchema = z.object({
   sort: z.enum(["created_at", "updated_at", "repetition_count"]).optional(),
   order: z.enum(["asc", "desc"]).optional(),
 });
+
+/**
+ * Alias for flashcardQuerySchema - used for listing flashcards
+ */
+export const listFlashcardsSchema = flashcardQuerySchema;
 
 /**
  * Schema for updating a flashcard

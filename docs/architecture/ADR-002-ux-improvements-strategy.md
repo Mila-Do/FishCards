@@ -2,7 +2,7 @@
 
 **Status**: Accepted  
 **Date**: 2025-01-02  
-**Authors**: Development Team  
+**Authors**: Development Team
 
 ## Context
 
@@ -13,24 +13,28 @@ The application needed improvements in user experience, particularly around load
 We will implement a comprehensive UX improvement system with the following components:
 
 ### 1. Unified Loading States
+
 - Prioritized loading states (low, medium, high, critical)
 - Consistent loading indicators across all components
 - Progress indicators for long-running operations
 - Skeleton loaders for content placeholders
 
 ### 2. Toast Notification System
+
 - Success, error, warning, and info variants
 - Auto-dismiss with configurable duration
 - Action buttons for user interaction
 - Programmatic API for non-component usage
 
 ### 3. Optimistic Updates
+
 - Immediate UI updates for better perceived performance
 - Automatic rollback on failures
 - Configurable timeout and retry logic
 - Support for CRUD operations
 
 ### 4. Enhanced Loading Components
+
 - Unified Spinner component with multiple variants
 - Skeleton loaders for different content types (text, cards, tables)
 - Loading overlays with backdrop and messaging
@@ -49,51 +53,54 @@ This approach provides:
 ## Implementation Details
 
 ### Loading States
+
 ```tsx
 const loadingState = useLoadingState({
-  defaultPriority: 'medium',
-  maxStates: 10
+  defaultPriority: "medium",
+  maxStates: 10,
 });
 
-loadingState.setLoading('api-call', true, {
-  message: 'Saving flashcard...',
-  priority: 'high'
+loadingState.setLoading("api-call", true, {
+  message: "Saving flashcard...",
+  priority: "high",
 });
 ```
 
 ### Optimistic Updates
+
 ```tsx
 const optimistic = useOptimisticCRUD(flashcards, {
   timeout: 5000,
-  onError: (error) => toast.error('Operation failed')
+  onError: (error) => toast.error("Operation failed"),
 });
 
-await optimistic.optimisticAdd(newFlashcard, () => 
-  api.createFlashcard(newFlashcard)
-);
+await optimistic.optimisticAdd(newFlashcard, () => api.createFlashcard(newFlashcard));
 ```
 
 ### Toast Notifications
+
 ```tsx
 const { showToast } = useToast();
 
 showToast({
-  title: 'Success!',
-  description: 'Flashcard created successfully',
-  variant: 'success'
+  title: "Success!",
+  description: "Flashcard created successfully",
+  variant: "success",
 });
 ```
 
 ## Component Architecture
 
 ### Skeleton Components
+
 - `TextSkeleton`: For text content
-- `CardSkeleton`: For card layouts  
+- `CardSkeleton`: For card layouts
 - `TableSkeleton`: For table data
 - `ListSkeleton`: For list items
 - `FormSkeleton`: For form fields
 
 ### Loading Components
+
 - `Spinner`: Basic spinner with sizes and colors
 - `DotsSpinner`: Three-dot animation
 - `PulseSpinner`: Pulsing circle
@@ -101,6 +108,7 @@ showToast({
 - `InlineLoader`: For buttons and small spaces
 
 ### Progress Components
+
 - `Progress`: Linear progress bar
 - `CircularProgress`: Circular progress indicator
 - `StepProgress`: Multi-step progress visualization
@@ -108,6 +116,7 @@ showToast({
 ## Consequences
 
 ### Positive
+
 - Improved perceived performance
 - Clear user feedback during operations
 - Consistent loading patterns
@@ -115,6 +124,7 @@ showToast({
 - Reduced cognitive load
 
 ### Negative
+
 - Additional complexity in state management
 - More components to maintain
 - Potential for over-engineering simple cases

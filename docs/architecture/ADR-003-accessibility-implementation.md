@@ -2,7 +2,7 @@
 
 **Status**: Accepted  
 **Date**: 2025-01-02  
-**Authors**: Development Team  
+**Authors**: Development Team
 
 ## Context
 
@@ -13,24 +13,28 @@ The application needed comprehensive accessibility improvements to ensure compli
 We will implement a comprehensive accessibility system with the following components:
 
 ### 1. Focus Management
+
 - Focus trap for modals and overlays
 - Keyboard navigation for interactive elements
 - Skip links for main content areas
 - Restore focus when closing modals
 
 ### 2. ARIA Implementation
+
 - Proper semantic markup with ARIA labels
 - Live regions for dynamic content updates
 - Descriptive relationships (describedby, labelledby)
 - State management (expanded, selected, busy)
 
 ### 3. Screen Reader Support
+
 - Meaningful text for screen readers
 - Proper heading hierarchy
 - Alternative text for images
 - Status announcements for operations
 
 ### 4. Keyboard Navigation
+
 - Tab order management
 - Arrow key navigation for lists/grids
 - Escape key handling for modals
@@ -41,6 +45,7 @@ We will implement a comprehensive accessibility system with the following compon
 ### Focus Management Hooks
 
 #### `useFocusTrap`
+
 - Traps focus within a container
 - Supports initial focus and restore focus
 - Configurable loop behavior
@@ -49,12 +54,13 @@ We will implement a comprehensive accessibility system with the following compon
 ```tsx
 const { containerRef } = useFocusTrap({
   active: isModalOpen,
-  initialFocus: () => document.querySelector('[data-initial-focus]'),
-  restoreFocus: triggerButtonRef.current
+  initialFocus: () => document.querySelector("[data-initial-focus]"),
+  restoreFocus: triggerButtonRef.current,
 });
 ```
 
-#### `useKeyboardNavigation` 
+#### `useKeyboardNavigation`
+
 - Arrow key navigation for lists
 - Home/End key support
 - Enter/Space activation
@@ -63,15 +69,17 @@ const { containerRef } = useFocusTrap({
 ### Accessibility Utilities
 
 #### Screen Reader Text Formatting
+
 ```tsx
-import { a11y } from '@/lib/utils/accessibility';
+import { a11y } from "@/lib/utils/accessibility";
 
 const formattedDate = a11y.screenReader.formatDate(new Date());
 const formattedNumber = a11y.screenReader.formatNumber(1234);
-const loadingText = a11y.screenReader.loadingText('flashcards');
+const loadingText = a11y.screenReader.loadingText("flashcards");
 ```
 
 #### ARIA Helpers
+
 ```tsx
 <button
   aria-expanded={a11y.aria.expanded(isExpanded)}
@@ -85,44 +93,28 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ### Component Patterns
 
 #### Modal Accessibility
+
 ```tsx
-<Modal 
-  isOpen={isOpen} 
-  onClose={onClose}
-  aria-labelledby="modal-title"
-  aria-describedby="modal-description"
->
+<Modal isOpen={isOpen} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-description">
   <h2 id="modal-title">Edit Flashcard</h2>
   <p id="modal-description">Update your flashcard content</p>
 </Modal>
 ```
 
 #### Form Accessibility
+
 ```tsx
-<FormField
-  label="Question"
-  error={errors.question}
-  helpText="Enter the question for your flashcard"
-  required
->
-  <input
-    id={fieldId}
-    aria-describedby={a11y.aria.describedBy(helpId, errorId)}
-    aria-invalid={!!errors.question}
-  />
+<FormField label="Question" error={errors.question} helpText="Enter the question for your flashcard" required>
+  <input id={fieldId} aria-describedby={a11y.aria.describedBy(helpId, errorId)} aria-invalid={!!errors.question} />
 </FormField>
 ```
 
 #### Loading States
+
 ```tsx
 <LoadingWrapper
   loading={isLoading}
-  loadingComponent={
-    <Spinner 
-      text="Loading flashcards"
-      aria-label="Loading flashcards, please wait"
-    />
-  }
+  loadingComponent={<Spinner text="Loading flashcards" aria-label="Loading flashcards, please wait" />}
 >
   <FlashcardsTable />
 </LoadingWrapper>
@@ -131,13 +123,15 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ## WCAG 2.1 AA Compliance
 
 ### Level A Requirements
+
 - ✅ Keyboard accessible
-- ✅ No seizure-inducing content  
+- ✅ No seizure-inducing content
 - ✅ Meaningful link text
 - ✅ Proper heading structure
 - ✅ Alternative text for images
 
 ### Level AA Requirements
+
 - ✅ 4.5:1 contrast ratio for normal text
 - ✅ 3:1 contrast ratio for large text
 - ✅ Resizable text up to 200%
@@ -147,12 +141,14 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ## Browser Support
 
 ### Screen Readers
+
 - NVDA (Windows)
-- JAWS (Windows)  
+- JAWS (Windows)
 - VoiceOver (macOS/iOS)
 - TalkBack (Android)
 
 ### Keyboard Navigation
+
 - Tab/Shift+Tab for focus movement
 - Arrow keys for list navigation
 - Enter/Space for activation
@@ -161,17 +157,20 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ## Testing Strategy
 
 ### Automated Testing
+
 - axe-core integration in tests
 - ESLint accessibility rules
 - Color contrast validation
 
-### Manual Testing  
+### Manual Testing
+
 - Screen reader testing
 - Keyboard-only navigation
 - High contrast mode testing
 - Zoom testing up to 200%
 
 ### User Testing
+
 - Testing with actual disabled users
 - Feedback collection and iteration
 - Regular accessibility audits
@@ -186,6 +185,7 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ## Consequences
 
 ### Positive
+
 - WCAG 2.1 AA compliance
 - Improved user experience for all users
 - Legal compliance in many jurisdictions
@@ -193,6 +193,7 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 - Increased user base
 
 ### Negative
+
 - Additional development complexity
 - More testing requirements
 - Bundle size increase (minimal)
@@ -201,6 +202,7 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 ## Development Guidelines
 
 ### Required Practices
+
 1. Use semantic HTML elements first
 2. Add ARIA only when semantic HTML isn't sufficient
 3. Test with keyboard-only navigation
@@ -208,6 +210,7 @@ const loadingText = a11y.screenReader.loadingText('flashcards');
 5. Include screen reader announcements for dynamic content
 
 ### Prohibited Practices
+
 1. No keyboard traps without escape mechanism
 2. No color-only information conveyance
 3. No auto-playing audio/video

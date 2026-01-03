@@ -33,6 +33,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 ## 4. Szczegóły komponentów
 
 ### FlashcardsView
+
 - **Opis komponentu:** Główny kontener widoku zarządzający całą logiką biblioteki fiszek, koordynuje komunikację między podkomponentami i obsługuje zarządzanie stanem
 - **Główne elementy:** Container div z układem grid/flex, header section, content section z tabelą, loading states, modales
 - **Obsługiwane interakcje:** Ładowanie danych, odświeżanie listy, obsługa błędów, koordynuje wszystkie interakcje użytkownika poprzez funkcje callback
@@ -41,6 +42,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** Brak (główny komponent)
 
 ### FlashcardsHeader
+
 - **Opis:** Nagłówek widoku zawierający tytuł, filtry i przycisk dodawania nowej fiszki
 - **Główne elementy:** H1 z tytułem, SearchBar, CreateFlashcardButton
 - **Obsługiwane interakcje:** Otwieranie modalu tworzenia fiszki
@@ -49,6 +51,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `onCreateClick: () => void, filters: FlashcardFilters, onFiltersChange: (filters: FlashcardFilters) => void`
 
 ### SearchBar
+
 - **Opis:** Panel filtrowania umożliwiający filtrowanie po statusie i źródle fiszek
 - **Główne elementy:** Select dla statusu, Select dla źródła, Button do resetowania filtrów
 - **Obsługiwane interakcje:** Zmiana filtrów, resetowanie filtrów
@@ -57,6 +60,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `filters: FlashcardFilters, onFiltersChange: (filters: FlashcardFilters) => void`
 
 ### FlashcardsTable
+
 - **Opis:** Tabela wyświetlająca listę fiszek z możliwością sortowania według kolumn
 - **Główne elementy:** Table component (Shadcn), TableHeader z sortowalnymi kolumnami, TableBody z FlashcardRow
 - **Obsługiwane interakcje:** Sortowanie po kolumnach, ładowanie kolejnych stron
@@ -65,6 +69,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `flashcards: FlashcardViewModel[], loading: boolean, sort: SortState, onSortChange: (field: FlashcardSortField) => void, onEditClick: (flashcard: FlashcardViewModel) => void, onDeleteClick: (flashcard: FlashcardViewModel) => void`
 
 ### FlashcardRow
+
 - **Opis:** Wiersz tabeli reprezentujący pojedynczą fiszkę z podglądem treści i akcjami
 - **Główne elementy:** TableRow, TableCell dla każdej kolumny (przód, tył, status, źródło, data, akcje)
 - **Obsługiwane interakcje:** Edycja fiszki, usuwanie fiszki
@@ -73,6 +78,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `flashcard: FlashcardViewModel, onEditClick: (flashcard: FlashcardViewModel) => void, onDeleteClick: (flashcard: FlashcardViewModel) => void`
 
 ### StatusBadge
+
 - **Opis:** Kolorowy znaczek wyświetlający status fiszki z odpowiednimi kolorami
 - **Główne elementy:** Badge component (Shadcn) z wariantami kolorów
 - **Obsługiwane interakcje:** Brak
@@ -81,6 +87,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `status: FlashcardStatus`
 
 ### SourceBadge
+
 - **Opis:** Znaczek wyświetlający źródło pochodzenia fiszki (manual, ai, mixed)
 - **Główne elementy:** Badge component z ikonami dla każdego typu źródła
 - **Obsługiwane interakcje:** Brak
@@ -89,6 +96,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `source: FlashcardSource`
 
 ### CreateFlashcardModal
+
 - **Opis:** Modal do tworzenia nowej fiszki z formularzem zawierającym pola przód, tył i źródło
 - **Główne elementy:** Dialog (Shadcn), form z polami textarea dla przodu i tyłu, select dla źródła
 - **Obsługiwane interakcje:** Wysłanie formularza, anulowanie, walidacja w czasie rzeczywistym
@@ -97,6 +105,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `isOpen: boolean, onClose: () => void, onSubmit: (data: CreateFlashcardCommand) => Promise<void>`
 
 ### EditFlashcardModal
+
 - **Opis:** Modal do edycji istniejącej fiszki ze wszystkimi dostępnymi polami do modyfikacji
 - **Główne elementy:** Dialog z formularzem edycji (front, back, status, source, repetition_count)
 - **Obsługiwane interakcje:** Aktualizacja fiszki, anulowanie, resetowanie do oryginalnych wartości
@@ -105,6 +114,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `flashcard: FlashcardViewModel | null, isOpen: boolean, onClose: () => void, onSubmit: (id: number, data: UpdateFlashcardCommand) => Promise<void>`
 
 ### DeleteAlertDialog
+
 - **Opis:** Dialog potwierdzający usunięcie fiszki z ostrzeżeniem o trwałości operacji
 - **Główne elementy:** AlertDialog (Shadcn) z tytułem, opisem i przyciskami anuluj/usuń
 - **Obsługiwane interakcje:** Potwierdzenie usunięcia, anulowanie
@@ -113,6 +123,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `flashcard: FlashcardViewModel | null, isOpen: boolean, onClose: () => void, onConfirm: (id: number) => Promise<void>`
 
 ### PaginationControls
+
 - **Opis:** Kontrolki nawigacji po stronach z informacjami o aktualnej stronie i łącznej liczbie elementów
 - **Główne elementy:** Div z przyciskami poprzednia/następna strona, numerami stron, informacjami o zakresie
 - **Obsługiwane interakcje:** Przejście do konkretnej strony, nawigacja przód/wstecz
@@ -121,6 +132,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 - **Propsy:** `pagination: PaginationMeta, onPageChange: (page: number) => void`
 
 ### EmptyState
+
 - **Opis:** Komponent wyświetlany gdy brak jest fiszek spełniających kryteria filtrowania
 - **Główne elementy:** Div z ikoną, tekstem informacyjnym i przyciskiem dodania pierwszej fiszki
 - **Obsługiwane interakcje:** Otworzenie modalu tworzenia fiszki
@@ -131,6 +143,7 @@ FlashcardsPage (src/pages/flashcards.astro)
 ## 5. Typy
 
 ### FlashcardViewModel
+
 ```typescript
 interface FlashcardViewModel extends FlashcardDTO {
   isLoading?: boolean; // Stan ładowania dla operacji na konkretnej fiszce
@@ -139,6 +152,7 @@ interface FlashcardViewModel extends FlashcardDTO {
 ```
 
 ### FlashcardsViewState
+
 ```typescript
 interface FlashcardsViewState {
   flashcards: FlashcardViewModel[];
@@ -153,6 +167,7 @@ interface FlashcardsViewState {
 ```
 
 ### FlashcardFilters
+
 ```typescript
 interface FlashcardFilters {
   status: FlashcardStatus | null;
@@ -161,6 +176,7 @@ interface FlashcardFilters {
 ```
 
 ### SortState
+
 ```typescript
 interface SortState {
   field: FlashcardSortField;
@@ -169,6 +185,7 @@ interface SortState {
 ```
 
 ### ModalState
+
 ```typescript
 interface ModalState {
   isCreateModalOpen: boolean;
@@ -179,6 +196,7 @@ interface ModalState {
 ```
 
 ### CreateFlashcardForm
+
 ```typescript
 interface CreateFlashcardForm {
   front: string;
@@ -188,6 +206,7 @@ interface CreateFlashcardForm {
 ```
 
 ### EditFlashcardForm
+
 ```typescript
 interface EditFlashcardForm {
   front: string;
@@ -214,8 +233,8 @@ import type {
   FlashcardStatus,
   FlashcardSource,
   FlashcardSortField,
-  SortOrder
-} from '../types';
+  SortOrder,
+} from "../types";
 ```
 
 ## 6. Zarządzanie stanem
@@ -230,20 +249,43 @@ const useFlashcardsState = () => {
     error: null,
     pagination: { page: 1, limit: 20, total: 0, total_pages: 0 },
     filters: { status: null, source: null },
-    sort: { field: 'created_at', order: 'desc' },
+    sort: { field: "created_at", order: "desc" },
     modals: { isCreateModalOpen: false, isEditModalOpen: false, isDeleteDialogOpen: false, selectedFlashcard: null },
-    selectedCount: 0
+    selectedCount: 0,
   });
 
-  const fetchFlashcards = async () => { /* pobieranie listy z API z zastosowaniem filtrów i sortowania */ };
-  const createFlashcard = async (data: CreateFlashcardCommand) => { /* tworzenie nowej fiszki */ };
-  const updateFlashcard = async (id: number, data: UpdateFlashcardCommand) => { /* edycja fiszki */ };
-  const deleteFlashcard = async (id: number) => { /* usuwanie fiszki z potwierdzeniem */ };
-  const applyFilters = (filters: FlashcardFilters) => { /* zastosowanie filtrów i odświeżenie listy */ };
-  const applySort = (field: FlashcardSortField) => { /* zmiana sortowania i odświeżenie listy */ };
-  const changePage = (page: number) => { /* zmiana strony i pobranie danych */ };
+  const fetchFlashcards = async () => {
+    /* pobieranie listy z API z zastosowaniem filtrów i sortowania */
+  };
+  const createFlashcard = async (data: CreateFlashcardCommand) => {
+    /* tworzenie nowej fiszki */
+  };
+  const updateFlashcard = async (id: number, data: UpdateFlashcardCommand) => {
+    /* edycja fiszki */
+  };
+  const deleteFlashcard = async (id: number) => {
+    /* usuwanie fiszki z potwierdzeniem */
+  };
+  const applyFilters = (filters: FlashcardFilters) => {
+    /* zastosowanie filtrów i odświeżenie listy */
+  };
+  const applySort = (field: FlashcardSortField) => {
+    /* zmiana sortowania i odświeżenie listy */
+  };
+  const changePage = (page: number) => {
+    /* zmiana strony i pobranie danych */
+  };
 
-  return { state, fetchFlashcards, createFlashcard, updateFlashcard, deleteFlashcard, applyFilters, applySort, changePage };
+  return {
+    state,
+    fetchFlashcards,
+    createFlashcard,
+    updateFlashcard,
+    deleteFlashcard,
+    applyFilters,
+    applySort,
+    changePage,
+  };
 };
 ```
 
@@ -264,6 +306,7 @@ const useApiCalls = () => {
 ## 7. Integracja API
 
 ### GET /api/flashcards
+
 - **Typy żądania:** FlashcardQueryParams (page, limit, status, source, sort, order)
 - **Typy odpowiedzi:** PaginatedFlashcardsResponse
 - **Użycie:** Pobieranie listy fiszek z filtrami i paginacją
@@ -271,6 +314,7 @@ const useApiCalls = () => {
 ### POST /api/flashcards
 
 **Typ żądania:** `CreateFlashcardCommand`
+
 ```typescript
 {
   front: string; // 1-200 znaków
@@ -286,6 +330,7 @@ const useApiCalls = () => {
 ### PATCH /api/flashcards/:id
 
 **Typ żądania:** `UpdateFlashcardCommand` (wszystkie pola opcjonalne)
+
 ```typescript
 {
   front?: string; // 1-200 znaków
@@ -315,31 +360,37 @@ const useApiCalls = () => {
 ## 8. Interakcje użytkownika
 
 ### Przeglądanie fiszek
+
 - Użytkownik wchodzi na `/flashcards`
 - Automatyczne ładowanie pierwszej strony fiszek
 - Wyświetlenie tabeli z paginacją
 
 ### Filtrowanie
+
 - Użytkownik wybiera filter statusu lub źródła z rozwijanej listy
 - Automatyczne odświeżenie listy z zastosowanymi filtrami
 - Reset filtrów przywraca pełną listę
 
 ### Sortowanie
+
 - Kliknięcie na nagłówek kolumny zmienia sortowanie
 - Ponowne kliknięcie odwraca kolejność sortowania
 - Wizualna wskazówka kierunku sortowania (strzałki)
 
 ### Tworzenie fiszki
+
 - Kliknięcie "Dodaj fiszkę" otwiera modal
 - Wypełnienie formularza z walidacją
 - Zapisanie dodaje fiszkę do listy i zamyka modal
 
 ### Edycja fiszki
+
 - Kliknięcie ikony edycji otwiera modal z danymi fiszki
 - Modyfikacja pól z walidacją
 - Zapisanie aktualizuje fiszkę na liście
 
 ### Usuwanie fiszki
+
 - Kliknięcie ikony usuwania otwiera dialog potwierdzenia
 - Potwierdzenie usuwa fiszkę z bazy i listy
 - Anulowanie zamyka dialog bez zmian
@@ -347,6 +398,7 @@ const useApiCalls = () => {
 ## 9. Warunki i walidacja
 
 ### Walidacja formularzy (CreateFlashcardModal, EditFlashcardModal)
+
 - **front:** wymagane, min 1 znak, max 200 znaków
 - **back:** wymagane, min 1 znak, max 500 znaków
 - **status:** musi być jedną z wartości enum FlashcardStatus
@@ -354,11 +406,13 @@ const useApiCalls = () => {
 - **repetition_count:** musi być liczbą całkowitą ≥ 0
 
 ### Walidacja UI
+
 - Wyłączenie przycisku zapisu gdy formularz jest nieprawidłowy
 - Wyświetlenie błędów walidacji pod polami formularza
 - Wskazanie wymaganych pól
 
 ### Walidacja danych z API
+
 - Sprawdzenie formatu odpowiedzi z API
 - Obsługa błędów walidacji zwracanych przez backend (400)
 - Fallback dla nieprawidłowych danych
@@ -366,25 +420,30 @@ const useApiCalls = () => {
 ## 10. Obsługa błędów
 
 ### Błędy autoryzacji (401)
+
 - Automatyczne przekierowanie do strony logowania
 - Wyświetlenie komunikatu o wygaśnięciu sesji
 
 ### Błędy walidacji (400)
+
 - Wyświetlenie konkretnych błędów przy polach formularza
 - Blokada zapisu do czasu naprawienia błędów
 - Highlighting nieprawidłowych pól
 
 ### Błędy serwera (500)
+
 - Toast notification z komunikatem o błędzie
 - Możliwość ponowienia operacji
 - Logowanie błędów do konsoli deweloperskiej
 
 ### Błędy sieci
+
 - Retry mechanism dla failed requests
 - Loading states podczas ponownych prób
 - Fallback UI dla braku połączenia
 
 ### Błędy nie znaleziono (404)
+
 - Komunikat o braku fiszki (dla operacji na konkretnej fiszce)
 - Odświeżenie listy po błędzie 404
 
@@ -402,7 +461,7 @@ const useApiCalls = () => {
 
 3. **Utworzenie podstawowych komponentów UI**
    - StatusBadge - kolorowe znaczki statusów
-   - SourceBadge - znaczki źródeł fiszek  
+   - SourceBadge - znaczki źródeł fiszek
    - EmptyState - stan pusty dla brak fiszek
 
 4. **Integracja API zarządzania fiszkami**

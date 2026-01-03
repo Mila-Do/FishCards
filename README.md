@@ -86,27 +86,27 @@ The FishCards API provides REST endpoints for managing flashcards and AI generat
 
 ### Flashcards API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/flashcards` | Get paginated list of flashcards with filtering |
-| `POST` | `/api/flashcards` | Create one or multiple flashcards |
-| `GET` | `/api/flashcards/:id` | Get single flashcard by ID |
-| `PATCH` | `/api/flashcards/:id` | Update existing flashcard |
-| `DELETE` | `/api/flashcards/:id` | Delete flashcard by ID |
+| Method   | Endpoint              | Description                                     |
+| -------- | --------------------- | ----------------------------------------------- |
+| `GET`    | `/api/flashcards`     | Get paginated list of flashcards with filtering |
+| `POST`   | `/api/flashcards`     | Create one or multiple flashcards               |
+| `GET`    | `/api/flashcards/:id` | Get single flashcard by ID                      |
+| `PATCH`  | `/api/flashcards/:id` | Update existing flashcard                       |
+| `DELETE` | `/api/flashcards/:id` | Delete flashcard by ID                          |
 
 ### Generations API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/generations` | Get paginated list of generations |
-| `POST` | `/api/generations` | Create new AI flashcard generation |
-| `GET` | `/api/generations/:id` | Get single generation by ID |
+| Method | Endpoint               | Description                        |
+| ------ | ---------------------- | ---------------------------------- |
+| `GET`  | `/api/generations`     | Get paginated list of generations  |
+| `POST` | `/api/generations`     | Create new AI flashcard generation |
+| `GET`  | `/api/generations/:id` | Get single generation by ID        |
 
 ### Additional Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/generation-error-logs` | Get generation error logs |
+| Method | Endpoint                     | Description               |
+| ------ | ---------------------------- | ------------------------- |
+| `GET`  | `/api/generation-error-logs` | Get generation error logs |
 
 ### Documentation & Testing
 

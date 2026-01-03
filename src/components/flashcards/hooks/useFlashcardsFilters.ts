@@ -1,14 +1,25 @@
 /**
- * Hook for managing flashcards filtering and sorting
- * Handles filter state and sort operations
+ * Hook for managing flashcards filters and sorting
+ * Handles filter state, sort state, and related operations
  */
 
 import { useState, useCallback } from "react";
 import type { FlashcardFilters, FlashcardSortState, FlashcardSortField } from "../types";
 
+interface UseFlashcardsFiltersActions {
+  applyFilters: (filters: FlashcardFilters) => void;
+  clearFilters: () => void;
+  applySort: (field: FlashcardSortField) => void;
+  resetSort: () => void;
+}
+
 const DEFAULT_FILTERS: FlashcardFilters = {
   status: null,
   source: null,
+  search: undefined,
+  dateFrom: undefined,
+  dateTo: undefined,
+  repetitionRange: undefined,
 };
 
 const DEFAULT_SORT: FlashcardSortState = {
@@ -16,7 +27,11 @@ const DEFAULT_SORT: FlashcardSortState = {
   order: "desc",
 };
 
-export function useFlashcardsFilters() {
+export function useFlashcardsFilters(): {
+  filters: FlashcardFilters;
+  sort: FlashcardSortState;
+  actions: UseFlashcardsFiltersActions;
+} {
   const [filters, setFilters] = useState<FlashcardFilters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<FlashcardSortState>(DEFAULT_SORT);
 
@@ -25,16 +40,27 @@ export function useFlashcardsFilters() {
     setFilters(newFilters);
   }, []);
 
-  // Reset filters to default
-  const resetFilters = useCallback(() => {
+  // Clear all filters
+  const clearFilters = useCallback(() => {
     setFilters(DEFAULT_FILTERS);
   }, []);
 
-  // Apply sort and toggle order if same field
+  // Apply sort - toggle order if same field, otherwise use desc for new field
   const applySort = useCallback((field: FlashcardSortField) => {
     setSort((prevSort) => {
-      const newOrder = prevSort.field === field && prevSort.order === "desc" ? "asc" : "desc";
-      return { field, order: newOrder };
+      if (prevSort.field === field) {
+        // Toggle order if same field
+        return {
+          field,
+          order: prevSort.order === "desc" ? "asc" : "desc",
+        };
+      } else {
+        // New field, default to desc
+        return {
+          field,
+          order: "desc",
+        };
+      }
     });
   }, []);
 
@@ -43,20 +69,12 @@ export function useFlashcardsFilters() {
     setSort(DEFAULT_SORT);
   }, []);
 
-  // Check if filters are active (not default)
-  const hasActiveFilters = filters.status !== null || filters.source !== null;
-
-  // Check if sort is default
-  const isDefaultSort = sort.field === DEFAULT_SORT.field && sort.order === DEFAULT_SORT.order;
-
   return {
     filters,
     sort,
-    hasActiveFilters,
-    isDefaultSort,
     actions: {
       applyFilters,
-      resetFilters,
+      clearFilters,
       applySort,
       resetSort,
     },

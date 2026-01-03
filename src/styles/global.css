@@ -5,129 +5,129 @@
 
 :root {
   --radius: 0.625rem;
-  
+
   /* Dark navy theme as default */
-  --background: oklch(0.08 0.05 240);       /* Very dark navy - deep dark background */
-  --foreground: oklch(0.92 0 0);            /* Gray-100 - light text */
-  
+  --background: oklch(0.08 0.05 240); /* Very dark navy - deep dark background */
+  --foreground: oklch(0.92 0 0); /* Gray-100 - light text */
+
   /* Dark navy theme as default - functional color system */
-  --primary: oklch(0.55 0.15 220);          /* Blue-400 - bright blue for buttons */
+  --primary: oklch(0.55 0.15 220); /* Blue-400 - bright blue for buttons */
   --primary-foreground: oklch(0.98 0 0);
-  --primary-hover: oklch(0.45 0.18 220);    /* Blue-500 */
-  
-  --secondary: oklch(0.45 0.12 240);        /* Navy-500 - lighter navy for contrast */
+  --primary-hover: oklch(0.45 0.18 220); /* Blue-500 */
+
+  --secondary: oklch(0.45 0.12 240); /* Navy-500 - lighter navy for contrast */
   --secondary-foreground: oklch(0.92 0 0);
-  --secondary-hover: oklch(0.35 0.15 240);  /* Navy-600 */
-  
-  --accent: oklch(0.65 0.12 200);           /* Light blue-300 - bright accent */
+  --secondary-hover: oklch(0.35 0.15 240); /* Navy-600 */
+
+  --accent: oklch(0.65 0.12 200); /* Light blue-300 - bright accent */
   --accent-foreground: oklch(0.08 0.05 240);
-  --accent-hover: oklch(0.75 0.1 200);      /* Light blue-200 */
-  
-  --surface: oklch(0.12 0.03 240);          /* Dark navy-900 - dark cards/sections */
+  --accent-hover: oklch(0.75 0.1 200); /* Light blue-200 */
+
+  --surface: oklch(0.12 0.03 240); /* Dark navy-900 - dark cards/sections */
   --surface-foreground: oklch(0.92 0 0);
-  --surface-border: oklch(0.2 0.03 240);    /* Navy-800 - subtle borders */
-  
-  --success: oklch(0.65 0.12 200);          /* Light blue-300 - błękitny zamiast zielonego */
+  --surface-border: oklch(0.2 0.03 240); /* Navy-800 - subtle borders */
+
+  --success: oklch(0.65 0.12 200); /* Light blue-300 - błękitny zamiast zielonego */
   --success-foreground: oklch(0.08 0.05 240);
-  --success-muted: oklch(0.15 0.08 200);    /* Light blue-900/20 */
-  
-  --warning: oklch(0.7 0.15 80);            /* Amber-400 - bright warning */
+  --success-muted: oklch(0.15 0.08 200); /* Light blue-900/20 */
+
+  --warning: oklch(0.7 0.15 80); /* Amber-400 - bright warning */
   --warning-foreground: oklch(0.08 0.05 240);
-  --warning-muted: oklch(0.15 0.08 80);     /* Amber-900/20 */
-  
-  --danger: oklch(0.65 0.25 25);            /* Red-400 - visible danger */
+  --warning-muted: oklch(0.15 0.08 80); /* Amber-900/20 */
+
+  --danger: oklch(0.65 0.25 25); /* Red-400 - visible danger */
   --danger-foreground: oklch(0.08 0.05 240);
-  --danger-muted: oklch(0.15 0.08 25);      /* Red-900/20 */
-  
-  --muted: oklch(0.25 0.02 240);            /* Dark navy-700 - subtle elements */
-  --muted-foreground: oklch(0.65 0 0);      /* Gray-400 - secondary text */
-  
-  --border: oklch(0.2 0.03 240);            /* Navy-800 */
-  --input: oklch(0.16 0.03 240);            /* Navy-850 - input backgrounds */
-  --ring: oklch(0.55 0.15 220);             /* Primary blue focus ring */
+  --danger-muted: oklch(0.15 0.08 25); /* Red-900/20 */
+
+  --muted: oklch(0.25 0.02 240); /* Dark navy-700 - subtle elements */
+  --muted-foreground: oklch(0.65 0 0); /* Gray-400 - secondary text */
+
+  --border: oklch(0.2 0.03 240); /* Navy-800 */
+  --input: oklch(0.16 0.03 240); /* Navy-850 - input backgrounds */
+  --ring: oklch(0.55 0.15 220); /* Primary blue focus ring */
 }
 
 /* Light theme variant (optional) */
 .light {
-  --background: oklch(0.98 0 0);            /* Light background */
-  --foreground: oklch(0.15 0 0);            /* Dark text */
-  
-  --primary: oklch(0.45 0.15 180);          /* Teal-600 */
+  --background: oklch(0.98 0 0); /* Light background */
+  --foreground: oklch(0.15 0 0); /* Dark text */
+
+  --primary: oklch(0.45 0.15 180); /* Teal-600 */
   --primary-foreground: oklch(0.98 0 0);
-  --primary-hover: oklch(0.35 0.18 180);    /* Teal-700 */
-  
-  --secondary: oklch(0.35 0.08 230);        /* Navy-700 */
+  --primary-hover: oklch(0.35 0.18 180); /* Teal-700 */
+
+  --secondary: oklch(0.35 0.08 230); /* Navy-700 */
   --secondary-foreground: oklch(0.98 0 0);
-  --secondary-hover: oklch(0.25 0.1 230);   /* Navy-800 */
-  
-  --accent: oklch(0.65 0.12 180);           /* Teal-400 */
+  --secondary-hover: oklch(0.25 0.1 230); /* Navy-800 */
+
+  --accent: oklch(0.65 0.12 180); /* Teal-400 */
   --accent-foreground: oklch(0.15 0 0);
-  --accent-hover: oklch(0.55 0.15 180);     /* Teal-500 */
-  
-  --surface: oklch(0.95 0 0);               /* Gray-50 */
+  --accent-hover: oklch(0.55 0.15 180); /* Teal-500 */
+
+  --surface: oklch(0.95 0 0); /* Gray-50 */
   --surface-foreground: oklch(0.15 0 0);
-  --surface-border: oklch(0.88 0 0);        /* Gray-200 */
-  
-  --success: oklch(0.45 0.15 140);          /* Green-600 */
+  --surface-border: oklch(0.88 0 0); /* Gray-200 */
+
+  --success: oklch(0.45 0.15 140); /* Green-600 */
   --success-foreground: oklch(0.98 0 0);
-  --success-muted: oklch(0.95 0.05 140);    /* Green-50 */
-  
-  --warning: oklch(0.65 0.15 80);           /* Amber-500 */
+  --success-muted: oklch(0.95 0.05 140); /* Green-50 */
+
+  --warning: oklch(0.65 0.15 80); /* Amber-500 */
   --warning-foreground: oklch(0.15 0 0);
-  --warning-muted: oklch(0.95 0.05 80);     /* Amber-50 */
-  
-  --danger: oklch(0.55 0.22 25);            /* Red-500 */
+  --warning-muted: oklch(0.95 0.05 80); /* Amber-50 */
+
+  --danger: oklch(0.55 0.22 25); /* Red-500 */
   --danger-foreground: oklch(0.98 0 0);
-  --danger-muted: oklch(0.95 0.05 25);      /* Red-50 */
-  
-  --muted: oklch(0.85 0 0);                 /* Gray-300 */
-  --muted-foreground: oklch(0.45 0 0);      /* Gray-600 */
-  
-  --border: oklch(0.88 0 0);                /* Gray-200 */
-  --input: oklch(0.88 0 0);                 /* Gray-200 */
-  --ring: oklch(0.45 0.15 180);             /* Primary focus ring */
+  --danger-muted: oklch(0.95 0.05 25); /* Red-50 */
+
+  --muted: oklch(0.85 0 0); /* Gray-300 */
+  --muted-foreground: oklch(0.45 0 0); /* Gray-600 */
+
+  --border: oklch(0.88 0 0); /* Gray-200 */
+  --input: oklch(0.88 0 0); /* Gray-200 */
+  --ring: oklch(0.45 0.15 180); /* Primary focus ring */
 }
 
 /* Dark theme - same as default, for explicit override */
 .dark {
-  --background: oklch(0.08 0.05 240);       /* Very dark navy - deep dark background */
-  --foreground: oklch(0.92 0 0);            /* Gray-100 - light text */
-  
+  --background: oklch(0.08 0.05 240); /* Very dark navy - deep dark background */
+  --foreground: oklch(0.92 0 0); /* Gray-100 - light text */
+
   /* Functional color system - dark navy optimized */
-  --primary: oklch(0.55 0.15 220);          /* Blue-400 - bright blue for buttons */
+  --primary: oklch(0.55 0.15 220); /* Blue-400 - bright blue for buttons */
   --primary-foreground: oklch(0.98 0 0);
-  --primary-hover: oklch(0.45 0.18 220);    /* Blue-500 */
-  
-  --secondary: oklch(0.45 0.12 240);        /* Navy-500 - lighter navy for contrast */
+  --primary-hover: oklch(0.45 0.18 220); /* Blue-500 */
+
+  --secondary: oklch(0.45 0.12 240); /* Navy-500 - lighter navy for contrast */
   --secondary-foreground: oklch(0.92 0 0);
-  --secondary-hover: oklch(0.35 0.15 240);  /* Navy-600 */
-  
-  --accent: oklch(0.65 0.12 200);           /* Light blue-300 - bright accent */
+  --secondary-hover: oklch(0.35 0.15 240); /* Navy-600 */
+
+  --accent: oklch(0.65 0.12 200); /* Light blue-300 - bright accent */
   --accent-foreground: oklch(0.08 0.05 240);
-  --accent-hover: oklch(0.75 0.1 200);      /* Light blue-200 */
-  
-  --surface: oklch(0.12 0.03 240);          /* Dark navy-900 - dark cards/sections */
+  --accent-hover: oklch(0.75 0.1 200); /* Light blue-200 */
+
+  --surface: oklch(0.12 0.03 240); /* Dark navy-900 - dark cards/sections */
   --surface-foreground: oklch(0.92 0 0);
-  --surface-border: oklch(0.2 0.03 240);    /* Navy-800 - subtle borders */
-  
-  --success: oklch(0.65 0.12 200);          /* Light blue-300 - błękitny zamiast zielonego */
+  --surface-border: oklch(0.2 0.03 240); /* Navy-800 - subtle borders */
+
+  --success: oklch(0.65 0.12 200); /* Light blue-300 - błękitny zamiast zielonego */
   --success-foreground: oklch(0.08 0.05 240);
-  --success-muted: oklch(0.15 0.08 200);    /* Light blue-900/20 */
-  
-  --warning: oklch(0.7 0.15 80);            /* Amber-400 - bright warning */
+  --success-muted: oklch(0.15 0.08 200); /* Light blue-900/20 */
+
+  --warning: oklch(0.7 0.15 80); /* Amber-400 - bright warning */
   --warning-foreground: oklch(0.08 0.05 240);
-  --warning-muted: oklch(0.15 0.08 80);     /* Amber-900/20 */
-  
-  --danger: oklch(0.65 0.25 25);            /* Red-400 - visible danger */
+  --warning-muted: oklch(0.15 0.08 80); /* Amber-900/20 */
+
+  --danger: oklch(0.65 0.25 25); /* Red-400 - visible danger */
   --danger-foreground: oklch(0.08 0.05 240);
-  --danger-muted: oklch(0.15 0.08 25);      /* Red-900/20 */
-  
-  --muted: oklch(0.25 0.02 240);            /* Dark navy-700 - subtle elements */
-  --muted-foreground: oklch(0.65 0 0);      /* Gray-400 - secondary text */
-  
-  --border: oklch(0.2 0.03 240);            /* Navy-800 */
-  --input: oklch(0.16 0.03 240);            /* Navy-850 - input backgrounds */
-  --ring: oklch(0.55 0.15 220);             /* Primary blue focus ring */
+  --danger-muted: oklch(0.15 0.08 25); /* Red-900/20 */
+
+  --muted: oklch(0.25 0.02 240); /* Dark navy-700 - subtle elements */
+  --muted-foreground: oklch(0.65 0 0); /* Gray-400 - secondary text */
+
+  --border: oklch(0.2 0.03 240); /* Navy-800 */
+  --input: oklch(0.16 0.03 240); /* Navy-850 - input backgrounds */
+  --ring: oklch(0.55 0.15 220); /* Primary blue focus ring */
 }
 
 @theme inline {
@@ -135,47 +135,47 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   /* Core colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
+
   /* Functional color system */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
-  
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary-hover: var(--secondary-hover);
-  
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-hover: var(--accent-hover);
-  
+
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
   --color-surface-border: var(--surface-border);
-  
+
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-muted: var(--success-muted);
-  
+
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-muted: var(--warning-muted);
-  
+
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
   --color-danger-muted: var(--danger-muted);
-  
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  
+
   /* Legacy aliases for compatibility */
   --color-card: var(--surface);
   --color-card-foreground: var(--surface-foreground);

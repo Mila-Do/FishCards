@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Authentication helper for API requests
  *
  * For development: uses dev tokens from environment

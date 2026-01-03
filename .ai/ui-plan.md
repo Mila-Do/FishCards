@@ -2,13 +2,14 @@
 
 ## 1. Przegląd struktury UI
 
-Interfejs użytkownika aplikacji FishCards został zaprojektowany jako nowoczesna aplikacja webowa (Single Page Application w ramach wysp Astro), zorientowana na maksymalną wydajność pracy z fiszkami. Architektura opiera się na podejściu "Desktop-first", optymalizując przestrzeń roboczą dla użytkowników PC, korzystających z dużych ilości tekstu i skrótów klawiszowych. 
+Interfejs użytkownika aplikacji FishCards został zaprojektowany jako nowoczesna aplikacja webowa (Single Page Application w ramach wysp Astro), zorientowana na maksymalną wydajność pracy z fiszkami. Architektura opiera się na podejściu "Desktop-first", optymalizując przestrzeń roboczą dla użytkowników PC, korzystających z dużych ilości tekstu i skrótów klawiszowych.
 
 Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nieblokujący), **Zarządzania** (biblioteka fiszek) oraz **Nauki** (tryb Zen z algorytmem powtórek).
 
 ## 2. Lista widoków
 
 ### Widok Logowania / Rejestracji
+
 - **Ścieżka:** `/login` | `/register`
 - **Główny cel:** Autentykacja użytkownika i dostęp do prywatnej bazy danych.
 - **Kluczowe informacje:** Formularze e-mail/hasło, komunikaty o błędach walidacji.
@@ -16,6 +17,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **UX, dostępność i bezpieczeństwo:** Walidacja pól w czasie rzeczywistym, obsługa błędów z Supabase Auth, ukrywanie haseł, Aria-labels dla pól formularza.
 
 ### Dashboard (Ekran Główny)
+
 - **Ścieżka:** `/dashboard`
 - **Główny cel:** Szybki przegląd postępów i przejście do najważniejszych akcji.
 - **Kluczowe informacje:** Liczba fiszek do powtórki na dziś, ogólne statystyki (wskaźnik akceptacji AI, całkowita liczba fiszek).
@@ -23,6 +25,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **UX, dostępność i bezpieczeństwo:** Priorytetyzacja najważniejszej akcji (Nauka) poprzez wizualne wyróżnienie (Primary Button).
 
 ### widok generowania fiszek
+
 - **Ścieżka:** `/generator`
 - **Główny cel:** umożliwia użytkownikowi generowanie propozycji fiszek poprzez AI i ich rewizję (zaakceptuj, edytuj lub odrzuć)
 - **Kluczowe informacje:** Pole tekstowe (1k-10k znaków), licznik znaków, lista propozycji AI (Staging).przycisk akceptacji, edycji lub odrzucenia dla każdej fiszki
@@ -30,6 +33,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **UX, dostępność i bezpieczeństwo:** Możliwość nawigacji po aplikacji podczas generowania (powiadomienie Toast po zakończeniu), walidacja długości tekstu blokująca przycisk "Generuj".
 
 ### Biblioteka (Moje Fiszki)
+
 - **Ścieżka:** `/flashcards`
 - **Główny cel:** Zarządzanie istniejącą bazą fiszek.
 - **Kluczowe informacje:** Lista fiszek z podglądem przodu i tyłu, status (new, learning, review, mastered), źródło (AI, manual, mixed).
@@ -37,6 +41,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **UX, dostępność i bezpieczeństwo:** Wymuszenie potwierdzenia usunięcia przez `AlertDialog`. Responsywne tabele z paginacją.
 
 ### Sesja Nauki (Tryb Zen)
+
 - **Ścieżka:** `/study`
 - **Główny cel:** Skoncentrowana nauka z wykorzystaniem algorytmu powtórek.
 - **Kluczowe informacje:** Przód/tył fiszki, system ocen 0-5, postęp sesji (pasek postępu).
@@ -44,17 +49,19 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
 - **UX, dostępność i bezpieczeństwo:** Obsługa klawiatury (Spacja do odwrócenia, 0-5 do oceny). Tryb pełnoekranowy/uproszczony (minimalizacja dystraktorów).
 
 ### Podsumowanie Sesji
+
 - **Ścieżka:** `/study/summary`
 - **Główny cel:** Prezentacja wyników zakończonej sesji nauki.
 - **Kluczowe informacje:** Liczba przejrzanych fiszek, czas trwania, rozkład ocen.
 - **Kluczowe komponenty:** `SummaryChart`, `DoneButton`.
 
 ### Profil Użytkownika / Ustawienia
+
 - **Ścieżka:** `/profile`
 - **Główny cel:** Zarządzanie kontem i danymi.
-- **Kluczowe informacje:** dane urżytkownika, opcjie edycji profilu, o przycisk wylogowania 
+- **Kluczowe informacje:** dane urżytkownika, opcjie edycji profilu, o przycisk wylogowania
 - **Kluczowe komponenty:** `UserProfileForm`, `DangerZone` (usuwanie konta).
-- **UX, dostępność i bezpieczeństwo:** Podwójna weryfikacja przy usuwaniu konta, prosty i czytelny interfejs, bezpieczne wylogowanie 
+- **UX, dostępność i bezpieczeństwo:** Podwójna weryfikacja przy usuwaniu konta, prosty i czytelny interfejs, bezpieczne wylogowanie
 
 ## 3. Mapa podróży użytkownika
 
@@ -64,7 +71,7 @@ Kluczowym elementem jest podział na proces **Generowania** (asynchroniczny, nie
    - Wkleja tekst (np. 5000 znaków).
    - Klika "Generuj". Podczas gdy AI pracuje, użytkownik przechodzi do Biblioteki, by przejrzeć stare fiszki.
    - Otrzymuje Toast: "Fiszki wygenerowane!".
-   - Wraca do Generatora, edytuje  propozycje, odrzuca i akceptuje resztę.
+   - Wraca do Generatora, edytuje propozycje, odrzuca i akceptuje resztę.
    - Klika "Zapisz", fiszki trafiają do bazy.
 3. **Nauka:**
    - Klika "Rozpocznij Naukę" na Dashboardzie.

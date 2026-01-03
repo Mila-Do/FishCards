@@ -1,23 +1,31 @@
 /**
- * Hook for managing flashcards data fetching, caching, and pagination
- * Separated from main state hook for better code organization
+ * Hook for managing flashcards data fetching and pagination
+ * Handles API calls for retrieving flashcards with filtering and sorting
  */
 
 import { useState, useCallback, useEffect } from "react";
+import { authenticatedFetch } from "../../../lib/auth-helper";
 import type {
   FlashcardViewModel,
-  PaginatedFlashcardsResponse,
-  FlashcardQueryParams,
   FlashcardFilters,
   FlashcardSortState,
+  PaginatedFlashcardsResponse,
   PaginationMeta,
+  FlashcardQueryParams,
 } from "../types";
 
-interface FlashcardsDataState {
+interface UseFlashcardsDataState {
   flashcards: FlashcardViewModel[];
   loading: boolean;
   error: string | null;
   pagination: PaginationMeta;
+}
+
+interface UseFlashcardsDataActions {
+  fetchFlashcards: () => Promise<void>;
+  changePage: (page: number) => void;
+  resetPagination: () => void;
+  refetch: () => Promise<void>;
 }
 
 const DEFAULT_PAGINATION: PaginationMeta = {
@@ -27,26 +35,27 @@ const DEFAULT_PAGINATION: PaginationMeta = {
   total_pages: 0,
 };
 
-export function useFlashcardsData(filters: FlashcardFilters, sort: FlashcardSortState) {
-  const [state, setState] = useState<FlashcardsDataState>({
+export function useFlashcardsData(
+  filters: FlashcardFilters,
+  sort: FlashcardSortState
+): UseFlashcardsDataState & { actions: UseFlashcardsDataActions } {
+  const [state, setState] = useState<UseFlashcardsDataState>({
     flashcards: [],
     loading: false,
     error: null,
     pagination: DEFAULT_PAGINATION,
   });
 
-  // Utility function to update state
-  const updateState = useCallback((updates: Partial<FlashcardsDataState>) => {
+  // Update state helper
+  const updateState = useCallback((updates: Partial<UseFlashcardsDataState>) => {
     setState((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  // Fetch flashcards from API with current filters and pagination
-  const fetchFlashcards = useCallback(async () => {
-    updateState({ loading: true, error: null });
-
-    try {
+  // Build query parameters from current filters, sort, and pagination
+  const buildQueryParams = useCallback(
+    (page?: number): FlashcardQueryParams => {
       const params: FlashcardQueryParams = {
-        page: state.pagination.page,
+        page: page ?? state.pagination.page,
         limit: state.pagination.limit,
         sort: sort.field,
         order: sort.order,
@@ -56,67 +65,98 @@ export function useFlashcardsData(filters: FlashcardFilters, sort: FlashcardSort
       if (filters.status) params.status = filters.status;
       if (filters.source) params.source = filters.source;
 
-      const queryString = new URLSearchParams(
-        Object.entries(params).reduce(
-          (acc, [key, value]) => {
-            if (value !== undefined && value !== null) {
-              acc[key] = String(value);
-            }
-            return acc;
-          },
-          {} as Record<string, string>
-        )
-      ).toString();
+      return params;
+    },
+    [filters, sort, state.pagination]
+  );
 
-      const response = await fetch(`/api/flashcards?${queryString}`);
+  // Fetch flashcards from API
+  const fetchFlashcards = useCallback(
+    async (page?: number) => {
+      updateState({ loading: true, error: null });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch flashcards: ${response.status}`);
+      try {
+        const params = buildQueryParams(page);
+        const queryString = new URLSearchParams(
+          Object.entries(params).reduce(
+            (acc, [key, value]) => {
+              if (value !== undefined && value !== null) {
+                acc[key] = String(value);
+              }
+              return acc;
+            },
+            {} as Record<string, string>
+          )
+        ).toString();
+
+        const response = await authenticatedFetch(`/api/flashcards?${queryString}`);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data: PaginatedFlashcardsResponse = await response.json();
+
+        updateState({
+          flashcards: data.data,
+          pagination: data.pagination,
+          loading: false,
+          error: null,
+        });
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Błąd podczas pobierania fiszek";
+        updateState({
+          loading: false,
+          error: errorMessage,
+          flashcards: [],
+        });
       }
+    },
+    [buildQueryParams, updateState]
+  );
 
-      const data: PaginatedFlashcardsResponse = await response.json();
-
-      updateState({
-        flashcards: data.data,
-        pagination: data.pagination,
-        loading: false,
-      });
-    } catch (error) {
-      updateState({
-        loading: false,
-        error: error instanceof Error ? error.message : "Błąd podczas pobierania fiszek",
-      });
-    }
-  }, [state.pagination.page, state.pagination.limit, sort, filters, updateState]);
-
-  // Change page and refresh data
+  // Change page and fetch new data
   const changePage = useCallback(
-    (page: number) => {
+    async (page: number) => {
+      if (page === state.pagination.page) return;
+
       updateState({
         pagination: { ...state.pagination, page },
       });
+
+      await fetchFlashcards(page);
     },
-    [state.pagination, updateState]
+    [state.pagination, updateState, fetchFlashcards]
   );
 
-  // Reset pagination to page 1 (used when filters change)
+  // Reset pagination to first page
   const resetPagination = useCallback(() => {
     updateState({
       pagination: { ...state.pagination, page: 1 },
     });
   }, [state.pagination, updateState]);
 
-  // Effect to fetch data when filters, sort, or pagination change
-  useEffect(() => {
-    fetchFlashcards();
+  // Refetch current data (useful for refreshing after mutations)
+  const refetch = useCallback(async () => {
+    await fetchFlashcards();
   }, [fetchFlashcards]);
 
+  // Effect to fetch data when filters or sort change
+  useEffect(() => {
+    fetchFlashcards();
+  }, [filters, sort]); // Remove fetchFlashcards from dependencies to prevent infinite loop
+
   return {
-    ...state,
+    flashcards: state.flashcards,
+    loading: state.loading,
+    error: state.error,
+    pagination: state.pagination,
     actions: {
       fetchFlashcards,
       changePage,
       resetPagination,
+      refetch,
     },
   };
 }

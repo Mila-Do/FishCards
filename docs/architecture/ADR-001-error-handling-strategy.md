@@ -2,7 +2,7 @@
 
 **Status**: Accepted  
 **Date**: 2025-01-02  
-**Authors**: Development Team  
+**Authors**: Development Team
 
 ## Context
 
@@ -13,18 +13,21 @@ The flashcard application needs a consistent and robust error handling strategy 
 We will implement a comprehensive error handling system with the following components:
 
 ### 1. ErrorBoundary Component
+
 - Catches JavaScript errors in component trees
-- Provides fallback UI with retry functionality  
+- Provides fallback UI with retry functionality
 - Supports custom error handlers and fallback components
 - Implements automatic retry with exponential backoff
 
 ### 2. useErrorHandler Hook
+
 - Centralized error handling with recovery strategies
 - Support for different error types (network, validation, server)
 - Automatic retry logic with configurable attempts
 - User-friendly error message mapping
 
 ### 3. Error Recovery Strategies
+
 - **retry**: Automatically retry failed operations
 - **fallback**: Show fallback data/UI
 - **redirect**: Redirect to safe page
@@ -32,6 +35,7 @@ We will implement a comprehensive error handling system with the following compo
 - **manual**: Require user intervention
 
 ### 4. Toast Notifications
+
 - Non-intrusive error notifications
 - Different variants (success, error, warning, info)
 - Auto-dismiss with configurable duration
@@ -50,6 +54,7 @@ This approach provides:
 ## Implementation Details
 
 ### ErrorBoundary Usage
+
 ```tsx
 <ErrorBoundary onError={(error) => logError(error)}>
   <FlashcardsView />
@@ -57,29 +62,32 @@ This approach provides:
 ```
 
 ### Hook Usage
+
 ```tsx
 const errorHandler = useErrorHandler({
   strategy: "retry",
   maxRetries: 3,
-  onError: (error) => analytics.track('error', error)
+  onError: (error) => analytics.track("error", error),
 });
 
 try {
   await apiCall();
 } catch (error) {
-  errorHandler.handleError(error, { context: 'api-call' });
+  errorHandler.handleError(error, { context: "api-call" });
 }
 ```
 
 ## Consequences
 
 ### Positive
+
 - Improved error resilience
 - Better user experience during failures
 - Consistent error handling patterns
 - Easier debugging and monitoring
 
-### Negative  
+### Negative
+
 - Additional complexity in initial setup
 - Need to train developers on new patterns
 - Potential over-engineering for simple cases
