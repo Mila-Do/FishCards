@@ -48,8 +48,8 @@ export const GET: APIRoute = async (context) => {
       limit: parsed.data.limit,
       status: parsed.data.status,
       source: parsed.data.source,
-      sort: parsed.data.sort,
-      order: parsed.data.order,
+      sort: parsed.data.sort ?? "created_at",
+      order: parsed.data.order ?? "asc",
     });
 
     const duration = performance.now() - startTime;
