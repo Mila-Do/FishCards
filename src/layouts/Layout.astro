@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { createSupabaseServerInstance } from "../db/supabase.client";
 
 interface Props {
   title?: string;
@@ -8,9 +9,15 @@ interface Props {
 
 const { title = "FishCards", showAuth = true } = Astro.props;
 
-// TODO: This will be replaced with actual auth state from middleware in backend implementation
-const isAuthenticated = false;
-const userEmail = "";
+// Get actual auth state from Supabase
+const supabase = createSupabaseServerInstance({
+  headers: Astro.request.headers,
+  cookies: Astro.cookies,
+});
+
+const { data: { user }, error } = await supabase.auth.getUser();
+const isAuthenticated = !!(user && !error && user.email);
+const userEmail = user?.email || "";
 ---
 
 <!doctype html>
@@ -64,10 +71,17 @@ const userEmail = "";
 
             <!-- Auth Section (right) -->
             <div class="flex items-center">
-              <!-- TODO: Replace with actual AuthButton when backend is implemented -->
               {isAuthenticated ? (
-                <div class="text-sm text-muted-foreground">
-                  {userEmail} • <a href="/auth/logout" class="hover:text-primary">Wyloguj</a>
+                <div class="flex items-center space-x-4">
+                  <div class="text-sm text-muted-foreground">
+                    Witaj, <span class="font-medium">{userEmail}</span>
+                  </div>
+                  <a 
+                    href="/auth/logout" 
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
+                  >
+                    Wyloguj się
+                  </a>
                 </div>
               ) : (
                 <a 
