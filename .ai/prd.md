@@ -134,6 +134,11 @@ Kryteria akceptacji:
 
 - Tylko zalogowany użytkownik może wyświetlać, edytować i usuwać swoje fiszki.
 - Nie ma dostępu do fiszek innych użytkowników ani możliwości współdzielenia.
+- Użytkownik loguje sie do systemu poprzez przycisk w prawym gornym rogu
+- Użytkownik wylogowuje sie poprzez przycisk w prawym gornym rogu
+- logowanie i rejestracja odbywają sie na dedykowanych stronach 
+- odzyskiwanie hasla powinno być możliwe
+
 
 ## 6. Metryki sukcesu
 
