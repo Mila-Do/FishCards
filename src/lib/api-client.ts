@@ -252,36 +252,6 @@ export class ApiClient {
   }
 
   /**
-   * Sets authorization header
-   */
-  setAuth(token: string, type: "Bearer" | "Basic" = "Bearer"): void {
-    this.setHeaders({ Authorization: `${type} ${token}` });
-  }
-
-  /**
-   * Sets authorization header from auth service
-   */
-  async setAuthFromService(): Promise<void> {
-    const { authService } = await import("./auth/auth-service");
-    const token = await authService.getToken();
-
-    if (token) {
-      this.setAuth(token);
-    } else {
-      this.clearAuth();
-    }
-  }
-
-  /**
-   * Removes authorization header
-   */
-  clearAuth(): void {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { Authorization, ...headers } = this.config.headers;
-    this.config.headers = headers;
-  }
-
-  /**
    * Creates a new instance with different config
    */
   withConfig(config: Partial<ApiClientConfig>): ApiClient {
@@ -301,32 +271,6 @@ export const apiClient = new ApiClient();
 // ============================================================================
 // Convenience Functions
 // ============================================================================
-
-/**
- * Authenticated fetch wrapper using Bearer tokens
- * Automatically adds Authorization header with current token
- */
-export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const { authService } = await import("./auth/auth-service");
-  const token = await authService.getToken();
-
-  if (!token) {
-    // Redirect to login if no token available
-    if (typeof window !== "undefined") {
-      window.location.href = "/auth/login";
-    }
-    throw new Error("Authentication required");
-  }
-
-  return fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
 
 /**
  * Type-safe API call wrapper

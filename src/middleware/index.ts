@@ -14,6 +14,7 @@ import {
   getAuthenticatedRedirect,
   getUnauthenticatedRedirect,
 } from "../lib/auth/routes-config";
+import { extractBearerToken, generateTokenJti } from "../lib/auth/token-utils";
 
 /**
  * Standard error response format for authentication
@@ -67,8 +68,8 @@ async function handleUnifiedBearerAuth(
     return next();
   }
 
-  // Get Bearer token from different sources
-  const token = getTokenFromRequest(context.request);
+  // Get Bearer token from Authorization header
+  const token = extractBearerToken(context.request.headers.get("authorization"));
 
   let user = null;
   let authenticatedSupabase = null;
@@ -156,21 +157,6 @@ async function handleUnifiedBearerAuth(
 }
 
 /**
- * Extract Bearer token from Authorization header only
- * Enforces consistent Bearer token strategy across all routes
- */
-function getTokenFromRequest(request: Request): string | null {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader) {
-    const match = authHeader.match(/^Bearer\s+(.+)$/i);
-    if (match) {
-      return match[1];
-    }
-  }
-  return null;
-}
-
-/**
  * Check if token is revoked (blacklisted)
  */
 async function checkTokenRevocation(token: string, supabase: SupabaseClient): Promise<boolean> {
@@ -196,18 +182,4 @@ async function checkTokenRevocation(token: string, supabase: SupabaseClient): Pr
     // On exception, allow token (fail open for availability)
     return false;
   }
-}
-
-/**
- * Generate token JTI (must match logic in revoke endpoint)
- */
-function generateTokenJti(token: string): string {
-  const tokenParts = token.split(".");
-  if (tokenParts.length >= 2) {
-    // Use part of the token as identifier (simplified approach)
-    // In production, you'd decode JWT and extract the actual 'jti' claim
-    return tokenParts[1].slice(-10) + "-" + Date.now().toString();
-  }
-
-  return "token-" + Date.now().toString() + "-" + Math.random().toString(36).substr(2, 9);
 }

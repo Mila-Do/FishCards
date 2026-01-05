@@ -4,6 +4,7 @@
  */
 
 import type { APIRoute } from "astro";
+import { extractBearerToken, generateRevocationData } from "../../../lib/auth/token-utils";
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
@@ -28,8 +29,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Get token from Authorization header
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
+    const token = extractBearerToken(request.headers.get("authorization"));
 
     if (!token) {
       return new Response(
@@ -83,10 +83,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Extract token information (simplified - in production you'd decode JWT)
-    const tokenHash = await hashToken(token);
-    const tokenJti = generateTokenId(token); // Simplified JTI generation
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+    // Generate revocation data using centralized utilities
+    const revocationData = await generateRevocationData(token, reason);
 
     try {
       if (revokeAll) {
@@ -100,10 +98,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
       // Revoke the current token using the database function
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error: revokeError } = await (supabase as any).rpc("revoke_token", {
-        p_token_jti: tokenJti,
-        p_token_hash: tokenHash,
-        p_expires_at: expiresAt.toISOString(),
-        p_reason: reason,
+        p_token_jti: revocationData.jti,
+        p_token_hash: revocationData.hash,
+        p_expires_at: revocationData.expires_at.toISOString(),
+        p_reason: revocationData.reason,
       });
 
       if (revokeError) {
@@ -187,41 +185,3 @@ export const GET: APIRoute = async () => {
     }
   );
 };
-
-/**
- * Generate a simple hash of the token for additional security
- */
-async function hashToken(token: string): Promise<string> {
-  if (typeof crypto !== "undefined" && crypto.subtle) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(token);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  // Fallback for environments without crypto.subtle
-  let hash = 0;
-  for (let i = 0; i < token.length; i++) {
-    const char = token.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  return Math.abs(hash).toString(16);
-}
-
-/**
- * Generate a simple token ID (JTI) from token content
- * In production, this would be extracted from the JWT payload
- */
-function generateTokenId(token: string): string {
-  // This is a simplified approach - in production you'd decode the JWT
-  // and extract the 'jti' claim or generate one consistently
-  const tokenParts = token.split(".");
-  if (tokenParts.length >= 2) {
-    // Use part of the token as identifier
-    return tokenParts[1].slice(-10) + "-" + Date.now().toString();
-  }
-
-  return "token-" + Date.now().toString() + "-" + Math.random().toString(36).substr(2, 9);
-}
