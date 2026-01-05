@@ -1,55 +1,37 @@
 /**
  * Authentication helper for API requests
  *
- * For development: uses dev tokens from environment
- * For production: should use proper authentication flow
+ * Uses proper Supabase authentication for all environments
  */
 
 /**
  * Get authentication token for API requests
  *
- * DEVELOPMENT ONLY: Returns dev token for testing
- * In production, this should integrate with proper auth system
+ * NOTE: This function is deprecated and should not be used.
+ * Use Supabase auth system directly instead.
  */
 export function getAuthToken(): string | null {
-  // Try to get token from environment first
-  const envToken = import.meta.env.PUBLIC_DEV_AUTH_TOKEN;
-
-  if (envToken) {
-    return envToken;
-  }
-
-  // Fallback to default dev token for user1
-  return "dev-token-user1";
+  // This function should only be used with proper authentication
+  // In production, tokens should come from Supabase auth system
+  throw new Error("Development auth helper removed for security. Use proper Supabase authentication.");
 }
 
 /**
  * Get authentication headers for API requests
+ *
+ * NOTE: This function is deprecated. Use proper Supabase client authentication.
  */
 export function getAuthHeaders(): Record<string, string> {
-  const token = getAuthToken();
-
-  if (!token) {
-    throw new Error("No authentication token available");
-  }
-
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
+  throw new Error(
+    "Development auth helper removed for security. Use proper Supabase authentication with session tokens."
+  );
 }
 
 /**
  * Enhanced fetch with automatic authentication headers
+ *
+ * NOTE: This function is deprecated. Use Supabase client with proper session management.
  */
-export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const authHeaders = getAuthHeaders();
-
-  return fetch(url, {
-    ...options,
-    headers: {
-      ...authHeaders,
-      ...options.headers,
-    },
-  });
+export async function authenticatedFetch(): Promise<Response> {
+  throw new Error("Development auth helper removed for security. Use Supabase client for authenticated requests.");
 }

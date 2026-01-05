@@ -85,11 +85,8 @@ SUPABASE_SERVICE_KEY=your_service_role_key  # Only if needed for admin operation
 
 ### Development Testing
 
-The application includes development tokens for testing API endpoints:
-- `dev-token-user1` → maps to user ID `81ae3963-b7c1-495e-bef5-4be876d4390a`
-- `dev-token-user2` → maps to user ID `fc161727-fbda-42f5-bd8b-8a0d219e363b`
-
-These work only in development mode for security.
+The application uses standard Supabase authentication for all environments.
+All API endpoints require valid JWT tokens from Supabase auth system.
 
 ### Manual Testing Steps
 

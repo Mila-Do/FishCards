@@ -289,13 +289,11 @@ export const apiClient = new ApiClient();
 // ============================================================================
 
 /**
- * Authenticated fetch wrapper that uses existing auth-helper functionality
- * This maintains backward compatibility with existing code
+ * Authenticated fetch wrapper - DEPRECATED
+ * Use Supabase client with proper session management instead
  */
 export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  // Import auth-helper here to avoid circular dependencies
-  const { authenticatedFetch: authFetch } = await import("./auth-helper");
-  return authFetch(url, options);
+  throw new Error("authenticatedFetch is deprecated. Use Supabase client for authenticated requests.");
 }
 
 /**

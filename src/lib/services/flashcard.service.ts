@@ -30,6 +30,9 @@ export async function getFlashcards(options: {
 
   let query = supabase.from("flashcards").select("*", { count: "exact" }).eq("user_id", userId);
 
+  // Debug log to verify user isolation
+  console.log("🔍 Fetching flashcards for user:", userId);
+
   // Apply filters
   if (status) {
     query = query.eq("status", status);
