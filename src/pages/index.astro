@@ -1,8 +1,164 @@
 ---
-import { Counter } from "../components/Counter";
 import Layout from "../layouts/Layout.astro";
+import { createSupabaseServerInstance } from "../db/supabase.client";
+import { getAuthenticatedRedirect } from "../lib/auth/routes-config";
+
+const title = "FishCards - Inteligentne Fiszki AI";
+
+// Check if user is authenticated - redirect to generator if logged in
+const supabase = createSupabaseServerInstance({
+  headers: Astro.request.headers,
+  cookies: Astro.cookies,
+});
+
+const {
+  data: { user },
+  error,
+} = await supabase.auth.getUser();
+
+// Debug info (remove in production)
+console.log("[DEBUG] Landing page auth check:", {
+  hasUser: !!user,
+  userEmail: user?.email,
+  userAud: user?.aud,
+  hasError: !!error,
+  errorMessage: error?.message,
+});
+
+// Only redirect if user is properly authenticated (has valid session)
+if (user && !error && user.email && user.aud === "authenticated") {
+  console.log("[DEBUG] Redirecting authenticated user to generator");
+  return Astro.redirect(getAuthenticatedRedirect());
+}
 ---
 
-<Layout>
-  <Counter client:load />
+<Layout title={title} showAuth={false}>
+  <!-- Hero Section -->
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <!-- Header with Logo and Auth Buttons -->
+    <header class="container mx-auto px-4 py-6">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <div class="h-12 w-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+            <span class="text-primary-foreground font-bold text-xl">FC</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-foreground">FishCards</h1>
+            <p class="text-sm text-muted-foreground">Inteligentne Fiszki AI</p>
+          </div>
+        </div>
+
+        <!-- Auth Buttons -->
+        <div class="flex items-center space-x-4">
+          <a
+            href="/auth/login"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
+          >
+            Zaloguj się
+          </a>
+          <a
+            href="/auth/register"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+          >
+            Zarejestruj się
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Hero Content -->
+    <main class="container mx-auto px-4 py-16">
+      <div class="max-w-4xl mx-auto text-center">
+        <!-- Main Heading -->
+        <h2 class="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          Twórz fiszki
+          <span class="text-primary">błyskawicznie</span>
+          <br />z pomocą AI
+        </h2>
+
+        <!-- Description -->
+        <p class="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+          Wklej dowolny tekst, a nasza sztuczna inteligencja automatycznie wygeneruje wysokiej jakości fiszki do nauki.
+          Oszczędź czas i ucz się efektywniej.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <a
+            href="/auth/register"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 w-full sm:w-auto"
+          >
+            Rozpocznij za darmo
+          </a>
+          <a
+            href="/demo"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8 py-3 w-full sm:w-auto"
+          >
+            Zobacz demo
+          </a>
+        </div>
+
+        <!-- Features Preview -->
+        <div class="grid md:grid-cols-3 gap-8 mt-16">
+          <!-- Feature 1 -->
+          <div class="bg-card rounded-xl p-6 shadow-sm border">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Błyskawiczne generowanie</h3>
+            <p class="text-muted-foreground">
+              Wklej tekst i otrzymaj gotowe fiszki w kilka sekund. AI analizuje treść i tworzy optymalne pytania.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-card rounded-xl p-6 shadow-sm border">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Inteligentna analiza</h3>
+            <p class="text-muted-foreground">
+              Zaawansowane algorytmy AI rozpoznają kluczowe pojęcia i tworzą pytania dopasowane do treści.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-card rounded-xl p-6 shadow-sm border">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Efektywna nauka</h3>
+            <p class="text-muted-foreground">
+              Wykorzystuj sprawdzone metody powtórek rozłożonych w czasie dla maksymalnej skuteczności nauki.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-4 py-8 border-t">
+      <div class="text-center text-muted-foreground">
+        <p>&copy; 2025 FishCards. Wszystkie prawa zastrzeżone.</p>
+      </div>
+    </footer>
+  </div>
 </Layout>

@@ -1,8 +1,16 @@
 import { defineMiddleware } from "astro:middleware";
+import type { MiddlewareHandler } from "astro";
 
-import { supabaseClient } from "../db/supabase.client.ts";
+import { supabaseClient, createSupabaseServerInstance } from "../db/supabase.client.ts";
 import { checkRateLimit, getRateLimitConfig } from "../lib/rate-limiter";
 import { errorResponse } from "../lib/response-helpers";
+import {
+  isProtectedRoute,
+  isGuestOnlyRoute,
+  isPublicApiRoute,
+  getAuthenticatedRedirect,
+  getUnauthenticatedRedirect,
+} from "../lib/auth/routes-config";
 
 function jsonResponse(body: unknown, options: { status: number }) {
   return new Response(JSON.stringify(body), {
@@ -14,10 +22,65 @@ function jsonResponse(body: unknown, options: { status: number }) {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  // Set supabase client for API routes (existing logic)
   context.locals.supabase = supabaseClient;
 
-  // Enforce authentication for API routes. Keeps auth logic consistent across endpoints.
+  // Handle Astro pages (non-API routes) with session management
   if (!context.url.pathname.startsWith("/api/")) {
+    return handlePageRequest(context, next);
+  }
+
+  // Handle API routes with Bearer token auth (existing logic)
+  return handleApiRequest(context, next);
+});
+
+/**
+ * Handles authentication for Astro pages using session cookies
+ */
+async function handlePageRequest(context: Parameters<MiddlewareHandler>[0], next: Parameters<MiddlewareHandler>[1]) {
+  const pathname = context.url.pathname;
+
+  // Create server-side Supabase instance for session management
+  const supabase = createSupabaseServerInstance({
+    headers: context.request.headers,
+    cookies: context.cookies,
+  });
+
+  // Get user session from cookies
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  // Store user info in context.locals for use in Astro pages
+  if (user && !error && user.email) {
+    context.locals.user = {
+      email: user.email,
+      id: user.id,
+    };
+    context.locals.userId = user.id;
+  }
+
+  // Apply route protection logic
+  if (isProtectedRoute(pathname) && !user) {
+    // Redirect unauthenticated users to login
+    return context.redirect(getUnauthenticatedRedirect(pathname));
+  }
+
+  if (isGuestOnlyRoute(pathname) && user) {
+    // Redirect authenticated users away from auth pages
+    return context.redirect(getAuthenticatedRedirect());
+  }
+
+  return next();
+}
+
+/**
+ * Handles authentication for API routes using Bearer tokens (existing logic)
+ */
+async function handleApiRequest(context: Parameters<MiddlewareHandler>[0], next: Parameters<MiddlewareHandler>[1]) {
+  // Skip auth check for public API routes
+  if (isPublicApiRoute(context.url.pathname)) {
     return next();
   }
 
@@ -78,4 +141,4 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   return next();
-});
+}

@@ -82,23 +82,51 @@ export function LoginForm({ redirectTo = "/generator", onSuccess, className = ""
     }));
 
     try {
-      // TODO: Replace with actual API call when backend is implemented
+      // Call login API endpoint
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formState.data.email,
+          password: formState.data.password,
+        }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await response.json();
 
-      // Simulate success
-      const mockUser = { email: formState.data.email, id: "1" };
+      if (!response.ok || result.error) {
+        // Handle API error response
+        const errorMessage = result.error?.message || "Wystąpił błąd podczas logowania";
 
-      if (onSuccess) {
-        onSuccess(mockUser);
+        setFormState((prev) => ({
+          ...prev,
+          submitError: errorMessage,
+        }));
+        return;
+      }
+
+      // Success - handle the response
+      if (result.success && result.user) {
+        if (onSuccess) {
+          onSuccess(result.user);
+        } else {
+          // Redirect to target page (use redirectTo from API response or fallback)
+          const targetUrl = result.redirectTo || redirectTo;
+          window.location.href = targetUrl;
+        }
       } else {
-        // Redirect to target page
-        window.location.href = redirectTo;
+        setFormState((prev) => ({
+          ...prev,
+          submitError: "Nieprawidłowa odpowiedź serwera",
+        }));
       }
     } catch (error) {
-      // Handle different error types
-      let errorMessage = "Wystąpił nieoczekiwany błąd";
+      // Handle network errors and other exceptions
+      console.error("Login error:", error);
+
+      let errorMessage = "Wystąpił błąd połączenia";
 
       if (error && typeof error === "object" && "message" in error) {
         errorMessage = (error as Error).message;

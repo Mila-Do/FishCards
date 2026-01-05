@@ -7,10 +7,18 @@ declare global {
     interface Locals {
       supabase: SupabaseClient;
       /**
-       * Authenticated user id (set by middleware for /api/* routes).
+       * Authenticated user id (set by middleware for /api/* routes and authenticated pages).
        * Optional because non-API routes might not require auth.
        */
       userId?: string;
+      /**
+       * Authenticated user info (set by middleware for authenticated pages).
+       * Available for Astro pages that use session management.
+       */
+      user?: {
+        id: string;
+        email: string;
+      };
     }
   }
 }
