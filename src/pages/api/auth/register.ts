@@ -1,7 +1,6 @@
 /**
- * Register API endpoint
- * Handles user registration with Supabase Auth
- * Implements auto-confirmation as per US-001 requirements
+ * Registration API endpoint
+ * Handles user registration with Supabase Auth (without email verification)
  */
 
 import type { APIRoute } from "astro";
@@ -42,18 +41,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       cookies,
     });
 
-    // Attempt to register user
-    // Note: Supabase should be configured for auto-confirmation (US-001 requirement)
+    // Attempt to sign up user - this will automatically sign in the user without email verification
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        // Auto-confirm email for immediate activation (US-001)
-        emailRedirectTo: undefined, // No email confirmation needed
+        // No email confirmation required - user will be automatically signed in
+        emailRedirectTo: undefined,
       },
     });
 
-    if (error) {
+    if (error || !data.user) {
       // Map Supabase error to our standardized error format
       const mappedError = mapSupabaseAuthError(error);
 
@@ -63,41 +61,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    if (!data.user) {
-      return new Response(
-        JSON.stringify({
-          error: {
-            code: "REGISTRATION_FAILED",
-            message: "Nie udało się utworzyć konta",
-          },
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Check if user needs email confirmation (shouldn't happen with auto-confirm)
-    if (!data.session) {
-      return new Response(
-        JSON.stringify({
-          success: true,
-          requiresConfirmation: true,
-          user: {
-            id: data.user.id,
-            email: data.user.email,
-          },
-          message: "Konto utworzone - sprawdź email w celu aktywacji",
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Success response with immediate login (US-001 requirement)
+    // Success response - user is automatically signed in
     return new Response(
       JSON.stringify({
         success: true,
@@ -105,9 +69,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           id: data.user.id,
           email: data.user.email,
         },
-        session: !!data.session,
-        redirectTo: "/generator", // Redirect to main app after registration
-        message: "Konto zostało pomyślnie utworzone i aktywowane",
+        redirectTo: "/generator", // Default redirect after registration
       }),
       {
         status: 200,
@@ -116,7 +78,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     );
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error("Register API Error:", error);
+    console.error("Registration API Error:", error);
 
     // Handle JSON parsing errors and other unexpected errors
     const mappedError = mapSupabaseAuthError(error);

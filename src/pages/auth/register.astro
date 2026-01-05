@@ -1,21 +1,26 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { RegisterForm } from "../../components/auth/RegisterForm";
-
-// TODO: In backend implementation, add server-side logic to:
-// 1. Check if user is already authenticated (redirect to /generator if logged in)
-// 2. Handle redirect query parameter
-// 3. Set appropriate meta tags for SEO
-// 4. Add rate limiting checks (prevent abuse)
+import { createSupabaseServerInstance } from "../../db/supabase.client";
 
 const title = "Zarejestruj się | FishCards";
 const redirectTo = Astro.url.searchParams.get("redirect") || "/generator";
 
-// Server-side auth check would go here
-// const user = await getServerSideAuth(Astro);
-// if (user) {
-//   return Astro.redirect(redirectTo);
-// }
+// Server-side auth check - redirect if already logged in
+const supabase = createSupabaseServerInstance({
+  headers: Astro.request.headers,
+  cookies: Astro.cookies,
+});
+
+const {
+  data: { user },
+  error,
+} = await supabase.auth.getUser();
+
+// If user is already authenticated, redirect to generator or specified redirect
+if (user && !error) {
+  return Astro.redirect(redirectTo);
+}
 ---
 
 <Layout title={title} showAuth={false}>

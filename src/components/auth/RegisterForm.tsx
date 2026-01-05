@@ -96,24 +96,48 @@ export function RegisterForm({ redirectTo = "/generator", onSuccess, className =
     }));
 
     try {
-      // TODO: Replace with actual API call when backend is implemented
+      // Call registration API endpoint
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formState.data.email,
+          password: formState.data.password,
+          confirmPassword: formState.data.confirmPassword,
+        }),
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const result = await response.json();
 
-      // Simulate success (in real implementation, user would be auto-logged in)
-      const mockUser = {
-        email: formState.data.email,
-        id: "1",
-      };
+      if (!response.ok || result.error) {
+        // Handle API error response
+        const errorMessage = result.error?.message || "Wystąpił błąd podczas rejestracji";
 
-      if (onSuccess) {
-        onSuccess(mockUser);
+        setFormState((prev) => ({
+          ...prev,
+          submitError: errorMessage,
+        }));
+        return;
+      }
+
+      // Success response
+      if (result.success && result.user) {
+        if (onSuccess) {
+          onSuccess(result.user);
+        } else {
+          // Show success message and redirect after delay
+          setTimeout(() => {
+            const targetUrl = result.redirectTo || redirectTo;
+            window.location.href = targetUrl;
+          }, 2000);
+        }
       } else {
-        // Show success message and redirect after delay
-        setTimeout(() => {
-          window.location.href = redirectTo;
-        }, 2000);
+        setFormState((prev) => ({
+          ...prev,
+          submitError: "Nieprawidłowa odpowiedź serwera",
+        }));
       }
     } catch (error) {
       // Handle different error types
