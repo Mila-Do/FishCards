@@ -1,0 +1,125 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { RegisterForm } from "../../components/auth/RegisterForm";
+
+// TODO: In backend implementation, add server-side logic to:
+// 1. Check if user is already authenticated (redirect to /generator if logged in)
+// 2. Handle redirect query parameter
+// 3. Set appropriate meta tags for SEO
+// 4. Add rate limiting checks (prevent abuse)
+
+const title = "Zarejestruj się | FishCards";
+const redirectTo = Astro.url.searchParams.get("redirect") || "/generator";
+
+// Server-side auth check would go here
+// const user = await getServerSideAuth(Astro);
+// if (user) {
+//   return Astro.redirect(redirectTo);
+// }
+---
+
+<Layout title={title} showAuth={false}>
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 sm:px-6 lg:px-8"
+  >
+    <div class="w-full max-w-md space-y-8">
+      <!-- Header -->
+      <div class="text-center">
+        <a href="/" class="inline-flex items-center space-x-2 hover:opacity-80 transition-opacity mb-8">
+          <div class="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
+            <span class="text-primary-foreground font-bold">FC</span>
+          </div>
+          <span class="font-bold text-2xl">FishCards</span>
+        </a>
+      </div>
+
+      <!-- Registration Form -->
+      <RegisterForm redirectTo={redirectTo} client:load />
+
+      <!-- Benefits Section -->
+      <div class="bg-card border border-border rounded-lg p-4 space-y-3">
+        <h3 class="font-semibold text-sm text-foreground">Co zyskujesz dzięki kontu:</h3>
+        <div class="grid grid-cols-1 gap-2 text-xs text-muted-foreground">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Nieograniczone generowanie fiszek AI</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Synchronizacja postępów między urządzeniami</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Statystyki nauki i śledzenie postępów</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>Bezpieczna kopia zapasowa Twoich fiszek</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Links -->
+      <div class="text-center space-y-4">
+        <div class="text-sm text-muted-foreground">
+          <a href="/" class="hover:text-primary transition-colors"> ← Powrót na stronę główną </a>
+        </div>
+
+        <!-- Terms and Privacy -->
+        <div class="text-xs text-muted-foreground space-y-1">
+          <p>
+            Rejestrując się, wyrażasz zgodę na nasze
+            <a href="/terms" class="text-primary hover:text-primary/80 transition-colors underline">
+              Warunki Korzystania
+            </a>
+            {" "}i{" "}
+            <a href="/privacy" class="text-primary hover:text-primary/80 transition-colors underline">
+              Politykę Prywatności
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom styles for auth pages */
+  body {
+    background: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted-foreground) / 0.05) 100%);
+  }
+
+  /* Subtle animation for benefits */
+  .benefits-list {
+    animation: slideIn 0.6s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<!-- Client-side enhancements -->
+<!-- TODO: Add focus management when backend is ready -->
+<!-- TODO: Add registration success tracking -->
+<!-- TODO: Add password strength enhancements -->
+
+<!-- TODO: Add structured data for SEO -->
+<!-- TODO: Add Open Graph meta tags when backend is ready -->
+<!-- TODO: Add registration conversion tracking -->
+<!-- TODO: Add A/B testing capabilities for registration flow -->

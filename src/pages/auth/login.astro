@@ -1,0 +1,70 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { LoginForm } from "../../components/auth/LoginForm";
+
+// TODO: In backend implementation, add server-side logic to:
+// 1. Check if user is already authenticated (redirect to /generator if logged in)
+// 2. Handle redirect query parameter from protected routes
+// 3. Set appropriate meta tags and OpenGraph data
+
+const title = "Zaloguj się | FishCards";
+const redirectTo = Astro.url.searchParams.get("redirect") || "/generator";
+
+// Server-side auth check would go here
+// const user = await getServerSideAuth(Astro);
+// if (user) {
+//   return Astro.redirect(redirectTo);
+// }
+---
+
+<Layout title={title} showAuth={false}>
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4 sm:px-6 lg:px-8"
+  >
+    <div class="w-full max-w-md space-y-8">
+      <!-- Header -->
+      <div class="text-center">
+        <a href="/" class="inline-flex items-center space-x-2 hover:opacity-80 transition-opacity mb-8">
+          <div class="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
+            <span class="text-primary-foreground font-bold">FC</span>
+          </div>
+          <span class="font-bold text-2xl">FishCards</span>
+        </a>
+      </div>
+
+      <!-- Login Form -->
+      <LoginForm redirectTo={redirectTo} client:load />
+
+      <!-- Additional Links -->
+      <div class="text-center space-y-4">
+        <div class="text-sm text-muted-foreground">
+          <a href="/" class="hover:text-primary transition-colors"> ← Powrót na stronę główną </a>
+        </div>
+
+        <!-- Demo/Guest Access (optional) -->
+        <div class="border-t border-border pt-4">
+          <p class="text-sm text-muted-foreground mb-2">Chcesz wypróbować aplikację?</p>
+          <a
+            href="/demo"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
+          >
+            Tryb demo (bez rejestracji)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom styles for auth pages */
+  body {
+    background: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted-foreground) / 0.05) 100%);
+  }
+</style>
+
+<!-- TODO: Add client-side scripts for: -->
+<!-- - Auto-focus on first input -->
+<!-- - Remember last email (optional) -->
+<!-- - Handle URL redirects properly -->
+<!-- - Analytics tracking (login attempts, success rates) -->

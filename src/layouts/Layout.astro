@@ -3,9 +3,14 @@ import "../styles/global.css";
 
 interface Props {
   title?: string;
+  showAuth?: boolean;
 }
 
-const { title = "10x Astro Starter" } = Astro.props;
+const { title = "FishCards", showAuth = true } = Astro.props;
+
+// TODO: This will be replaced with actual auth state from middleware in backend implementation
+const isAuthenticated = false;
+const userEmail = "";
 ---
 
 <!doctype html>
@@ -18,7 +23,69 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="min-h-screen bg-background text-foreground">
-    <slot />
+    {showAuth && (
+      <header class="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex h-14 items-center justify-between">
+            <!-- Logo/Brand (left) -->
+            <div class="flex items-center">
+              <a href="/" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <div class="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
+                  <span class="text-primary-foreground font-bold text-sm">FC</span>
+                </div>
+                <span class="font-bold text-xl">FishCards</span>
+              </a>
+            </div>
+
+            <!-- Main Navigation (center) -->
+            <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Nawigacja główna">
+              <a 
+                href="/generator" 
+                class="text-sm font-medium transition-colors hover:text-primary"
+                aria-current={Astro.url.pathname === '/generator' ? 'page' : undefined}
+              >
+                Generator
+              </a>
+              <a 
+                href="/flashcards" 
+                class="text-sm font-medium transition-colors hover:text-primary"
+                aria-current={Astro.url.pathname === '/flashcards' ? 'page' : undefined}
+              >
+                Moje Fiszki
+              </a>
+              <a 
+                href="/learning" 
+                class="text-sm font-medium transition-colors hover:text-primary"
+                aria-current={Astro.url.pathname === '/learning' ? 'page' : undefined}
+              >
+                Sesja Nauki
+              </a>
+            </nav>
+
+            <!-- Auth Section (right) -->
+            <div class="flex items-center">
+              <!-- TODO: Replace with actual AuthButton when backend is implemented -->
+              {isAuthenticated ? (
+                <div class="text-sm text-muted-foreground">
+                  {userEmail} • <a href="/auth/logout" class="hover:text-primary">Wyloguj</a>
+                </div>
+              ) : (
+                <a 
+                  href="/auth/login" 
+                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+                >
+                  Zaloguj się
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+    )}
+    
+    <main class="flex-1" role="main">
+      <slot />
+    </main>
   </body>
 </html>
 
