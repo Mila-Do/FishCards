@@ -82,39 +82,33 @@ export function LoginForm({ redirectTo = "/generator", onSuccess, className = ""
     }));
 
     try {
-      // Call login API endpoint
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formState.data.email,
-          password: formState.data.password,
-        }),
+      // Use auth service for login
+      const { authService } = await import("../../lib/auth/auth-service");
+
+      const result = await authService.login({
+        email: formState.data.email,
+        password: formState.data.password,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || result.error) {
-        // Handle API error response
-        const errorMessage = result.error?.message || "Wystąpił błąd podczas logowania";
-
+      if (!result.success) {
+        // Handle login error
         setFormState((prev) => ({
           ...prev,
-          submitError: errorMessage,
+          submitError: result.error || "Wystąpił błąd podczas logowania",
         }));
         return;
       }
 
       // Success - handle the response
-      if (result.success && result.user) {
+      if (result.user && result.user.email) {
         if (onSuccess) {
-          onSuccess(result.user);
+          onSuccess({
+            id: result.user.id,
+            email: result.user.email,
+          });
         } else {
-          // Redirect to target page (use redirectTo from API response or fallback)
-          const targetUrl = result.redirectTo || redirectTo;
-          window.location.href = targetUrl;
+          // Redirect to target page
+          window.location.href = redirectTo;
         }
       } else {
         setFormState((prev) => ({

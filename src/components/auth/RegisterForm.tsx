@@ -96,41 +96,35 @@ export function RegisterForm({ redirectTo = "/generator", onSuccess, className =
     }));
 
     try {
-      // Call registration API endpoint
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formState.data.email,
-          password: formState.data.password,
-          confirmPassword: formState.data.confirmPassword,
-        }),
+      // Use auth service for registration
+      const { authService } = await import("../../lib/auth/auth-service");
+
+      const result = await authService.register({
+        email: formState.data.email,
+        password: formState.data.password,
+        confirmPassword: formState.data.confirmPassword,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || result.error) {
-        // Handle API error response
-        const errorMessage = result.error?.message || "Wystąpił błąd podczas rejestracji";
-
+      if (!result.success) {
+        // Handle registration error
         setFormState((prev) => ({
           ...prev,
-          submitError: errorMessage,
+          submitError: result.error || "Wystąpił błąd podczas rejestracji",
         }));
         return;
       }
 
       // Success response
-      if (result.success && result.user) {
+      if (result.user && result.user.email) {
         if (onSuccess) {
-          onSuccess(result.user);
+          onSuccess({
+            id: result.user.id,
+            email: result.user.email,
+          });
         } else {
           // Show success message and redirect after delay
           setTimeout(() => {
-            const targetUrl = result.redirectTo || redirectTo;
-            window.location.href = targetUrl;
+            window.location.href = redirectTo;
           }, 2000);
         }
       } else {

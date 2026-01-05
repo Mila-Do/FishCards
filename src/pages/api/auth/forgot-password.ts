@@ -4,11 +4,11 @@
  */
 
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
+import { supabaseClient } from "../../../db/supabase.client";
 import { forgotPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
     // Parse and validate request body
     const body = await request.json();
@@ -35,14 +35,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const { email } = validation.data;
 
-    // Create Supabase server instance
-    const supabase = createSupabaseServerInstance({
-      headers: request.headers,
-      cookies,
-    });
-
-    // Send password reset email
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    // Send password reset email using regular Supabase client
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
       redirectTo: `${new URL(request.url).origin}/auth/reset-password`,
     });
 

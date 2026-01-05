@@ -4,56 +4,44 @@
  */
 
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
-import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
-    // Create Supabase server instance for session management
-    const supabase = createSupabaseServerInstance({
-      headers: request.headers,
-      cookies,
-    });
+    // Get Bearer token from request headers
+    const authHeader = request.headers.get("authorization");
+    const token = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
 
-    // Attempt to sign out user
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      // eslint-disable-next-line no-console
-      console.error("Logout error:", error);
-
-      // Map Supabase error to our standardized error format
-      const mappedError = mapSupabaseAuthError(error);
-
-      return new Response(JSON.stringify({ error: mappedError }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (token) {
+      // For Bearer tokens, logout is handled client-side
+      // Server just acknowledges the request
+      console.log("Logout request received for token");
     }
 
-    // Success response
+    // Always return success - client handles token cleanup
     return new Response(
       JSON.stringify({
         success: true,
         message: "Wylogowano pomyślnie",
-        redirectTo: "/", // Redirect to home page after logout
+        redirectTo: "/",
       }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Logout API Error:", error);
-
-    // Handle unexpected errors
-    const mappedError = mapSupabaseAuthError(error);
-
-    return new Response(JSON.stringify({ error: mappedError }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+  } catch {
+    // Even if server logout fails, return success for client cleanup
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Wylogowano pomyślnie",
+        redirectTo: "/",
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 };
 

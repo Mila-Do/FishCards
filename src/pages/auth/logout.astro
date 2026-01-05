@@ -1,15 +1,7 @@
 ---
-import { createSupabaseServerInstance } from "../../db/supabase.client";
+// Handle logout - redirect to home page
+// Actual logout is handled by the auth service on the client side
+// This page just provides a logout endpoint for direct navigation
 
-// Handle logout - clear session and redirect
-const supabase = createSupabaseServerInstance({
-  headers: Astro.request.headers,
-  cookies: Astro.cookies,
-});
-
-// Sign out user
-await supabase.auth.signOut();
-
-// Redirect to home page
-return Astro.redirect("/");
+return Astro.redirect("/?logout=true");
 ---

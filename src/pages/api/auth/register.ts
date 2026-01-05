@@ -4,9 +4,9 @@
  */
 
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 import { registerSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
+import { supabaseClient } from "../../../db/supabase.client";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
@@ -35,14 +35,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const { email, password } = validation.data;
 
-    // Create Supabase server instance for session management
-    const supabase = createSupabaseServerInstance({
-      headers: request.headers,
-      cookies,
-    });
-
-    // Attempt to sign up user - this will automatically sign in the user without email verification
-    const { data, error } = await supabase.auth.signUp({
+    // Use regular Supabase client for authentication
+    // Session management is handled by the frontend auth service
+    const { data, error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
@@ -52,30 +47,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error || !data.user) {
-      // Map Supabase error to our standardized error format
       const mappedError = mapSupabaseAuthError(error);
-
       return new Response(JSON.stringify({ error: mappedError }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Success response - user is automatically signed in
-    return new Response(
-      JSON.stringify({
-        success: true,
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-        },
-        redirectTo: "/generator", // Default redirect after registration
+    // Return user data and tokens if session is available (auto-confirm enabled)
+    const response = {
+      success: true,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+      },
+      redirectTo: "/generator",
+      // Include session data if available
+      ...(data.session && {
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_at: data.session.expires_at,
       }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Registration API Error:", error);

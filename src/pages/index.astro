@@ -1,32 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { createSupabaseServerInstance } from "../db/supabase.client";
 import { getAuthenticatedRedirect } from "../lib/auth/routes-config";
 
 const title = "FishCards - Inteligentne Fiszki AI";
 
-// Check if user is authenticated - redirect to generator if logged in
-const supabase = createSupabaseServerInstance({
-  headers: Astro.request.headers,
-  cookies: Astro.cookies,
-});
-
-const {
-  data: { user },
-  error,
-} = await supabase.auth.getUser();
+// Check if user is authenticated (from middleware) - redirect to generator if logged in
+const user = Astro.locals.user;
 
 // Debug info (remove in production)
 console.log("[DEBUG] Landing page auth check:", {
   hasUser: !!user,
   userEmail: user?.email,
-  userAud: user?.aud,
-  hasError: !!error,
-  errorMessage: error?.message,
 });
 
-// Only redirect if user is properly authenticated (has valid session)
-if (user && !error && user.email && user.aud === "authenticated") {
+// Only redirect if user is properly authenticated
+if (user && user.email) {
   console.log("[DEBUG] Redirecting authenticated user to generator");
   return Astro.redirect(getAuthenticatedRedirect());
 }

@@ -6,32 +6,52 @@
 
 /**
  * Get authentication token for API requests
- *
- * NOTE: This function is deprecated and should not be used.
- * Use Supabase auth system directly instead.
+ * Uses the new auth service for proper token management
  */
-export function getAuthToken(): string | null {
-  // This function should only be used with proper authentication
-  // In production, tokens should come from Supabase auth system
-  throw new Error("Development auth helper removed for security. Use proper Supabase authentication.");
+export async function getAuthToken(): Promise<string | null> {
+  const { authService } = await import("./auth/auth-service");
+  return await authService.getToken();
 }
 
 /**
  * Get authentication headers for API requests
- *
- * NOTE: This function is deprecated. Use proper Supabase client authentication.
+ * Uses the new auth service for proper token management
  */
-export function getAuthHeaders(): Record<string, string> {
-  throw new Error(
-    "Development auth helper removed for security. Use proper Supabase authentication with session tokens."
-  );
+export async function getAuthHeaders(): Promise<Record<string, string>> {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return { "Content-Type": "application/json" };
+  }
+
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
 }
 
 /**
  * Enhanced fetch with automatic authentication headers
- *
- * NOTE: This function is deprecated. Use Supabase client with proper session management.
+ * Uses the new auth service for proper token management with automatic refresh
  */
-export async function authenticatedFetch(): Promise<Response> {
-  throw new Error("Development auth helper removed for security. Use Supabase client for authenticated requests.");
+export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const { authService } = await import("./auth/auth-service");
+  const token = await authService.getToken();
+
+  if (!token) {
+    // Redirect to login if no token available
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth/login";
+    }
+    throw new Error("Authentication required");
+  }
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

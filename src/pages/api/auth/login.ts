@@ -4,11 +4,11 @@
  */
 
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 import { loginSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
+import { supabaseClient } from "../../../db/supabase.client";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
     // Parse and validate request body
     const body = await request.json();
@@ -35,29 +35,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const { email, password } = validation.data;
 
-    // Create Supabase server instance for session management
-    const supabase = createSupabaseServerInstance({
-      headers: request.headers,
-      cookies,
-    });
-
-    // Attempt to sign in user
-    const { data, error } = await supabase.auth.signInWithPassword({
+    // Use regular Supabase client for authentication
+    // Session management is handled by the frontend auth service
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error || !data.user) {
-      // Map Supabase error to our standardized error format
+    if (error || !data.user || !data.session) {
       const mappedError = mapSupabaseAuthError(error);
-
       return new Response(JSON.stringify({ error: mappedError }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Success response
+    // Return user data and access token for Bearer token auth
     return new Response(
       JSON.stringify({
         success: true,
@@ -65,7 +58,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           id: data.user.id,
           email: data.user.email,
         },
-        redirectTo: "/generator", // Default redirect after login
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_at: data.session.expires_at,
+        redirectTo: "/generator",
       }),
       {
         status: 200,
@@ -73,12 +69,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     );
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error("Login API Error:", error);
-
-    // Handle JSON parsing errors and other unexpected errors
     const mappedError = mapSupabaseAuthError(error);
-
     return new Response(JSON.stringify({ error: mappedError }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

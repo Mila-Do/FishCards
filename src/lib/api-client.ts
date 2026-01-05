@@ -84,7 +84,7 @@ export class ApiClient {
   /**
    * Makes HTTP request with retry logic and proper error handling
    */
-  private async makeRequest<T>(url: string, config: RequestConfig = {}): Promise<ApiResult<T>> {
+  protected async makeRequest<T>(url: string, config: RequestConfig = {}): Promise<ApiResult<T>> {
     const { timeout = this.config.timeout, retries = this.config.retries, body, ...fetchConfig } = config;
 
     const fullUrl = url.startsWith("http") ? url : `${this.config.baseURL}${url}`;
@@ -259,6 +259,20 @@ export class ApiClient {
   }
 
   /**
+   * Sets authorization header from auth service
+   */
+  async setAuthFromService(): Promise<void> {
+    const { authService } = await import("./auth/auth-service");
+    const token = await authService.getToken();
+
+    if (token) {
+      this.setAuth(token);
+    } else {
+      this.clearAuth();
+    }
+  }
+
+  /**
    * Removes authorization header
    */
   clearAuth(): void {
@@ -289,11 +303,29 @@ export const apiClient = new ApiClient();
 // ============================================================================
 
 /**
- * Authenticated fetch wrapper - DEPRECATED
- * Use Supabase client with proper session management instead
+ * Authenticated fetch wrapper using Bearer tokens
+ * Automatically adds Authorization header with current token
  */
 export async function authenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  throw new Error("authenticatedFetch is deprecated. Use Supabase client for authenticated requests.");
+  const { authService } = await import("./auth/auth-service");
+  const token = await authService.getToken();
+
+  if (!token) {
+    // Redirect to login if no token available
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth/login";
+    }
+    throw new Error("Authentication required");
+  }
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 /**

@@ -4,11 +4,11 @@
  */
 
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
+import { supabaseClient } from "../../../db/supabase.client";
 import { resetPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
     // Parse and validate request body
     const body = await request.json();
@@ -35,16 +35,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const { password } = validation.data;
 
-    // Create Supabase server instance
-    const supabase = createSupabaseServerInstance({
-      headers: request.headers,
-      cookies,
-    });
+    // Get Bearer token from request headers for authenticated password update
+    const authHeader = request.headers.get("authorization");
+    const token = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
 
-    // Update user password
-    const { data, error } = await supabase.auth.updateUser({
-      password: password,
-    });
+    if (!token) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Token autoryzacji jest wymagany do zmiany hasła",
+          },
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Update user password using authenticated client
+    const { data, error } = await supabaseClient.auth.updateUser({ password });
 
     if (error || !data.user) {
       const mappedError = mapSupabaseAuthError(error);

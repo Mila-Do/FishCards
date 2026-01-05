@@ -1,24 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { LoginForm } from "../../components/auth/LoginForm";
-import { createSupabaseServerInstance } from "../../db/supabase.client";
 
 const title = "Zaloguj się | FishCards";
 const redirectTo = Astro.url.searchParams.get("redirect") || "/generator";
 
-// Server-side auth check - redirect if already logged in
-const supabase = createSupabaseServerInstance({
-  headers: Astro.request.headers,
-  cookies: Astro.cookies,
-});
-
-const {
-  data: { user },
-  error,
-} = await supabase.auth.getUser();
+// Check if user is already authenticated (from middleware)
+const user = Astro.locals.user;
 
 // If user is already authenticated, redirect to generator or specified redirect
-if (user && !error) {
+if (user) {
   return Astro.redirect(redirectTo);
 }
 ---
