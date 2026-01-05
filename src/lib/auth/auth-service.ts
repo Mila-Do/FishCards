@@ -3,11 +3,10 @@
  * Replaces the hybrid session/bearer approach with pure Bearer tokens
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { supabaseClient } from "../../db/supabase.client";
 import { tokenStorage } from "./token-storage";
-import type { Database } from "../../db/database.types";
+import { createClient } from "@supabase/supabase-js";
 import type { User, AuthError } from "@supabase/supabase-js";
+import type { Database } from "../../db/database.types";
 
 export interface LoginCredentials {
   email: string;
@@ -39,6 +38,7 @@ export interface AuthState {
 class AuthService {
   private currentUser: User | null = null;
   private authStateListeners: ((state: AuthState) => void)[] = [];
+  private isInitializing = true;
 
   constructor() {
     this.initializeAuth();
@@ -55,17 +55,18 @@ class AuthService {
       if (user && isValid) {
         this.currentUser = user;
         console.info("Auth initialized successfully for user:", user.email);
-        this.notifyAuthStateChange();
       } else {
         // Invalid/expired token, clear it
         console.info("Invalid or expired token found, clearing auth state");
         await tokenStorage.removeToken();
         this.currentUser = null;
-        this.notifyAuthStateChange();
       }
-    } catch (error) {
-      console.error("Critical error initializing auth:", error);
+    } catch {
+      // Critical error initializing auth
       this.currentUser = null;
+    } finally {
+      // Always mark initialization as complete
+      this.isInitializing = false;
       this.notifyAuthStateChange();
     }
   }
@@ -75,35 +76,44 @@ class AuthService {
    */
   async login(credentials: LoginCredentials): Promise<AuthResult> {
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password,
+      // Use API endpoint instead of direct supabaseClient (avoids env var issues in browser)
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
       });
 
-      if (error || !data.session || !data.user) {
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
         return {
           success: false,
-          error: this.mapAuthError(error),
+          error: result.error?.message || "Wystąpił błąd podczas logowania",
         };
       }
 
-      // Store token data
+      // Store token data from API response
       await tokenStorage.setTokenData({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token || "",
-        expires_at: data.session.expires_at || 0,
-        user: data.user,
+        access_token: result.access_token,
+        refresh_token: result.refresh_token || "",
+        expires_at: result.expires_at || 0,
+        user: result.user,
       });
 
-      this.currentUser = data.user;
+      this.currentUser = result.user;
       this.notifyAuthStateChange();
 
       return {
         success: true,
-        user: data.user,
+        user: result.user,
       };
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch {
+      // Login error occurred
       return {
         success: false,
         error: "Wystąpił nieoczekiwany błąd podczas logowania",
@@ -123,37 +133,45 @@ class AuthService {
         };
       }
 
-      const { data, error } = await supabaseClient.auth.signUp({
-        email: credentials.email,
-        password: credentials.password,
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
       });
 
-      if (error || !data.user) {
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
         return {
           success: false,
-          error: this.mapAuthError(error),
+          error: result.error?.message || "Wystąpił błąd podczas rejestracji",
         };
       }
 
       // If session is available (auto-confirm enabled), store tokens
-      if (data.session) {
+      if (result.access_token) {
         await tokenStorage.setTokenData({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token || "",
-          expires_at: data.session.expires_at || 0,
-          user: data.user,
+          access_token: result.access_token,
+          refresh_token: result.refresh_token || "",
+          expires_at: result.expires_at || 0,
+          user: result.user,
         });
 
-        this.currentUser = data.user;
+        this.currentUser = result.user;
         this.notifyAuthStateChange();
       }
 
       return {
         success: true,
-        user: data.user,
+        user: result.user,
       };
-    } catch (error) {
-      console.error("Register error:", error);
+    } catch {
+      // Register error occurred
       return {
         success: false,
         error: "Wystąpił nieoczekiwany błąd podczas rejestracji",
@@ -166,17 +184,15 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      const userEmail = this.currentUser?.email;
-
       // Revoke current token before clearing local storage
       await this.revokeCurrentToken("manual_logout");
 
       await tokenStorage.removeToken();
       this.currentUser = null;
       this.notifyAuthStateChange();
-      console.info("User logged out successfully:", userEmail);
-    } catch (error) {
-      console.error("Critical error during logout:", error);
+      // User logged out successfully
+    } catch {
+      // Critical error during logout
       // Force cleanup even if logout fails
       await tokenStorage.removeToken();
       this.currentUser = null;
@@ -205,14 +221,14 @@ class AuthService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.warn("Token revocation failed:", errorData);
+        await response.json().catch(() => ({}));
+        // Token revocation failed
         // Don't throw error - logout should continue even if revocation fails
       } else {
         console.info("Token revoked successfully");
       }
-    } catch (error) {
-      console.warn("Error during token revocation:", error);
+    } catch {
+      // Error during token revocation
       // Don't throw error - logout should continue even if revocation fails
     }
   }
@@ -222,8 +238,7 @@ class AuthService {
    */
   async forceLogout(reason = "security_incident"): Promise<void> {
     try {
-      const userEmail = this.currentUser?.email;
-      console.warn("Force logout initiated for user:", userEmail, "Reason:", reason);
+      // Force logout initiated for security reasons
 
       // Try to revoke token with security reason
       await this.revokeCurrentToken(reason);
@@ -232,9 +247,9 @@ class AuthService {
       this.currentUser = null;
       this.notifyAuthStateChange();
 
-      console.info("Force logout completed for user:", userEmail);
-    } catch (error) {
-      console.error("Critical error during force logout:", error);
+      // Force logout completed
+    } catch {
+      // Critical error during force logout
       // Force cleanup even if revocation fails
       await tokenStorage.removeToken();
       this.currentUser = null;
@@ -286,24 +301,32 @@ class AuthService {
   }
 
   /**
-   * Reset password
+   * Reset password using secure API endpoint
    */
   async resetPassword(email: string): Promise<AuthResult> {
     try {
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
       });
 
-      if (error) {
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
         return {
           success: false,
-          error: this.mapAuthError(error),
+          error: result.error?.message || "Wystąpił błąd podczas resetowania hasła",
         };
       }
 
       return { success: true };
-    } catch (error) {
-      console.error("Reset password error:", error);
+    } catch {
+      // Reset password error occurred
       return {
         success: false,
         error: "Wystąpił błąd podczas resetowania hasła",
@@ -312,24 +335,41 @@ class AuthService {
   }
 
   /**
-   * Update password
+   * Update password using secure API endpoint
    */
   async updatePassword(newPassword: string): Promise<AuthResult> {
     try {
-      const { error } = await supabaseClient.auth.updateUser({
-        password: newPassword,
-      });
-
-      if (error) {
+      const token = await tokenStorage.getToken();
+      if (!token) {
         return {
           success: false,
-          error: this.mapAuthError(error),
+          error: "Nie jesteś zalogowany",
+        };
+      }
+
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          password: newPassword,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        return {
+          success: false,
+          error: result.error?.message || "Wystąpił błąd podczas aktualizacji hasła",
         };
       }
 
       return { success: true };
-    } catch (error) {
-      console.error("Update password error:", error);
+    } catch {
+      // Update password error occurred
       return {
         success: false,
         error: "Wystąpił błąd podczas aktualizacji hasła",
@@ -347,7 +387,7 @@ class AuthService {
     callback({
       isAuthenticated: !!this.currentUser,
       user: this.currentUser,
-      loading: false,
+      loading: this.isInitializing,
     });
 
     // Return unsubscribe function
@@ -366,14 +406,14 @@ class AuthService {
     const state: AuthState = {
       isAuthenticated: !!this.currentUser,
       user: this.currentUser,
-      loading: false,
+      loading: this.isInitializing,
     };
 
     this.authStateListeners.forEach((callback) => {
       try {
         callback(state);
-      } catch (error) {
-        console.error("Error in auth state listener:", error);
+      } catch {
+        // Error in auth state listener
       }
     });
   }

@@ -10,14 +10,19 @@
 // ============================================================================
 
 /**
- * Routes that require user to be authenticated
+ * Routes that require user to be authenticated at MIDDLEWARE level
+ * Note: /generator and /flashcards use client-side AuthGuard instead
  * Niezalogowani użytkownicy będą przekierowani do /auth/login
  */
 export const PROTECTED_ROUTES = [
-  "/generator",
-  "/flashcards",
   "/learning", // Future implementation for spaced repetition
 ] as const;
+
+/**
+ * Routes that use client-side AuthGuard (not middleware protection)
+ * These routes load normally but AuthGuard checks auth in React
+ */
+export const CLIENT_PROTECTED_ROUTES = ["/generator", "/flashcards"] as const;
 
 /**
  * Routes accessible only to guests (not logged in users)
@@ -56,10 +61,17 @@ export const PUBLIC_ROUTES = [
 // ============================================================================
 
 /**
- * Check if route requires authentication
+ * Check if route requires authentication at middleware level
  */
 export function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+}
+
+/**
+ * Check if route uses client-side AuthGuard
+ */
+export function isClientProtectedRoute(pathname: string): boolean {
+  return CLIENT_PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 }
 
 /**

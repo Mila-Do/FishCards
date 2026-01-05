@@ -4,7 +4,7 @@
  */
 
 import type { APIRoute } from "astro";
-import { supabaseClient } from "../../../db/supabase.client";
+import { createSupabaseClient } from "../../../db/supabase.client";
 import { resetPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Update user password using authenticated client
-    const { data, error } = await supabaseClient.auth.updateUser({ password });
+    const { data, error } = await createSupabaseClient().auth.updateUser({ password });
 
     if (error || !data.user) {
       const mappedError = mapSupabaseAuthError(error);

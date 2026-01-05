@@ -4,7 +4,7 @@
  */
 
 import type { APIRoute } from "astro";
-import { supabaseClient } from "../../../db/supabase.client";
+import { createSupabaseClient } from "../../../db/supabase.client";
 import { forgotPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { email } = validation.data;
 
     // Send password reset email using regular Supabase client
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    const { error } = await createSupabaseClient().auth.resetPasswordForEmail(email, {
       redirectTo: `${new URL(request.url).origin}/auth/reset-password`,
     });
 

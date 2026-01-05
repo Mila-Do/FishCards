@@ -28,7 +28,6 @@ interface ImportMetaEnv {
   readonly SUPABASE_KEY: string;
   readonly OPENROUTER_API_KEY: string;
   readonly MOCK_AI_GENERATION?: string;
-  // Development auth tokens removed for security
   // more env variables...
 }
 

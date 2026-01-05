@@ -458,3 +458,68 @@ export interface OpenRouterResponse {
     total_tokens: number;
   };
 }
+
+// ============================================================================
+// Dashboard Types
+// ============================================================================
+
+/**
+ * Dashboard statistics interface for the main dashboard view
+ */
+export interface DashboardStats {
+  /** Number of flashcards to review today */
+  flashcardsToReviewToday: number;
+  /** Total number of flashcards owned by the user */
+  totalFlashcards: number;
+  /** AI acceptance rate as a percentage (0-100) */
+  aiAcceptanceRate: number;
+  /** Total number of AI generations created */
+  totalGenerations: number;
+  /** Date of last activity (optional) */
+  lastActivityDate?: Date;
+  /** Optional weekly progress statistics */
+  weeklyProgress?: {
+    reviewedCount: number;
+    createdCount: number;
+  };
+}
+
+/**
+ * Props for the StatCard component
+ */
+export interface StatCardProps {
+  /** Title of the stat card (e.g., "Fiszki do powtórki") */
+  title: string;
+  /** Main value to display */
+  value: number | string;
+  /** Optional subtitle below the main value */
+  subtitle?: string;
+  /** Optional icon from Lucide React */
+  icon?: React.ReactNode;
+  /** Loading state */
+  loading?: boolean;
+  /** Click handler */
+  onClick?: () => void;
+  /** Additional CSS classes */
+  className?: string;
+}
+
+/**
+ * Quick action button configuration
+ */
+export interface QuickAction {
+  /** Unique identifier for the action */
+  id: string;
+  /** Button title */
+  title: string;
+  /** Action description */
+  description: string;
+  /** Navigation path */
+  href: string;
+  /** Optional icon */
+  icon?: React.ReactNode;
+  /** Button style variant */
+  variant: "primary" | "secondary" | "outline";
+  /** Disabled state */
+  disabled?: boolean;
+}

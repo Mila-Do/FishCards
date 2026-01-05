@@ -1,9 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import type { MiddlewareHandler } from "astro";
-import { createClient } from "@supabase/supabase-js";
-
-import { supabaseClient } from "../db/supabase.client.ts";
-import type { Database } from "../db/database.types.ts";
+import { createSupabaseClient } from "../db/supabase.client.ts";
 import type { SupabaseClient } from "../db/supabase.client.ts";
 import { checkRateLimit, getRateLimitConfig } from "../lib/rate-limiter";
 import { errorResponse } from "../lib/response-helpers";
@@ -11,6 +8,7 @@ import {
   isProtectedRoute,
   isGuestOnlyRoute,
   isPublicApiRoute,
+  isClientProtectedRoute,
   getAuthenticatedRedirect,
   getUnauthenticatedRedirect,
 } from "../lib/auth/routes-config";
@@ -68,37 +66,45 @@ async function handleUnifiedBearerAuth(
     return next();
   }
 
-  // Get Bearer token from Authorization header
+  // Always check for Bearer token from Authorization header
   const token = extractBearerToken(context.request.headers.get("authorization"));
+
+  // Log authentication attempts for debugging
+  if (process.env.NODE_ENV === "development") {
+    console.log(`🔍 [${pathname}] Auth check:`, {
+      hasAuthHeader: !!context.request.headers.get("authorization"),
+      hasToken: !!token,
+      isApiRoute,
+      isClientProtected: isClientProtectedRoute(pathname),
+    });
+  }
 
   let user = null;
   let authenticatedSupabase = null;
 
+  // Check auth for ALL routes (but handle differently based on route type)
   if (token) {
     try {
+      // Create anonymous client for token validation
+      const anonymousSupabase = createSupabaseClient();
+
       // Validate token with Supabase
-      const { data, error } = await supabaseClient.auth.getUser(token);
+      const { data, error } = await anonymousSupabase.auth.getUser(token);
 
       if (!error && data?.user) {
         // Check if token is revoked (blacklisted)
-        const isRevoked = await checkTokenRevocation(token, supabaseClient);
+        const isRevoked = await checkTokenRevocation(token, anonymousSupabase);
 
         if (isRevoked) {
-          console.warn("Revoked token attempted to be used:", "Path:", pathname);
+          console.warn("🚫 Revoked token attempted to be used:", "Path:", pathname);
           // Don't set user - treat as unauthenticated
         } else {
           user = data.user;
 
           // Create authenticated Supabase client for RLS
-          authenticatedSupabase = createClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-            global: {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          });
+          authenticatedSupabase = createSupabaseClient(token);
 
-          // Store user info in context.locals
+          // ALWAYS store user info in context.locals (for Layout.astro)
           context.locals.user = {
             email: user.email || "",
             id: user.id,
@@ -115,7 +121,19 @@ async function handleUnifiedBearerAuth(
     }
   }
 
-  // Handle route protection
+  // Handle route protection based on route type
+
+  // 1. Guest-only routes: authenticated users should be redirected
+  if (isGuestOnlyRoute(pathname) && user) {
+    if (isApiRoute) {
+      return authErrorResponse(403, "FORBIDDEN", "Already authenticated", pathname);
+    } else {
+      // Redirect authenticated users away from auth pages
+      return context.redirect(getAuthenticatedRedirect());
+    }
+  }
+
+  // 2. Server-protected routes: unauthenticated users should be redirected
   if (isProtectedRoute(pathname) && !user) {
     if (isApiRoute) {
       return authErrorResponse(401, "UNAUTHORIZED", "Authentication required", pathname);
@@ -125,13 +143,10 @@ async function handleUnifiedBearerAuth(
     }
   }
 
-  if (isGuestOnlyRoute(pathname) && user) {
-    if (isApiRoute) {
-      return authErrorResponse(403, "FORBIDDEN", "Already authenticated", pathname);
-    } else {
-      // Redirect authenticated users away from auth pages
-      return context.redirect(getAuthenticatedRedirect());
-    }
+  // 3. Client-protected routes: allow page load with user info (AuthGuard handles auth)
+  if (isClientProtectedRoute(pathname)) {
+    // Continue to page load - AuthGuard will handle authentication
+    // Layout.astro will have access to user info if available
   }
 
   // Apply rate limiting for API endpoints (only for authenticated users)
@@ -150,7 +165,7 @@ async function handleUnifiedBearerAuth(
 
   // Set default supabase client if no authenticated one
   if (!context.locals.supabase) {
-    context.locals.supabase = supabaseClient;
+    context.locals.supabase = createSupabaseClient();
   }
 
   return next();

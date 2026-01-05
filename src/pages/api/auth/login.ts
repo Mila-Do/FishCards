@@ -6,7 +6,7 @@
 import type { APIRoute } from "astro";
 import { loginSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
-import { supabaseClient } from "../../../db/supabase.client";
+import { createSupabaseClient } from "../../../db/supabase.client";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Use regular Supabase client for authentication
     // Session management is handled by the frontend auth service
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
+    const { data, error } = await createSupabaseClient().auth.signInWithPassword({
       email,
       password,
     });

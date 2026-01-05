@@ -3,7 +3,6 @@
  * Handles token persistence, refresh, and validation
  */
 
-import { supabaseClient } from "../../db/supabase.client";
 import type { User } from "@supabase/supabase-js";
 
 export interface TokenData {
@@ -90,8 +89,7 @@ class SecureTokenStorage implements TokenStorage {
       sessionStorage.removeItem(this.EXPIRES_KEY);
       sessionStorage.removeItem(this.USER_KEY);
 
-      // Also sign out from Supabase
-      await supabaseClient.auth.signOut();
+      // Signout będzie obsługiwane przez API endpoint
     } catch {
       // Silently handle removal errors
     }
@@ -99,50 +97,63 @@ class SecureTokenStorage implements TokenStorage {
 
   /**
    * Refresh the access token using refresh token with retry logic
+   * Uses secure API endpoint instead of direct Supabase client
    */
   async refreshToken(): Promise<string | null> {
+    const refreshToken = this.getStoredRefreshToken();
+    if (!refreshToken) {
+      console.error("No refresh token available");
+      await this.removeToken();
+      return null;
+    }
+
     const maxRetries = 3;
     let lastError: Error | null = null;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const { data, error } = await supabaseClient.auth.refreshSession();
+        const response = await fetch("/api/auth/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            refresh_token: refreshToken,
+          }),
+        });
 
-        if (error) {
-          console.warn(`Token refresh failed (attempt ${attempt}/${maxRetries}):`, error.message);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          const errorMessage = result.error?.message || "Token refresh failed";
+          console.warn(`Token refresh failed (attempt ${attempt}/${maxRetries}):`, errorMessage);
 
           // If it's an auth error (invalid refresh token), don't retry
-          if (error.message.includes("refresh_token") || error.message.includes("invalid")) {
+          if (errorMessage.includes("refresh_token") || errorMessage.includes("invalid")) {
             console.error("Invalid refresh token, clearing auth data");
             await this.removeToken();
             return null;
           }
 
-          lastError = new Error(error.message);
+          lastError = new Error(errorMessage);
 
           // Wait before retry (exponential backoff)
           if (attempt < maxRetries) {
             await this.sleep(Math.pow(2, attempt - 1) * 1000);
             continue;
           }
+        } else {
+          // Store new token data
+          await this.setTokenData({
+            access_token: result.access_token,
+            refresh_token: result.refresh_token,
+            expires_at: result.expires_at,
+            user: result.user,
+          });
+
+          console.info("Token refreshed successfully");
+          return result.access_token;
         }
-
-        if (!data.session) {
-          console.error("No session returned from refresh");
-          await this.removeToken();
-          return null;
-        }
-
-        // Store new token data
-        await this.setTokenData({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token || "",
-          expires_at: data.session.expires_at || 0,
-          user: data.session.user,
-        });
-
-        console.info("Token refreshed successfully");
-        return data.session.access_token;
       } catch (error) {
         lastError = error as Error;
         console.error(`Token refresh network error (attempt ${attempt}/${maxRetries}):`, error);
@@ -169,6 +180,7 @@ class SecureTokenStorage implements TokenStorage {
 
   /**
    * Check if current token is valid
+   * Uses secure API endpoint for validation
    */
   async isTokenValid(): Promise<boolean> {
     const token = await this.getToken();
@@ -177,9 +189,17 @@ class SecureTokenStorage implements TokenStorage {
     }
 
     try {
-      // Validate token with Supabase
-      const { data, error } = await supabaseClient.auth.getUser(token);
-      return !error && !!data.user;
+      // Validate token through API endpoint
+      const response = await fetch("/api/auth/validate", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+      return response.ok && result.success && !!result.user;
     } catch {
       return false;
     }
@@ -226,6 +246,21 @@ class SecureTokenStorage implements TokenStorage {
         expires_at: parseInt(expiresAt, 10),
         user: JSON.parse(user),
       };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get stored refresh token
+   */
+  private getStoredRefreshToken(): string | null {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    try {
+      return sessionStorage.getItem(this.REFRESH_KEY);
     } catch {
       return null;
     }
