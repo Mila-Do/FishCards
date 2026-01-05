@@ -9,6 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 import { cn } from "../../lib/utils";
 import type { StatCardProps } from "../../types";
 
+/* eslint-disable react/prop-types */
 export const StatCard = memo<StatCardProps>(function StatCard({
   title,
   value,
@@ -74,9 +75,7 @@ export const StatCard = memo<StatCardProps>(function StatCard({
           <div className="space-y-3">
             {/* Header with title and optional icon */}
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                {title}
-              </h3>
+              <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
               {icon && (
                 <div className="text-muted-foreground/70" aria-hidden="true">
                   {icon}
@@ -86,22 +85,14 @@ export const StatCard = memo<StatCardProps>(function StatCard({
 
             {/* Main value */}
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight">
-                {formatValue(value)}
-              </span>
+              <span className="text-2xl font-bold tracking-tight">{formatValue(value)}</span>
               {typeof value === "number" && value >= 1000 && (
-                <span className="text-xs text-muted-foreground">
-                  ({value.toLocaleString()})
-                </span>
+                <span className="text-xs text-muted-foreground">({value.toLocaleString()})</span>
               )}
             </div>
 
             {/* Optional subtitle */}
-            {subtitle && (
-              <p className="text-xs text-muted-foreground">
-                {subtitle}
-              </p>
-            )}
+            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
           </div>
         )}
       </CardContent>

@@ -63,26 +63,23 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
   const fetchStats = useCallback(async (): Promise<DashboardStats | null> => {
     // Return cached data if valid
     if (isCacheValid && statsCache) {
-      setState(prev => ({
+      const cachedData = statsCache;
+      setState((prev) => ({
         ...prev,
-        stats: statsCache!.data,
+        stats: cachedData.data,
         loading: false,
         error: null,
-        lastFetched: new Date(statsCache!.timestamp),
+        lastFetched: new Date(cachedData.timestamp),
       }));
-      onSuccess?.(statsCache.data);
-      return statsCache.data;
+      onSuccess?.(cachedData.data);
+      return cachedData.data;
     }
 
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       // Fetch data from multiple endpoints in parallel
-      const [
-        totalFlashcardsResult,
-        reviewFlashcardsResult,
-        generationsResult,
-      ] = await Promise.all([
+      const [totalFlashcardsResult, reviewFlashcardsResult, generationsResult] = await Promise.all([
         // Get total flashcards count
         fetchFlashcards("/api/flashcards?page=1&limit=1"),
         // Get flashcards to review today
@@ -105,20 +102,22 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
       // Calculate AI acceptance rate
       const generations = generationsResult.data.data;
       let aiAcceptanceRate = 0;
-      
+
       if (generations.length > 0) {
         const totalGenerated = generations.reduce((sum, gen) => sum + gen.generated_count, 0);
-        const totalAccepted = generations.reduce((sum, gen) => 
-          sum + gen.accepted_unedited_count + gen.accepted_edited_count, 0
+        const totalAccepted = generations.reduce(
+          (sum, gen) => sum + gen.accepted_unedited_count + gen.accepted_edited_count,
+          0
         );
-        
+
         aiAcceptanceRate = totalGenerated > 0 ? Math.round((totalAccepted / totalGenerated) * 100) : 0;
       }
 
       // Find last activity date
-      const lastActivityDate = generations.length > 0 
-        ? new Date(Math.max(...generations.map(g => new Date(g.created_at).getTime())))
-        : undefined;
+      const lastActivityDate =
+        generations.length > 0
+          ? new Date(Math.max(...generations.map((g) => new Date(g.created_at).getTime())))
+          : undefined;
 
       // Construct dashboard stats
       const stats: DashboardStats = {
@@ -135,7 +134,7 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
         timestamp: Date.now(),
       };
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         stats,
         loading: false,
@@ -145,11 +144,10 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
 
       onSuccess?.(stats);
       return stats;
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to fetch dashboard stats";
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         loading: false,
         error: errorMessage,
@@ -158,14 +156,7 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
       onError?.(errorMessage);
       return null;
     }
-  }, [
-    fetchFlashcards,
-    fetchReviewFlashcards,
-    fetchGenerations,
-    isCacheValid,
-    onSuccess,
-    onError,
-  ]);
+  }, [fetchFlashcards, fetchReviewFlashcards, fetchGenerations, isCacheValid]); // Removed onSuccess, onError from deps to stabilize
 
   // Refresh stats (bypass cache)
   const refetchStats = useCallback(async () => {
@@ -174,12 +165,12 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
     return await fetchStats();
   }, [fetchStats]);
 
-  // Auto-fetch on mount
+  // Auto-fetch on mount - removed fetchStats from dependencies to prevent infinite loop
   useEffect(() => {
     if (autoFetch) {
       fetchStats();
     }
-  }, [autoFetch, fetchStats]);
+  }, [autoFetch]); // Only depend on autoFetch, fetchStats is stable due to useCallback
 
   // Clear cache when component unmounts
   useEffect(() => {

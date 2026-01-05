@@ -99,7 +99,7 @@ export function isPublicRoute(pathname: string): boolean {
  * Get redirect path for authenticated user
  */
 export function getAuthenticatedRedirect(): string {
-  return "/generator";
+  return "/dashboard";
 }
 
 /**
@@ -128,7 +128,7 @@ export function getUnauthenticatedRedirect(currentPath: string): string {
  *    - Mają pełen dostęp do generowania fiszek (/generator)
  *    - Mają dostęp do zarządzania fiszkami (/flashcards)
  *    - Mają dostęp do sesji nauki (/learning)
- *    - Przekierowani ze stron auth na /generator
+ *    - Przekierowani ze stron auth na /dashboard
  *
  * 3. API ENDPOINTS:
  *    - /api/auth/* - publiczne (login, register, etc.)

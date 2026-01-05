@@ -61,7 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
         id: data.user.id,
         email: data.user.email,
       },
-      redirectTo: "/generator",
+      redirectTo: "/dashboard",
       // Include session data if available
       ...(data.session && {
         access_token: data.session.access_token,

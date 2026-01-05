@@ -31,7 +31,7 @@ interface FormState {
   isValid: boolean;
 }
 
-export function LoginForm({ redirectTo = "/generator", onSuccess, className = "" }: LoginFormProps) {
+export function LoginForm({ redirectTo = "/dashboard", onSuccess, className = "" }: LoginFormProps) {
   const [formState, setFormState] = useState<FormState>({
     data: {
       email: "",

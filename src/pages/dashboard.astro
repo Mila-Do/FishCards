@@ -1,0 +1,29 @@
+---
+/**
+ * Dashboard page - Main dashboard view for authenticated users
+ * Displays user statistics and provides quick access to app features
+ */
+
+import Layout from "../layouts/Layout.astro";
+import { DashboardView } from "../components/dashboard/DashboardView";
+
+export const prerender = false;
+
+// Set page metadata
+const title = "Dashboard - FishCards";
+const description =
+  "Twój osobisty dashboard do zarządzania nauką z fiszkami. Przegląd statystyk, szybki dostęp do funkcji i monitorowanie postępów.";
+---
+
+<Layout title={title} description={description}>
+  <main>
+    <DashboardView client:load />
+  </main>
+</Layout>
+
+<style>
+  main {
+    min-height: 100vh;
+    background: hsl(var(--background));
+  }
+</style>

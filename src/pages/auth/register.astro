@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { RegisterForm } from "../../components/auth/RegisterForm";
 
 const title = "Zarejestruj się | FishCards";
-const redirectTo = Astro.url.searchParams.get("redirect") || "/generator";
+const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
 
 // Check if user is already authenticated (from middleware)
 const user = Astro.locals.user;
