@@ -2,6 +2,9 @@ import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeAll, afterAll } from "vitest";
 
+// DOM environment should be available via vitest jsdom environment
+// If not available, tests will show appropriate errors
+
 // MSW setup
 import { server } from "./__mocks__/server";
 

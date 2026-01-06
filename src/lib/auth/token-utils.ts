@@ -9,6 +9,11 @@
  */
 export function generateTokenJti(token: string): string {
   try {
+    // Handle null/undefined tokens
+    if (!token) {
+      return `fallback_${hashString("")}`;
+    }
+
     // For JWT tokens, we use a combination of the signature part and a hash
     const tokenParts = token.split(".");
     if (tokenParts.length >= 3) {
@@ -56,7 +61,7 @@ export async function hashToken(token: string): Promise<string> {
  */
 function hashString(str: string): string {
   let hash = 0;
-  if (str.length === 0) return "0";
+  if (!str || str.length === 0) return "00000000";
 
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
@@ -90,7 +95,8 @@ export function extractBearerToken(authHeader: string | null): string | null {
   }
 
   const match = authHeader.match(/^Bearer\s+(.+)$/i);
-  return match ? match[1] : null;
+  const token = match ? match[1].trim() : null;
+  return token && token.length > 0 ? token : null;
 }
 
 /**

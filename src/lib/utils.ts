@@ -16,8 +16,20 @@ export function cn(...inputs: ClassValue[]) {
  * Truncates text to specified length and adds ellipsis
  */
 export function truncateText(text: string, maxLength: number): string {
+  // Handle edge cases
+  if (maxLength < 0) return "...";
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength).trim() + "...";
+
+  // For Polish app: take exactly maxLength characters and add ellipsis
+  // Handle Unicode characters (including emoji) properly
+  const chars = Array.from(text);
+  const truncatedChars = chars.slice(0, maxLength);
+  const truncated = truncatedChars.join("");
+  const trimmed = truncated.trim();
+
+  // If truncated text ended with space, preserve it before ellipsis
+  const hasTrailingSpace = truncated !== trimmed && truncated.endsWith(" ");
+  return trimmed + (hasTrailingSpace ? " " : "") + "...";
 }
 
 /**
@@ -32,15 +44,102 @@ export function capitalizeWords(text: string): string {
 }
 
 /**
- * Generates a slug from text
+ * Generates a slug from text with Polish character support
  */
 export function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+  // Polish and international character mappings
+  const charMap: Record<string, string> = {
+    // Polish characters
+    ą: "a",
+    ć: "c",
+    ę: "e",
+    ł: "l",
+    ń: "n",
+    ó: "o",
+    ś: "s",
+    ź: "z",
+    ż: "z",
+    Ą: "a",
+    Ć: "c",
+    Ę: "e",
+    Ł: "l",
+    Ń: "n",
+    Ó: "o",
+    Ś: "s",
+    Ź: "z",
+    Ż: "z",
+    // Other international characters
+    à: "a",
+    á: "a",
+    â: "a",
+    ã: "a",
+    ä: "a",
+    å: "a",
+    è: "e",
+    é: "e",
+    ê: "e",
+    ë: "e",
+    ì: "i",
+    í: "i",
+    î: "i",
+    ï: "i",
+    ò: "o",
+    ô: "o",
+    õ: "o",
+    ö: "o",
+    ù: "u",
+    ú: "u",
+    û: "u",
+    ü: "u",
+    ñ: "n",
+    ý: "y",
+    ÿ: "y",
+    ç: "c",
+    ž: "z",
+    À: "a",
+    Á: "a",
+    Â: "a",
+    Ã: "a",
+    Ä: "a",
+    Å: "a",
+    È: "e",
+    É: "e",
+    Ê: "e",
+    Ë: "e",
+    Ì: "i",
+    Í: "i",
+    Î: "i",
+    Ï: "i",
+    Ò: "o",
+    Ô: "o",
+    Õ: "o",
+    Ö: "o",
+    Ù: "u",
+    Ú: "u",
+    Û: "u",
+    Ü: "u",
+    Ñ: "n",
+    Ý: "y",
+    Ÿ: "y",
+    Ç: "c",
+    Ž: "z",
+  };
+
+  return (
+    text
+      .toLowerCase()
+      .trim()
+      // First replace all international characters with their base equivalents
+      .replace(/./g, (char) => charMap[char] || char)
+      // Then remove any remaining non-alphanumeric characters except spaces and hyphens
+      .replace(/[^\w\s-]/g, "")
+      // Replace whitespace and underscores with dashes
+      .replace(/[\s_]+/g, "-")
+      // Remove multiple consecutive dashes
+      .replace(/-+/g, "-")
+      // Remove leading and trailing dashes
+      .replace(/^-+|-+$/g, "")
+  );
 }
 
 // ============================================================================
@@ -61,7 +160,8 @@ export function formatDate(
   }
 ): string {
   const date = typeof dateString === "string" ? new Date(dateString) : dateString;
-  return date.toLocaleDateString("pl-PL", options);
+  const formatter = new Intl.DateTimeFormat("pl-PL", options);
+  return formatter.format(date);
 }
 
 /**
@@ -160,6 +260,11 @@ export function uniqueBy<T, K extends keyof T>(array: T[], key: K): T[] {
  * Chunks array into smaller arrays of specified size
  */
 export function chunk<T>(array: T[], size: number): T[][] {
+  // Guard against invalid chunk sizes
+  if (size <= 0) {
+    return [];
+  }
+
   const chunks: T[][] = [];
   for (let i = 0; i < array.length; i += size) {
     chunks.push(array.slice(i, i + size));

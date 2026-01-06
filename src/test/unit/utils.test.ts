@@ -26,7 +26,7 @@ describe("Utility functions", () => {
       const testDate = new Date("2024-01-15T00:00:00.000Z"); // UTC date
       const result = formatDate(testDate);
 
-      expect(result).toMatchInlineSnapshot('"2024-01-15"');
+      expect(result).toBe("2024-01-15");
     });
   });
 
