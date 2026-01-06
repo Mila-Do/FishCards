@@ -15,7 +15,7 @@ const description =
   "Twój osobisty dashboard do zarządzania nauką z fiszkami. Przegląd statystyk, szybki dostęp do funkcji i monitorowanie postępów.";
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} useClientHeader={true}>
   <main>
     <DashboardView client:load />
   </main>
