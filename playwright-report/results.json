@@ -1,0 +1,553 @@
+{
+  "config": {
+    "configFile": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\playwright.config.ts",
+    "rootDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 8,
+    "webServer": {
+      "command": "bun run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "home.spec.ts",
+      "file": "home.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Home Page",
+          "file": "home.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display home page correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6639,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n    at HomePage.expectToBeVisible (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts:32:35)\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:18:5",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                          "column": 35,
+                          "line": 32
+                        },
+                        "snippet": "   at pages\\HomePage.ts:32\n\n  30 |   async expectToBeVisible() {\n  31 |     await expect(this.title).toBeVisible();\n> 32 |     await expect(this.navigation).toBeVisible();\n     |                                   ^\n  33 |   }\n  34 |\n  35 |   async expectTitle(expectedTitle: string) {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                            "column": 35,
+                            "line": 32
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n\n   at pages\\HomePage.ts:32\n\n  30 |   async expectToBeVisible() {\n  31 |     await expect(this.title).toBeVisible();\n> 32 |     await expect(this.navigation).toBeVisible();\n     |                                   ^\n  33 |   }\n  34 |\n  35 |   async expectTitle(expectedTitle: string) {\n    at HomePage.expectToBeVisible (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts:32:35)\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:18:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.640Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                        "column": 35,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-5c99b627f6ec4018e8b3",
+              "file": "home.spec.ts",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 6644,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:27:30",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                          "column": 30,
+                          "line": 27
+                        },
+                        "snippet": "  25 |     // Verify navigation is present\n  26 |     const navigation = homePage.navigation;\n> 27 |     await expect(navigation).toBeVisible();\n     |                              ^\n  28 |     \n  29 |     // Test navigation items (adjust selectors based on your actual nav)\n  30 |     const navItems = page.getByRole('navigation').getByRole('link');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                            "column": 30,
+                            "line": 27
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n\n  25 |     // Verify navigation is present\n  26 |     const navigation = homePage.navigation;\n> 27 |     await expect(navigation).toBeVisible();\n     |                              ^\n  28 |     \n  29 |     // Test navigation items (adjust selectors based on your actual nav)\n  30 |     const navItems = page.getByRole('navigation').getByRole('link');\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:27:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.624Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-navigation-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-navigation-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                        "column": 30,
+                        "line": 27
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-46dc69b162368bb7de3e",
+              "file": "home.spec.ts",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 6508,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n    at HomePage.expectToBeVisible (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts:32:35)\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:37:5",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                          "column": 35,
+                          "line": 32
+                        },
+                        "snippet": "   at pages\\HomePage.ts:32\n\n  30 |   async expectToBeVisible() {\n  31 |     await expect(this.title).toBeVisible();\n> 32 |     await expect(this.navigation).toBeVisible();\n     |                                   ^\n  33 |   }\n  34 |\n  35 |   async expectTitle(expectedTitle: string) {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                            "column": 35,
+                            "line": 32
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation')\u001b[22m\n\n\n   at pages\\HomePage.ts:32\n\n  30 |   async expectToBeVisible() {\n  31 |     await expect(this.title).toBeVisible();\n> 32 |     await expect(this.navigation).toBeVisible();\n     |                                   ^\n  33 |   }\n  34 |\n  35 |   async expectTitle(expectedTitle: string) {\n    at HomePage.expectToBeVisible (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts:32:35)\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:37:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.696Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts",
+                        "column": 35,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-4008a3c5790cf7a4c0b7",
+              "file": "home.spec.ts",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should have accessible elements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 6545,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('img').first()\nExpected: have attribute\nReceived: attribute not present\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('img').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <svg fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" class=\"w-6 h-6 text-primary\">…</svg>\u001b[22m\n\u001b[2m      - unexpected value \"attribute not present\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('img').first()\nExpected: have attribute\nReceived: attribute not present\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('img').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <svg fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" class=\"w-6 h-6 text-primary\">…</svg>\u001b[22m\n\u001b[2m      - unexpected value \"attribute not present\"\u001b[22m\n\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:59:27",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                          "column": 27,
+                          "line": 59
+                        },
+                        "snippet": "  57 |     for (let i = 0; i < imageCount; i++) {\n  58 |       const image = images.nth(i);\n> 59 |       await expect(image).toHaveAttribute('alt');\n     |                           ^\n  60 |     }\n  61 |   });\n  62 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                            "column": 27,
+                            "line": 59
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('img').first()\nExpected: have attribute\nReceived: attribute not present\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('img').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <svg fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" class=\"w-6 h-6 text-primary\">…</svg>\u001b[22m\n\u001b[2m      - unexpected value \"attribute not present\"\u001b[22m\n\n\n  57 |     for (let i = 0; i < imageCount; i++) {\n  58 |       const image = images.nth(i);\n> 59 |       await expect(image).toHaveAttribute('alt');\n     |                           ^\n  60 |     }\n  61 |   });\n  62 |\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:59:27"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.639Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                        "column": 27,
+                        "line": 59
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-a2d9b22bd0f5b8538d84",
+              "file": "home.spec.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load without console errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1993,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.685Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-7f693f84225cfe1be0d6",
+              "file": "home.spec.ts",
+              "line": 63,
+              "column": 3
+            },
+            {
+              "title": "should pass visual regression test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 2100,
+                      "error": {
+                        "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-win32.png, writing actual.",
+                        "stack": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-win32.png, writing actual.\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:81:5",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                          "column": 5,
+                          "line": 81
+                        },
+                        "snippet": "  79 |   test('should pass visual regression test', async ({ page }) => {\n  80 |     // Take full page screenshot for visual comparison\n> 81 |     await expect(page).toHaveScreenshot('home-page-full.png', {\n     |     ^\n  82 |       fullPage: true,\n  83 |     });\n  84 |   });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                            "column": 5,
+                            "line": 81
+                          },
+                          "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-win32.png, writing actual.\n\n  79 |   test('should pass visual regression test', async ({ page }) => {\n  80 |     // Take full page screenshot for visual comparison\n> 81 |     await expect(page).toHaveScreenshot('home-page-full.png', {\n     |     ^\n  82 |       fullPage: true,\n  83 |     });\n  84 |   });\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:81:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T12:59:44.683Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "home-page-full-expected.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-win32.png"
+                        },
+                        {
+                          "name": "home-page-full-actual.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium\\home-page-full-actual.png"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                        "column": 5,
+                        "line": 81
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-b687ed885372fa601e1b",
+              "file": "home.spec.ts",
+              "line": 79,
+              "column": 3
+            }
+          ],
+          "suites": [
+            {
+              "title": "API Integration",
+              "file": "home.spec.ts",
+              "line": 86,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle API responses correctly",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 6,
+                          "status": "timedOut",
+                          "duration": 30185,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                                "column": 35,
+                                "line": 104
+                              },
+                              "message": "Error: page.waitForResponse: Test timeout of 30000ms exceeded.\n=========================== logs ===========================\nwaiting for response \"/api/test\"\n============================================================\n\n  102 |       \n  103 |       // Verify API interaction\n> 104 |       const response = await page.waitForResponse('/api/test');\n      |                                   ^\n  105 |       expect(response.status()).toBe(200);\n  106 |     });\n  107 |   });\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:104:35"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-06T12:59:44.715Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-API-Integra-70f58-dle-API-responses-correctly-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-API-Integra-70f58-dle-API-responses-correctly-chromium\\error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d318381359a9b96acb1e-57fa56a9b91b1b82c20a",
+                  "file": "home.spec.ts",
+                  "line": 87,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-06T12:59:42.827Z",
+    "duration": 33087.158,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,56 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e8]: FC
+          - generic [ref=e9]:
+            - heading "FishCards" [level=1] [ref=e10]
+            - paragraph [ref=e11]: Inteligentne Fiszki AI
+        - generic [ref=e12]:
+          - link "Zaloguj się" [ref=e13] [cursor=pointer]:
+            - /url: /auth/login
+          - link "Zarejestruj się" [ref=e14] [cursor=pointer]:
+            - /url: /auth/register
+      - main [ref=e15]:
+        - generic [ref=e16]:
+          - heading "Twórz fiszki błyskawicznie z pomocą AI" [level=2] [ref=e17]:
+            - text: Twórz fiszki błyskawicznie
+            - text: z pomocą AI
+          - paragraph [ref=e18]: Wklej dowolny tekst, a nasza sztuczna inteligencja automatycznie wygeneruje wysokiej jakości fiszki do nauki. Oszczędź czas i ucz się efektywniej.
+          - generic [ref=e19]:
+            - link "Rozpocznij za darmo" [ref=e20] [cursor=pointer]:
+              - /url: /auth/register
+            - link "Zobacz demo" [ref=e21] [cursor=pointer]:
+              - /url: /demo
+          - generic [ref=e22]:
+            - generic [ref=e23]:
+              - img [ref=e25]
+              - heading "Błyskawiczne generowanie" [level=3] [ref=e27]
+              - paragraph [ref=e28]: Wklej tekst i otrzymaj gotowe fiszki w kilka sekund. AI analizuje treść i tworzy optymalne pytania.
+            - generic [ref=e29]:
+              - img [ref=e31]
+              - heading "Inteligentna analiza" [level=3] [ref=e33]
+              - paragraph [ref=e34]: Zaawansowane algorytmy AI rozpoznają kluczowe pojęcia i tworzą pytania dopasowane do treści.
+            - generic [ref=e35]:
+              - img [ref=e37]
+              - heading "Efektywna nauka" [level=3] [ref=e39]
+              - paragraph [ref=e40]: Wykorzystuj sprawdzone metody powtórek rozłożonych w czasie dla maksymalnej skuteczności nauki.
+      - paragraph [ref=e43]: © 2025 FishCards. Wszystkie prawa zastrzeżone.
+  - generic [ref=e46]:
+    - button "Menu" [ref=e47]:
+      - img [ref=e49]
+      - generic: Menu
+    - button "Inspect" [ref=e53]:
+      - img [ref=e55]
+      - generic: Inspect
+    - button "Audit" [ref=e57]:
+      - img [ref=e59]
+      - generic: Audit
+    - button "Settings" [ref=e62]:
+      - img [ref=e64]
+      - generic: Settings
+```
