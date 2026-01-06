@@ -108,12 +108,12 @@ export interface ProposalsSectionProps {
   onSave: () => void;
   isVisible: boolean;
   selectedCount: number;
-  isLoading: boolean; // dla wyĹ›wietlania skeleton
+  isLoading: boolean; // dla wyświetlania skeleton
   onUpdateProposal: (id: string, updates: Partial<ProposalState>) => void;
 }
 
 export interface ProposalsSkeletonProps {
-  count?: number; // liczba skeleton cards, domyĹ›lnie 4
+  count?: number; // liczba skeleton cards, domyślnie 4
 }
 
 export interface LoadingOverlayProps {

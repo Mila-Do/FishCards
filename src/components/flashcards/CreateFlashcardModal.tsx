@@ -1,6 +1,6 @@
 /**
  * CreateFlashcardModal - Modal do tworzenia nowej fiszki
- * Zawiera formularz z polami przĂłd, tyĹ‚ i ĹşrĂłdĹ‚o
+ * Zawiera formularz z polami przód, tył i źródło
  */
 
 import React, { useState, useCallback } from "react";
@@ -54,19 +54,19 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
     const newErrors: FormErrors = {};
 
     if (!data.front.trim()) {
-      newErrors.front = "PrzĂłd fiszki nie moĹĽe byÄ‡ pusty";
+      newErrors.front = "Przód fiszki nie może być pusty";
     } else if (data.front.length > 200) {
-      newErrors.front = "PrzĂłd fiszki moĹĽe mieÄ‡ maksymalnie 200 znakĂłw";
+      newErrors.front = "Przód fiszki może mieć maksymalnie 200 znaków";
     }
 
     if (!data.back.trim()) {
-      newErrors.back = "TyĹ‚ fiszki nie moĹĽe byÄ‡ pusty";
+      newErrors.back = "Tył fiszki nie może być pusty";
     } else if (data.back.length > 500) {
-      newErrors.back = "TyĹ‚ fiszki moĹĽe mieÄ‡ maksymalnie 500 znakĂłw";
+      newErrors.back = "Tył fiszki może mieć maksymalnie 500 znaków";
     }
 
     if (!["manual", "ai", "mixed"].includes(data.source)) {
-      newErrors.source = "NieprawidĹ‚owe ĹşrĂłdĹ‚o fiszki";
+      newErrors.source = "Nieprawidłowe źródło fiszki";
     }
 
     return newErrors;
@@ -97,7 +97,7 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
         setFormData(DEFAULT_FORM_DATA);
       } catch (error) {
         setErrors({
-          general: error instanceof Error ? error.message : "WystÄ…piĹ‚ bĹ‚Ä…d podczas tworzenia fiszki",
+          general: error instanceof Error ? error.message : "Wystąpił błąd podczas tworzenia fiszki",
         });
       } finally {
         setIsSubmitting(false);
@@ -142,7 +142,7 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Dodaj nowÄ… fiszkÄ™</DialogTitle>
+          <DialogTitle>Dodaj nową fiszkę</DialogTitle>
           <DialogDescription>
             Utwórz nową fiszkę wprowadzając pytanie i odpowiedź. Możesz również wybrać źródło pochodzenia fiszki.
           </DialogDescription>
@@ -159,11 +159,11 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
           {/* Front field */}
           <div className="space-y-2">
             <Label htmlFor="front">
-              PrzĂłd fiszki <span className="text-destructive">*</span>
+              Przód fiszki <span className="text-destructive">*</span>
             </Label>
             <Textarea
               id="front"
-              placeholder="Wpisz pytanie lub pojÄ™cie..."
+              placeholder="Wpisz pytanie lub pojęcie..."
               value={formData.front}
               onChange={handleInputChange("front")}
               className={errors.front ? "border-destructive" : ""}
@@ -180,11 +180,11 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
           {/* Back field */}
           <div className="space-y-2">
             <Label htmlFor="back">
-              TyĹ‚ fiszki <span className="text-destructive">*</span>
+              Tył fiszki <span className="text-destructive">*</span>
             </Label>
             <Textarea
               id="back"
-              placeholder="Wpisz odpowiedĹş lub wyjaĹ›nienie..."
+              placeholder="Wpisz odpowiedź lub wyjaśnienie..."
               value={formData.back}
               onChange={handleInputChange("back")}
               className={errors.back ? "border-destructive" : ""}
@@ -200,13 +200,13 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
 
           {/* Source field */}
           <div className="space-y-2">
-            <Label htmlFor="source">ĹąrĂłdĹ‚o</Label>
+            <Label htmlFor="source">Źródło</Label>
             <Select value={formData.source} onValueChange={handleSourceChange} disabled={isSubmitting}>
               <SelectTrigger className={errors.source ? "border-destructive" : ""}>
-                <SelectValue placeholder="Wybierz ĹşrĂłdĹ‚o" />
+                <SelectValue placeholder="Wybierz źródło" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="manual">RÄ™czne</SelectItem>
+                <SelectItem value="manual">Ręczne</SelectItem>
                 <SelectItem value="ai">AI</SelectItem>
                 <SelectItem value="mixed">Mieszane</SelectItem>
               </SelectContent>
@@ -219,7 +219,7 @@ export function CreateFlashcardModal({ isOpen, onClose, onSubmit }: CreateFlashc
               Anuluj
             </Button>
             <Button type="submit" disabled={isSubmitting || !formData.front.trim() || !formData.back.trim()}>
-              {isSubmitting ? "Dodawanie..." : "Dodaj fiszkÄ™"}
+              {isSubmitting ? "Dodawanie..." : "Dodaj fiszkę"}
             </Button>
           </DialogFooter>
         </form>
