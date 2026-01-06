@@ -37,6 +37,14 @@ The application provides a complete flashcard management ecosystem including AI-
 - **GitHub Actions** - Automated CI/CD pipelines
 - **DigitalOcean** - Application hosting via Docker containers
 
+### Testing
+
+- **Vitest** - Fast unit testing framework with native ES modules support
+- **React Testing Library** - Simple and complete React components testing
+- **Playwright** - Reliable end-to-end testing for web applications
+- **MSW (Mock Service Worker)** - API mocking for integration tests
+- **Lighthouse CI** - Automated performance and accessibility audits
+
 ## Getting Started Locally
 
 ### Prerequisites
@@ -79,6 +87,10 @@ The application provides a complete flashcard management ecosystem including AI-
 | `bun run lint:fix`  | Automatically fix ESLint issues      |
 | `bun run format`    | Format code using Prettier           |
 | `bun run check-mvp` | Run MVP validation checks            |
+| `bun run test`      | Run unit tests with Vitest           |
+| `bun run test:ui`   | Run tests with Vitest UI interface   |
+| `bun run test:e2e`  | Run end-to-end tests with Playwright |
+| `bun run test:coverage` | Generate test coverage reports     |
 
 ## API Documentation
 
