@@ -1,6 +1,16 @@
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
-import { afterEach, beforeAll, afterAll } from "vitest";
+import { afterEach, beforeAll, afterAll, vi } from "vitest";
+
+// Extend global type to include vi
+declare global {
+  interface GlobalThis {
+    vi: typeof import("vitest").vi;
+  }
+}
+
+// Make vi globally available
+globalThis.vi = vi;
 
 // DOM environment should be available via vitest jsdom environment
 // If not available, tests will show appropriate errors
