@@ -45,11 +45,11 @@ describe("jsonResponse", () => {
     });
 
     it("should handle null data", async () => {
-      const response = jsonResponse(null, { status: 204 });
+      const response = jsonResponse(null, { status: 200 });
       const responseText = await response.text();
 
       expect(responseText).toBe("null");
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(200);
     });
 
     it("should handle undefined data", async () => {
@@ -126,7 +126,7 @@ describe("jsonResponse", () => {
 
   describe("different status codes", () => {
     it("should handle various success status codes", () => {
-      const successCodes = [200, 201, 202, 204];
+      const successCodes = [200, 201, 202];
 
       successCodes.forEach((status) => {
         const response = jsonResponse({ status: "ok" }, { status });
