@@ -9,8 +9,13 @@ import type { QuickAction } from "../../types";
 export function useDashboardNavigation() {
   // Navigate to different sections of the app
   const navigateTo = useCallback((path: string) => {
-    // Use client-side navigation for SPA-like experience
-    window.location.assign(path);
+    try {
+      // Use client-side navigation for SPA-like experience
+      window.location.assign(path);
+    } catch (error) {
+      // Handle navigation errors gracefully
+      console.error("Navigation error:", error);
+    }
   }, []);
 
   // Quick action configurations
