@@ -33,6 +33,14 @@ interface CacheEntry {
 
 let statsCache: CacheEntry | null = null;
 
+/**
+ * Clear the stats cache - useful for testing
+ * @internal
+ */
+export function clearStatsCache() {
+  statsCache = null;
+}
+
 export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
   const {
     autoFetch = true,
