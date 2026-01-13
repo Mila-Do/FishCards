@@ -93,7 +93,7 @@ class AuthService {
       if (!response.ok || !result.success) {
         return {
           success: false,
-          error: result.error?.message || "Wystąpił błąd podczas logowania",
+          error: this.mapAuthError(result.error),
         };
       }
 
@@ -141,6 +141,7 @@ class AuthService {
         body: JSON.stringify({
           email: credentials.email,
           password: credentials.password,
+          confirmPassword: credentials.confirmPassword,
         }),
       });
 
@@ -149,7 +150,7 @@ class AuthService {
       if (!response.ok || !result.success) {
         return {
           success: false,
-          error: result.error?.message || "Wystąpił błąd podczas rejestracji",
+          error: this.mapAuthError(result.error),
         };
       }
 
@@ -187,14 +188,25 @@ class AuthService {
       // Revoke current token before clearing local storage
       await this.revokeCurrentToken("manual_logout");
 
-      await tokenStorage.removeToken();
+      // Clean up local storage (ignore errors)
+      try {
+        await tokenStorage.removeToken();
+      } catch {
+        // Ignore storage errors during logout
+      }
+
       this.currentUser = null;
       this.notifyAuthStateChange();
       // User logged out successfully
     } catch {
       // Critical error during logout
       // Force cleanup even if logout fails
-      await tokenStorage.removeToken();
+      try {
+        await tokenStorage.removeToken();
+      } catch {
+        // Ignore storage errors during cleanup
+      }
+
       this.currentUser = null;
       this.notifyAuthStateChange();
     }
@@ -243,7 +255,13 @@ class AuthService {
       // Try to revoke token with security reason
       await this.revokeCurrentToken(reason);
 
-      await tokenStorage.removeToken();
+      // Clean up local storage (ignore errors)
+      try {
+        await tokenStorage.removeToken();
+      } catch {
+        // Ignore storage errors during force logout
+      }
+
       this.currentUser = null;
       this.notifyAuthStateChange();
 
@@ -251,7 +269,12 @@ class AuthService {
     } catch {
       // Critical error during force logout
       // Force cleanup even if revocation fails
-      await tokenStorage.removeToken();
+      try {
+        await tokenStorage.removeToken();
+      } catch {
+        // Ignore storage errors during cleanup
+      }
+
       this.currentUser = null;
       this.notifyAuthStateChange();
     }
@@ -285,19 +308,24 @@ class AuthService {
    * Get authenticated Supabase client with current token
    */
   async getAuthenticatedClient(): Promise<ReturnType<typeof createClient<Database>> | null> {
-    const token = await this.getToken();
+    try {
+      const token = await this.getToken();
 
-    if (!token) {
+      if (!token) {
+        return null;
+      }
+
+      return createClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
+    } catch {
+      // Error getting token or creating client
       return null;
     }
-
-    return createClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    });
   }
 
   /**
@@ -320,7 +348,7 @@ class AuthService {
       if (!response.ok || !result.success) {
         return {
           success: false,
-          error: result.error?.message || "Wystąpił błąd podczas resetowania hasła",
+          error: this.mapAuthError(result.error) || "Wystąpił błąd podczas resetowania hasła",
         };
       }
 
@@ -363,7 +391,7 @@ class AuthService {
       if (!response.ok || !result.success) {
         return {
           success: false,
-          error: result.error?.message || "Wystąpił błąd podczas aktualizacji hasła",
+          error: this.mapAuthError(result.error) || "Wystąpił błąd podczas aktualizacji hasła",
         };
       }
 
@@ -383,12 +411,20 @@ class AuthService {
   onAuthStateChange(callback: (state: AuthState) => void): () => void {
     this.authStateListeners.push(callback);
 
-    // Immediately call with current state
-    callback({
-      isAuthenticated: !!this.currentUser,
-      user: this.currentUser,
-      loading: this.isInitializing,
-    });
+    // Immediately call with current state (handle errors gracefully)
+    try {
+      callback({
+        isAuthenticated: !!this.currentUser,
+        user: this.currentUser,
+        loading: this.isInitializing,
+      });
+    } catch {
+      // Error in immediate callback - remove the faulty listener
+      const index = this.authStateListeners.indexOf(callback);
+      if (index > -1) {
+        this.authStateListeners.splice(index, 1);
+      }
+    }
 
     // Return unsubscribe function
     return () => {

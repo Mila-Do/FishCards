@@ -122,7 +122,12 @@ export class ApiClient {
           return { success: false, error: error.message, details: error.details };
         }
 
-        if (error instanceof DOMException && error.name === "AbortError") {
+        // Check for timeout/abort errors (both DOMException and Error with name="AbortError")
+        const isAbortError =
+          (error instanceof Error && error.name === "AbortError") ||
+          (error instanceof DOMException && error.name === "AbortError");
+
+        if (isAbortError) {
           if (attempt === retries) {
             return {
               success: false,
@@ -311,5 +316,5 @@ export function isApiSuccess<T>(result: ApiResult<T>): result is { success: true
  * Utility function to extract error from API result
  */
 export function getApiError<T>(result: ApiResult<T>): string | null {
-  return result.success ? null : result.error;
+  return result.success ? null : result.error || null;
 }

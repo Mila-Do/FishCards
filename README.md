@@ -92,6 +92,134 @@ The application provides a complete flashcard management ecosystem including AI-
 | `bun run test:e2e`  | Run end-to-end tests with Playwright |
 | `bun run test:coverage` | Generate test coverage reports     |
 
+## Testing
+
+### Test Structure
+
+The project uses a comprehensive testing strategy with multiple layers:
+
+- **Unit Tests** (`src/test/unit/`): Test individual functions and components in isolation
+- **Integration Tests** (`src/test/integration/`): Test component and API interactions
+- **E2E Tests** (`src/test/e2e/`): Full user workflow testing with Playwright
+
+### Running Tests
+
+#### All Tests
+```bash
+# Run all tests once
+bun run test
+
+# Run tests in watch mode (recommended during development)
+bun run test:watch
+
+# Run tests with UI interface
+bun run test:ui
+```
+
+#### Specific Test Suites
+
+```bash
+# Unit tests only
+bun run test:unit
+
+# Integration tests only
+bun run test:integration
+
+# E2E tests only
+bun run test:e2e
+
+# E2E tests with debug mode
+bun run test:e2e:debug
+
+# E2E tests in headed mode (visible browser)
+bun run test:e2e:headed
+```
+
+#### API Client Tests
+
+The API client (`src/lib/api-client.ts`) has comprehensive unit test coverage (91.89%). To run only these tests:
+
+```bash
+# Run API client tests specifically
+npx vitest run src/test/unit/api/api-client.test.ts
+
+# Run with coverage for API client
+npx vitest run --coverage src/test/unit/api/api-client.test.ts
+
+# Run in watch mode during API client development
+npx vitest watch src/test/unit/api/api-client.test.ts
+```
+
+#### Test Coverage
+
+Generate detailed coverage reports:
+
+```bash
+# Generate coverage report for all tests
+bun run test:coverage
+
+# Generate coverage for specific test file
+npx vitest run --coverage src/test/unit/api/api-client.test.ts
+```
+
+### Test Coverage Goals
+
+| Module | Target Coverage | Current Status |
+|--------|----------------|----------------|
+| API Client | 85%+ | ✅ 91.89% |
+| Utility Functions | 80%+ | ✅ 95%+ |
+| React Components | 70%+ | In Progress |
+| E2E Flows | 100% | In Progress |
+
+### Writing Tests
+
+#### Unit Tests (Vitest + React Testing Library)
+```typescript
+import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { MyComponent } from "@/components/MyComponent";
+
+describe("MyComponent", () => {
+  it("renders correctly", () => {
+    render(<MyComponent />);
+    expect(screen.getByText("Hello")).toBeInTheDocument();
+  });
+});
+```
+
+#### API Integration Tests (MSW)
+```typescript
+import { rest } from "msw";
+import { server } from "@/test/__mocks__/server";
+
+describe("API Integration", () => {
+  it("fetches data successfully", async () => {
+    server.use(
+      rest.get("/api/data", (req, res, ctx) => {
+        return res(ctx.json({ success: true, data: [] }));
+      })
+    );
+
+    const result = await apiCall("GET", "/api/data");
+    expect(result.success).toBe(true);
+  });
+});
+```
+
+#### E2E Tests (Playwright)
+```typescript
+import { test, expect } from "@playwright/test";
+
+test("user can create flashcard", async ({ page }) => {
+  await page.goto("/");
+  await page.fill('[data-testid="front-input"]', "Question");
+  await page.fill('[data-testid="back-input"]', "Answer");
+  await page.click('[data-testid="save-button"]');
+
+  await expect(page.getByText("Flashcard created")).toBeVisible();
+});
+```
+
 ## API Documentation
 
 The FishCards API provides REST endpoints for managing flashcards and AI generations. All endpoints require JWT authentication via Bearer token.

@@ -25,11 +25,13 @@ src/test/
 
 ### Unit & Integration Tests (Vitest)
 
+**Note:** All tests use `vitest run` for consistency and full API support (including `vi.mock` and `vi.hoisted`). This ensures compatibility across all test files.
+
 ```bash
 # Run all tests
 bun run test
 
-# Run with UI
+# Run with UI (interactive mode)
 bun run test:ui
 
 # Run in watch mode
@@ -41,6 +43,12 @@ bun run test:coverage
 # Run specific test suite
 bun run test:unit
 bun run test:integration
+
+# Run auth tests specifically
+bun run test:auth
+
+# Run specific test file
+bunx vitest run src/test/unit/auth/auth-service.test.ts
 ```
 
 ### E2E Tests (Playwright)
@@ -131,6 +139,17 @@ test('should navigate correctly', async ({ page }) => {
 });
 ```
 
+## Test Runner
+
+All tests use **Vitest Runner** (`vitest run`) for consistency and full API support:
+
+- ✅ Full Vitest API support including `vi.mock` and `vi.hoisted`
+- ✅ Consistent behavior across all test files
+- ✅ Module mocking works correctly
+- ✅ All npm scripts use `vitest run` by default
+
+**Note:** While Bun's test runner (`bun test`) is faster, it doesn't support `vi.mock` and `vi.hoisted`, so we use Vitest runner for all tests to ensure compatibility.
+
 ## Best Practices
 
 ### General
@@ -138,6 +157,12 @@ test('should navigate correctly', async ({ page }) => {
 - Use Arrange-Act-Assert pattern for clarity
 - Keep tests isolated and independent
 - Mock external dependencies
+
+### Module Mocking
+- Use `vi.mock` for module mocking (requires `vitest run`)
+- Use `vi.hoisted` when you need to reference variables in mock factories
+- For Bun compatibility, prefer direct mock factories in `vi.mock` instead of `vi.hoisted`
+- Use `vi.mocked()` helper for type-safe mock assertions
 
 ### Unit Tests
 - Test one thing at a time

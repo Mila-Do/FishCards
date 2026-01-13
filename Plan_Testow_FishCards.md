@@ -2,7 +2,7 @@
 ## Aplikacja do Inteligentnego Tworzenia Fiszek z AI
 
 **Wersja:** 1.0  
-**Data:** 6 stycznia 2025  
+**Data:** 6 stycznia 2026  
 **Status:** MVP w rozwoju  
 
 ---

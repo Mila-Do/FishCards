@@ -8,23 +8,23 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { LoginCredentials, RegisterCredentials } from "../../../lib/auth/auth-service";
 import type { User } from "@supabase/supabase-js";
 
-// Mock tokenStorage - critical dependency
-const mockTokenStorage = {
-  getToken: vi.fn(),
-  setTokenData: vi.fn(),
-  removeToken: vi.fn(),
-  refreshToken: vi.fn(),
-  isTokenValid: vi.fn(),
-  getUser: vi.fn(),
-};
-
 // Mock the token storage module before importing authService
+// Using direct mock factory (vi.hoisted not available with Bun runner)
 vi.mock("../../../lib/auth/token-storage", () => ({
-  tokenStorage: mockTokenStorage,
+  tokenStorage: {
+    getToken: vi.fn(),
+    setTokenData: vi.fn(),
+    removeToken: vi.fn(),
+    refreshToken: vi.fn(),
+    isTokenValid: vi.fn(),
+    getUser: vi.fn(),
+  },
 }));
 
 // Import authService after mock setup
 import { authService } from "../../../lib/auth/auth-service";
+// Import tokenStorage for assertions (will be mocked)
+import { tokenStorage } from "../../../lib/auth/token-storage";
 
 // Mock fetch globally using vi.stubGlobal
 const mockFetch = vi.fn();
@@ -61,17 +61,19 @@ describe("AuthService", () => {
     // Reset all mocks
     mockFetch.mockReset();
 
-    // Reset tokenStorage mocks
-    Object.values(mockTokenStorage).forEach((mock) => {
-      if (typeof mock.mockReset === "function") {
-        mock.mockReset();
-      }
-    });
+    // Reset tokenStorage mocks using vi.mocked
+    const mockedTokenStorage = vi.mocked(tokenStorage);
+    vi.mocked(mockedTokenStorage.getUser).mockReset();
+    vi.mocked(mockedTokenStorage.isTokenValid).mockReset();
+    vi.mocked(mockedTokenStorage.getToken).mockReset();
+    vi.mocked(mockedTokenStorage.setTokenData).mockReset();
+    vi.mocked(mockedTokenStorage.removeToken).mockReset();
+    vi.mocked(mockedTokenStorage.refreshToken).mockReset();
 
     // Set default tokenStorage behavior
-    mockTokenStorage.getUser.mockResolvedValue(null);
-    mockTokenStorage.isTokenValid.mockResolvedValue(false);
-    mockTokenStorage.getToken.mockResolvedValue(null);
+    vi.mocked(mockedTokenStorage.getUser).mockResolvedValue(null);
+    vi.mocked(mockedTokenStorage.isTokenValid).mockResolvedValue(false);
+    vi.mocked(mockedTokenStorage.getToken).mockResolvedValue(null);
 
     // Reset storage mocks
     [mockSessionStorage, mockLocalStorage].forEach((storage) => {
@@ -242,16 +244,16 @@ describe("AuthService", () => {
   describe("getToken", () => {
     it("should return token from tokenStorage", async () => {
       const expectedToken = "test-token-123";
-      mockTokenStorage.getToken.mockResolvedValue(expectedToken);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(expectedToken);
 
       const token = await authService.getToken();
 
       expect(token).toBe(expectedToken);
-      expect(mockTokenStorage.getToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).getToken).toHaveBeenCalled();
     });
 
     it("should return null when no token", async () => {
-      mockTokenStorage.getToken.mockResolvedValue(null);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(null);
 
       const token = await authService.getToken();
 
@@ -261,7 +263,7 @@ describe("AuthService", () => {
 
   describe("revokeCurrentToken", () => {
     it("should revoke token successfully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ success: true }),
@@ -285,7 +287,7 @@ describe("AuthService", () => {
     });
 
     it("should handle missing token gracefully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue(null);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(null);
       const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 
       await authService.revokeCurrentToken();
@@ -297,7 +299,7 @@ describe("AuthService", () => {
     });
 
     it("should handle API errors gracefully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ error: { message: "Invalid token" } }),
@@ -308,7 +310,7 @@ describe("AuthService", () => {
     });
 
     it("should handle network errors gracefully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
       mockFetch.mockRejectedValue(new Error("Network error"));
 
       // Should not throw
@@ -316,7 +318,7 @@ describe("AuthService", () => {
     });
 
     it("should use default reason when none provided", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ success: true }),
@@ -335,7 +337,7 @@ describe("AuthService", () => {
 
   describe("updatePassword", () => {
     it("should update password successfully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("valid-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("valid-token");
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ success: true }),
@@ -355,7 +357,7 @@ describe("AuthService", () => {
     });
 
     it("should return error when not authenticated", async () => {
-      mockTokenStorage.getToken.mockResolvedValue(null);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(null);
 
       const result = await authService.updatePassword("newPassword123");
 
@@ -365,7 +367,7 @@ describe("AuthService", () => {
     });
 
     it("should handle API errors", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("valid-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("valid-token");
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () =>
@@ -382,7 +384,7 @@ describe("AuthService", () => {
     });
 
     it("should handle network errors", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("valid-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("valid-token");
       mockFetch.mockRejectedValue(new Error("Network error"));
 
       const result = await authService.updatePassword("newPassword123");
@@ -414,11 +416,11 @@ describe("AuthService", () => {
       vi.spyOn(authService, "getCurrentUser").mockReturnValue(mockUser);
 
       // Mock tokenStorage.isTokenValid to return true
-      mockTokenStorage.isTokenValid.mockResolvedValue(true);
+      vi.mocked(tokenStorage).isTokenValid.mockResolvedValue(true);
 
       const isAuth = await authService.isAuthenticated();
       expect(isAuth).toBe(true);
-      expect(mockTokenStorage.isTokenValid).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).isTokenValid).toHaveBeenCalled();
     });
   });
 
@@ -431,7 +433,7 @@ describe("AuthService", () => {
       } as Response);
 
       // Mock tokenStorage.getToken to return a token for revocation
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
       await authService.logout();
 
@@ -446,7 +448,7 @@ describe("AuthService", () => {
       });
 
       // Verify token was removed
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
 
     it("should cleanup even if token revocation fails", async () => {
@@ -456,39 +458,39 @@ describe("AuthService", () => {
         json: () => Promise.resolve({ success: false, error: { message: "Revocation failed" } }),
       } as Response);
 
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
       await authService.logout();
 
       // Verify cleanup still happened
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
 
     it("should handle logout when no token exists", async () => {
       // Mock no token available
-      mockTokenStorage.getToken.mockResolvedValue(null);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(null);
 
       await authService.logout();
 
       // Should not attempt revocation
       expect(mockFetch).not.toHaveBeenCalled();
       // Should still remove token (cleanup)
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
 
     it("should handle network errors during revocation gracefully", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
       mockFetch.mockRejectedValue(new Error("Network error"));
 
       await authService.logout();
 
       // Verify cleanup still happened
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
 
     it("should handle tokenStorage.removeToken() errors", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
-      mockTokenStorage.removeToken.mockRejectedValue(new Error("Storage error"));
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).removeToken.mockRejectedValue(new Error("Storage error"));
 
       // Should not throw
       await expect(authService.logout()).resolves.toBeUndefined();
@@ -502,7 +504,7 @@ describe("AuthService", () => {
         json: () => Promise.resolve({ success: true }),
       } as Response);
 
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
       await authService.forceLogout("security_incident");
 
@@ -515,7 +517,7 @@ describe("AuthService", () => {
         body: JSON.stringify({ reason: "security_incident" }),
       });
 
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
 
     it("should use default security_incident reason", async () => {
@@ -524,7 +526,7 @@ describe("AuthService", () => {
         json: () => Promise.resolve({ success: true }),
       } as Response);
 
-      mockTokenStorage.getToken.mockResolvedValue("test-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
       await authService.forceLogout();
 
@@ -537,14 +539,14 @@ describe("AuthService", () => {
     });
 
     it("should force cleanup even if all operations fail", async () => {
-      mockTokenStorage.getToken.mockRejectedValue(new Error("Token error"));
-      mockTokenStorage.removeToken.mockRejectedValue(new Error("Storage error"));
+      vi.mocked(tokenStorage).getToken.mockRejectedValue(new Error("Token error"));
+      vi.mocked(tokenStorage).removeToken.mockRejectedValue(new Error("Storage error"));
 
       // Should not throw
       await expect(authService.forceLogout()).resolves.toBeUndefined();
 
       // Should still attempt cleanup
-      expect(mockTokenStorage.removeToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).removeToken).toHaveBeenCalled();
     });
   });
 
@@ -765,7 +767,7 @@ describe("AuthService", () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe("Wystąpił błąd podczas logowania");
+      expect(result.error).toBe("Wystąpił nieznany błąd");
     });
 
     it("should handle error without message property", async () => {
@@ -785,45 +787,46 @@ describe("AuthService", () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe("Wystąpił błąd podczas logowania");
+      expect(result.error).toBe("Wystąpił błąd podczas uwierzytelniania");
     });
   });
 
   describe("getAuthenticatedClient", () => {
+    const originalEnv = process.env;
+
     beforeEach(() => {
-      // Mock import.meta.env using vi.stubGlobal with proper structure
-      vi.stubGlobal("import", {
-        meta: {
-          env: {
-            SUPABASE_URL: "https://test.supabase.co",
-            SUPABASE_KEY: "test-anon-key",
-          },
-        },
-      });
+      // Mock environment variables for Supabase client
+      vi.stubEnv("SUPABASE_URL", "https://test.supabase.co");
+      vi.stubEnv("SUPABASE_KEY", "test-anon-key");
+    });
+
+    afterEach(() => {
+      // Restore original environment
+      process.env = originalEnv;
     });
 
     it("should return authenticated Supabase client when token exists", async () => {
-      mockTokenStorage.getToken.mockResolvedValue("valid-token");
+      vi.mocked(tokenStorage).getToken.mockResolvedValue("valid-token");
 
       const client = await authService.getAuthenticatedClient();
 
       expect(client).not.toBeNull();
-      expect(mockTokenStorage.getToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).getToken).toHaveBeenCalled();
       // Note: Full Supabase client testing would require mocking the createClient function
       // This test verifies the method doesn't throw and calls getToken
     });
 
     it("should return null when no token exists", async () => {
-      mockTokenStorage.getToken.mockResolvedValue(null);
+      vi.mocked(tokenStorage).getToken.mockResolvedValue(null);
 
       const client = await authService.getAuthenticatedClient();
 
       expect(client).toBeNull();
-      expect(mockTokenStorage.getToken).toHaveBeenCalled();
+      expect(vi.mocked(tokenStorage).getToken).toHaveBeenCalled();
     });
 
     it("should handle getToken errors gracefully", async () => {
-      mockTokenStorage.getToken.mockRejectedValue(new Error("Token retrieval failed"));
+      vi.mocked(tokenStorage).getToken.mockRejectedValue(new Error("Token retrieval failed"));
 
       const client = await authService.getAuthenticatedClient();
 
@@ -1010,7 +1013,7 @@ describe("AuthService", () => {
           json: () => Promise.resolve({ success: true }),
         } as Response);
 
-        mockTokenStorage.getToken.mockResolvedValue("test-token");
+        vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
         await authService.logout();
 
@@ -1052,7 +1055,7 @@ describe("AuthService", () => {
           json: () => Promise.resolve({ success: true }),
         } as Response);
 
-        mockTokenStorage.getToken.mockResolvedValue("test-token");
+        vi.mocked(tokenStorage).getToken.mockResolvedValue("test-token");
 
         await authService.logout();
 
@@ -1081,13 +1084,13 @@ describe("AuthService", () => {
       } as User;
 
       // Set up mocks for successful initialization
-      mockTokenStorage.getUser.mockResolvedValue(mockUser);
-      mockTokenStorage.isTokenValid.mockResolvedValue(true);
+      vi.mocked(tokenStorage).getUser.mockResolvedValue(mockUser);
+      vi.mocked(tokenStorage).isTokenValid.mockResolvedValue(true);
 
       // The initialization behavior is already tested through other service operations
       // This test documents the expected happy path behavior
-      expect(mockTokenStorage.getUser).toBeDefined();
-      expect(mockTokenStorage.isTokenValid).toBeDefined();
+      expect(vi.mocked(tokenStorage).getUser).toBeDefined();
+      expect(vi.mocked(tokenStorage).isTokenValid).toBeDefined();
     });
 
     it("should handle invalid token during initialization", async () => {
@@ -1101,8 +1104,8 @@ describe("AuthService", () => {
         created_at: "2024-01-01T00:00:00Z",
       } as User;
 
-      mockTokenStorage.getUser.mockResolvedValue(mockUser);
-      mockTokenStorage.isTokenValid.mockResolvedValue(false);
+      vi.mocked(tokenStorage).getUser.mockResolvedValue(mockUser);
+      vi.mocked(tokenStorage).isTokenValid.mockResolvedValue(false);
 
       // Call a method that would trigger the token validation logic
       const isAuth = await authService.isAuthenticated();
@@ -1113,8 +1116,8 @@ describe("AuthService", () => {
 
     it("should handle storage errors during initialization", () => {
       // Test error resilience during initialization
-      mockTokenStorage.getUser.mockRejectedValue(new Error("Storage error"));
-      mockTokenStorage.isTokenValid.mockRejectedValue(new Error("Validation error"));
+      vi.mocked(tokenStorage).getUser.mockRejectedValue(new Error("Storage error"));
+      vi.mocked(tokenStorage).isTokenValid.mockRejectedValue(new Error("Validation error"));
 
       // Service should still be functional despite initialization errors
       expect(() => authService.getCurrentUser()).not.toThrow();
@@ -1122,8 +1125,8 @@ describe("AuthService", () => {
 
     it("should handle no stored user during initialization", () => {
       // Test initialization when no user is stored
-      mockTokenStorage.getUser.mockResolvedValue(null);
-      mockTokenStorage.isTokenValid.mockResolvedValue(false);
+      vi.mocked(tokenStorage).getUser.mockResolvedValue(null);
+      vi.mocked(tokenStorage).isTokenValid.mockResolvedValue(false);
 
       // Service should handle null user gracefully
       const currentUser = authService.getCurrentUser();
@@ -1154,8 +1157,8 @@ describe("AuthService", () => {
         created_at: "2024-01-01T00:00:00Z",
       } as User;
 
-      mockTokenStorage.getUser.mockResolvedValue(mockUser);
-      mockTokenStorage.isTokenValid.mockRejectedValue(new Error("Validation failed"));
+      vi.mocked(tokenStorage).getUser.mockResolvedValue(mockUser);
+      vi.mocked(tokenStorage).isTokenValid.mockRejectedValue(new Error("Validation failed"));
 
       // Service should handle partial failures gracefully
       expect(() => authService.getCurrentUser()).not.toThrow();
@@ -1196,22 +1199,22 @@ describe("AuthService", () => {
       const state = callback.mock.calls[0][0];
       expect(state).toMatchObject({
         isAuthenticated: expect.any(Boolean),
-        user: expect.anything(),
+        user: null, // Initial state always has null user (not yet initialized)
         loading: expect.any(Boolean),
       });
     });
 
     it("should handle tokenStorage availability", () => {
       // Test behavior when tokenStorage methods are available
-      expect(mockTokenStorage.getUser).toBeDefined();
-      expect(mockTokenStorage.setTokenData).toBeDefined();
-      expect(mockTokenStorage.removeToken).toBeDefined();
-      expect(mockTokenStorage.isTokenValid).toBeDefined();
-      expect(mockTokenStorage.getToken).toBeDefined();
+      expect(vi.mocked(tokenStorage).getUser).toBeDefined();
+      expect(vi.mocked(tokenStorage).setTokenData).toBeDefined();
+      expect(vi.mocked(tokenStorage).removeToken).toBeDefined();
+      expect(vi.mocked(tokenStorage).isTokenValid).toBeDefined();
+      expect(vi.mocked(tokenStorage).getToken).toBeDefined();
 
       // All methods should be callable without throwing
-      expect(() => mockTokenStorage.getUser()).not.toThrow();
-      expect(() => mockTokenStorage.isTokenValid()).not.toThrow();
+      expect(() => vi.mocked(tokenStorage).getUser()).not.toThrow();
+      expect(() => vi.mocked(tokenStorage).isTokenValid()).not.toThrow();
     });
   });
 });

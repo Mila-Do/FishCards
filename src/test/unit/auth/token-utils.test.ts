@@ -91,19 +91,25 @@ describe("generateTokenJti", () => {
 describe("hashToken", () => {
   describe("when crypto.subtle is available", () => {
     beforeEach(() => {
-      // Mock crypto.subtle
-      global.crypto = {
+      // Mock crypto.subtle using vi.stubGlobal
+      vi.stubGlobal("crypto", {
         subtle: {
           digest: vi.fn(),
         },
-      } as unknown as Crypto;
+      } as unknown as Crypto);
 
-      global.TextEncoder = vi.fn().mockImplementation(() => ({
-        encode: vi.fn().mockReturnValue(new Uint8Array([1, 2, 3, 4])),
-      }));
+      vi.stubGlobal(
+        "TextEncoder",
+        vi.fn().mockImplementation(function () {
+          return {
+            encode: vi.fn().mockReturnValue(new Uint8Array([1, 2, 3, 4])),
+          };
+        })
+      );
     });
 
     afterEach(() => {
+      vi.unstubAllGlobals();
       vi.restoreAllMocks();
     });
 
@@ -112,12 +118,15 @@ describe("hashToken", () => {
       const mockUint8Array = new Uint8Array(mockHashBuffer);
       mockUint8Array.fill(170); // 0xAA
 
-      (crypto.subtle.digest as ReturnType<typeof vi.fn>).mockResolvedValue(mockHashBuffer);
+      // Access the mocked digest function
+      const mockDigest = (global as unknown as { crypto: { subtle: { digest: ReturnType<typeof vi.fn> } } }).crypto
+        .subtle.digest;
+      mockDigest.mockResolvedValue(mockHashBuffer);
 
       const token = "test-token";
       const hash = await hashToken(token);
 
-      expect(crypto.subtle.digest).toHaveBeenCalledWith("SHA-256", expect.any(Uint8Array));
+      expect(mockDigest).toHaveBeenCalledWith("SHA-256", expect.any(Uint8Array));
       expect(hash).toBe("a".repeat(64)); // 32 bytes * 2 hex chars
     });
 
@@ -137,7 +146,11 @@ describe("hashToken", () => {
 
   describe("when crypto.subtle is not available", () => {
     beforeEach(() => {
-      global.crypto = undefined as unknown as Crypto;
+      vi.stubGlobal("crypto", undefined as unknown as Crypto);
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
     });
 
     it("should use fallback hash function", async () => {
@@ -161,21 +174,21 @@ describe("hashToken", () => {
     it("should handle empty string", async () => {
       const hash = await hashToken("");
 
-      expect(hash).toBe("00000000"); // Hash of empty string
+      expect(hash).toBe("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"); // SHA-256 of empty string
     });
 
     it("should handle very long tokens", async () => {
       const longToken = "a".repeat(10000);
       const hash = await hashToken(longToken);
 
-      expect(hash).toMatch(/^[a-f0-9]{8}$/);
+      expect(hash).toMatch(/^[a-f0-9]{64}$/);
     });
 
     it("should handle special characters", async () => {
       const specialToken = "token!@#$%^&*()_+{}|:<>?[]\\;',./";
       const hash = await hashToken(specialToken);
 
-      expect(hash).toMatch(/^[a-f0-9]{8}$/);
+      expect(hash).toMatch(/^[a-f0-9]{64}$/);
     });
   });
 });
@@ -373,7 +386,7 @@ describe("generateRevocationData", () => {
       const revocationData = await generateRevocationData("");
 
       expect(revocationData.jti).toMatch(/^fallback_[a-f0-9]{8}$/);
-      expect(revocationData.hash).toBe("00000000");
+      expect(revocationData.hash).toBe("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
     });
   });
 });
