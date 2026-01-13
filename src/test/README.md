@@ -25,30 +25,44 @@ src/test/
 
 ### Unit & Integration Tests (Vitest)
 
-**Note:** All tests use `vitest run` for consistency and full API support (including `vi.mock` and `vi.hoisted`). This ensures compatibility across all test files.
+**Note:** All tests use `vitest run` (not `bun test`) for consistency and full API support (including `vi.mock` and `vi.hoisted`). This ensures compatibility across all test files.
 
 ```bash
 # Run all tests
 bun run test
+# or: bunx vitest run
 
 # Run with UI (interactive mode)
 bun run test:ui
+# or: bunx vitest --ui
 
 # Run in watch mode
 bun run test:watch
+# or: bunx vitest watch
 
 # Run with coverage
 bun run test:coverage
+# or: bunx vitest run --coverage
 
 # Run specific test suite
 bun run test:unit
+# or: bunx vitest run src/test/unit
+
 bun run test:integration
+# or: bunx vitest run src/test/integration
 
 # Run auth tests specifically
 bun run test:auth
+# or: bunx vitest run src/test/unit/auth
 
 # Run specific test file
 bunx vitest run src/test/unit/auth/auth-service.test.ts
+bunx vitest run src/test/unit/api/api-client.test.ts
+bunx vitest run src/test/unit/validation/flashcard.test.ts
+
+# Run tests matching pattern
+bunx vitest run --grep "TC-AUTH"
+bunx vitest run --grep "mapAuthError"
 ```
 
 ### E2E Tests (Playwright)
@@ -148,7 +162,18 @@ All tests use **Vitest Runner** (`vitest run`) for consistency and full API supp
 - ✅ Module mocking works correctly
 - ✅ All npm scripts use `vitest run` by default
 
-**Note:** While Bun's test runner (`bun test`) is faster, it doesn't support `vi.mock` and `vi.hoisted`, so we use Vitest runner for all tests to ensure compatibility.
+**Important:** Always use `bunx vitest run` or `bun run test`, **NOT** `bun test`:
+
+```bash
+# ✅ CORRECT - Uses Vitest runner with full API support
+bunx vitest run src/test/unit/auth/auth-service.test.ts
+bun run test:auth
+
+# ❌ WRONG - Uses Bun's test runner (no vi.mock support)
+bun test src/test/unit/auth/auth-service.test.ts
+```
+
+**Why Vitest instead of Bun?** While Bun's test runner (`bun test`) is faster, it doesn't support `vi.mock` and `vi.hoisted`, which are critical for mocking modules like `tokenStorage` in auth tests. Using Vitest ensures all tests work correctly.
 
 ## Best Practices
 
@@ -186,11 +211,41 @@ All tests use **Vitest Runner** (`vitest run`) for consistency and full API supp
 ## Debugging
 
 ### Vitest
-- Use `test.only()` to run single tests
-- Use `--reporter=verbose` for detailed output
+
+```bash
+# Run single test file with verbose output
+bunx vitest run src/test/unit/auth/auth-service.test.ts --reporter=verbose
+
+# Run tests matching specific pattern
+bunx vitest run --grep "TC-AUTH-001"
+
+# Run tests in watch mode for debugging
+bunx vitest watch src/test/unit/auth/auth-service.test.ts
+
+# Generate coverage report
+bunx vitest run --coverage
+# Then open: coverage/index.html
+```
+
+In test files:
+- Use `it.only()` to run single test
+- Use `it.skip()` to skip specific test
+- Use `describe.only()` to run test group
 - Check coverage reports in `coverage/` folder
 
 ### Playwright
+
+```bash
+# Debug E2E tests
+bun run test:e2e:debug
+
+# Run with headed browser
+bun run test:e2e:headed
+
+# Generate trace
+bun run test:e2e -- --trace on
+```
+
 - Use `--debug` flag to pause execution
 - Use trace viewer for failed test analysis
 - Screenshots are captured automatically on failure
