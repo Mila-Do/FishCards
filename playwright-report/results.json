@@ -39,8 +39,40 @@
         "metadata": {
           "actualWorkers": 8
         },
-        "id": "chromium",
-        "name": "chromium",
+        "id": "setup",
+        "name": "setup",
+        "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "chromium-auth",
+        "name": "chromium-auth",
+        "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "chromium-no-auth",
+        "name": "chromium-no-auth",
         "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
         "testIgnore": [],
         "testMatch": [
@@ -64,6 +96,82 @@
   },
   "suites": [
     {
+      "title": "auth.setup.ts",
+      "file": "auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9222,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "🔐 Starting authentication setup...\n"
+                    },
+                    {
+                      "text": "🔑 Attempting to login with existing user...\n"
+                    },
+                    {
+                      "text": "📧 Logging in as: testuser01@gmail.com\n"
+                    },
+                    {
+                      "text": "⚠️ Login failed, trying registration...\n"
+                    },
+                    {
+                      "text": "📝 Registering new user: test-1768942681712@example.com\n"
+                    },
+                    {
+                      "text": "✅ Registration successful for: test-1768942681712@example.com\n"
+                    },
+                    {
+                      "text": "🔍 Final verification - checking authenticated state...\n"
+                    },
+                    {
+                      "text": "✅ Authentication verified - saving state\n"
+                    },
+                    {
+                      "text": "💾 Authentication state saved to: D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\playwright\\.auth\\user.json\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-01-20T20:57:56.581Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth.setup.ts-authenticate-setup\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "17e3fe6f4d9d8bd79c6b-60f085b113a677673906",
+          "file": "auth.setup.ts",
+          "line": 19,
+          "column": 1
+        }
+      ]
+    },
+    {
       "title": "home.spec.ts",
       "file": "home.spec.ts",
       "column": 0,
@@ -85,25 +193,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 9,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2776,
+                      "duration": 2385,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.106Z",
+                      "startTime": "2026-01-20T20:58:08.030Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium-auth\\trace.zip"
                         }
                       ]
                     }
@@ -111,7 +219,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-5c99b627f6ec4018e8b3",
+              "id": "d318381359a9b96acb1e-f4d194437b2b705a35ef",
               "file": "home.spec.ts",
               "line": 16,
               "column": 3
@@ -125,25 +233,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 10,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2737,
+                      "duration": 2274,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.105Z",
+                      "startTime": "2026-01-20T20:58:08.051Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-auth-buttons-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-auth-buttons-chromium-auth\\trace.zip"
                         }
                       ]
                     }
@@ -151,7 +259,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-6fea58e28fea8febf041",
+              "id": "d318381359a9b96acb1e-cac7ead964d210f02ed8",
               "file": "home.spec.ts",
               "line": 27,
               "column": 3
@@ -165,25 +273,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 11,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3088,
+                      "duration": 2470,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.091Z",
+                      "startTime": "2026-01-20T20:58:08.062Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium-auth\\trace.zip"
                         }
                       ]
                     }
@@ -191,7 +299,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-4008a3c5790cf7a4c0b7",
+              "id": "d318381359a9b96acb1e-410b14f11a65d0390cd0",
               "file": "home.spec.ts",
               "line": 36,
               "column": 3
@@ -205,25 +313,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 12,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2728,
+                      "duration": 2123,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.106Z",
+                      "startTime": "2026-01-20T20:58:08.095Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium-auth\\trace.zip"
                         }
                       ]
                     }
@@ -231,7 +339,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-a2d9b22bd0f5b8538d84",
+              "id": "d318381359a9b96acb1e-f0d860348125d1a6c1eb",
               "file": "home.spec.ts",
               "line": 50,
               "column": 3
@@ -245,25 +353,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 11,
+                      "workerIndex": 13,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 3114,
+                      "duration": 2721,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.140Z",
+                      "startTime": "2026-01-20T20:58:08.062Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-load-without-console-errors-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-load-without-console-errors-chromium-auth\\trace.zip"
                         }
                       ]
                     }
@@ -271,13 +379,97 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-7f693f84225cfe1be0d6",
+              "id": "d318381359a9b96acb1e-9f3a8ac1c369aa8f2587",
               "file": "home.spec.ts",
               "line": 64,
               "column": 3
             },
             {
               "title": "should pass visual regression test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-auth",
+                  "projectName": "chromium-auth",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 2805,
+                      "error": {
+                        "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-auth-win32.png, writing actual.",
+                        "stack": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-auth-win32.png, writing actual.\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:82:5",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                          "column": 5,
+                          "line": 82
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 80 |\u001b[39m   test(\u001b[32m\"should pass visual regression test\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 81 |\u001b[39m     \u001b[90m// Take full page screenshot for visual comparison\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m\"home-page-full.png\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 83 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 84 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 85 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                            "column": 5,
+                            "line": 82
+                          },
+                          "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-auth-win32.png, writing actual.\n\n\u001b[0m \u001b[90m 80 |\u001b[39m   test(\u001b[32m\"should pass visual regression test\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 81 |\u001b[39m     \u001b[90m// Take full page screenshot for visual comparison\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m\"home-page-full.png\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 83 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 84 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 85 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:82:5\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:58:08.063Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "home-page-full-expected.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-auth-win32.png"
+                        },
+                        {
+                          "name": "home-page-full-actual.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-auth\\home-page-full-actual.png"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-auth\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-auth\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-auth\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                        "column": 5,
+                        "line": 82
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-64645e21c0cdb530de1f",
+              "file": "home.spec.ts",
+              "line": 80,
+              "column": 3
+            },
+            {
+              "title": "should display home page correctly",
               "ok": true,
               "tags": [],
               "tests": [
@@ -285,25 +477,25 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 5,
+                      "workerIndex": 2,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3031,
+                      "duration": 3267,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T20:35:37.121Z",
+                      "startTime": "2026-01-20T20:57:56.567Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium\\trace.zip"
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium-no-auth\\trace.zip"
                         }
                       ]
                     }
@@ -311,7 +503,251 @@
                   "status": "expected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-b687ed885372fa601e1b",
+              "id": "d318381359a9b96acb1e-8a4bee3c8134c15a6866",
+              "file": "home.spec.ts",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "should have working auth buttons",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3291,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:57:56.566Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-auth-buttons-chromium-no-auth\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-70809db5135f4c4910d7",
+              "file": "home.spec.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 3321,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:57:56.583Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium-no-auth\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-4aa0203022fc9253c60b",
+              "file": "home.spec.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should have accessible elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 3184,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:57:56.583Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium-no-auth\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-5cae29a2504466101344",
+              "file": "home.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "should load without console errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 3544,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:57:56.598Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-load-without-console-errors-chromium-no-auth\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-806d1c73a24284fe4016",
+              "file": "home.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "should pass visual regression test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-no-auth",
+                  "projectName": "chromium-no-auth",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 3699,
+                      "error": {
+                        "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-no-auth-win32.png, writing actual.",
+                        "stack": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-no-auth-win32.png, writing actual.\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:82:5",
+                        "location": {
+                          "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                          "column": 5,
+                          "line": 82
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 80 |\u001b[39m   test(\u001b[32m\"should pass visual regression test\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 81 |\u001b[39m     \u001b[90m// Take full page screenshot for visual comparison\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m\"home-page-full.png\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 83 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 84 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 85 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                            "column": 5,
+                            "line": 82
+                          },
+                          "message": "Error: A snapshot doesn't exist at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-no-auth-win32.png, writing actual.\n\n\u001b[0m \u001b[90m 80 |\u001b[39m   test(\u001b[32m\"should pass visual regression test\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 81 |\u001b[39m     \u001b[90m// Take full page screenshot for visual comparison\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveScreenshot(\u001b[32m\"home-page-full.png\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 83 |\u001b[39m       fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 84 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 85 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts:82:5\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-20T20:57:56.615Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "home-page-full-expected.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts-snapshots\\home-page-full-chromium-no-auth-win32.png"
+                        },
+                        {
+                          "name": "home-page-full-actual.png",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\home-page-full-actual.png"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
+                        "column": 5,
+                        "line": 82
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d318381359a9b96acb1e-a9f2dfb0f825aa876218",
               "file": "home.spec.ts",
               "line": 80,
               "column": 3
@@ -333,25 +769,25 @@
                       "timeout": 30000,
                       "annotations": [],
                       "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
+                      "projectId": "chromium-auth",
+                      "projectName": "chromium-auth",
                       "results": [
                         {
-                          "workerIndex": 13,
+                          "workerIndex": 15,
                           "parallelIndex": 6,
                           "status": "passed",
-                          "duration": 3227,
+                          "duration": 2241,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T20:35:37.134Z",
+                          "startTime": "2026-01-20T20:58:08.096Z",
                           "annotations": [],
                           "attachments": [
                             {
                               "name": "trace",
                               "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-8f0e3-gistration-when-CTA-clicked-chromium\\trace.zip"
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-8f0e3-gistration-when-CTA-clicked-chromium-auth\\trace.zip"
                             }
                           ]
                         }
@@ -359,7 +795,7 @@
                       "status": "expected"
                     }
                   ],
-                  "id": "d318381359a9b96acb1e-8750b9508b4e9ece6e9f",
+                  "id": "d318381359a9b96acb1e-2ad04728e58343d42bd2",
                   "file": "home.spec.ts",
                   "line": 88,
                   "column": 5
@@ -373,25 +809,25 @@
                       "timeout": 30000,
                       "annotations": [],
                       "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
+                      "projectId": "chromium-auth",
+                      "projectName": "chromium-auth",
                       "results": [
                         {
-                          "workerIndex": 14,
+                          "workerIndex": 16,
                           "parallelIndex": 7,
                           "status": "passed",
-                          "duration": 3628,
+                          "duration": 2541,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T20:35:37.160Z",
+                          "startTime": "2026-01-20T20:58:08.141Z",
                           "annotations": [],
                           "attachments": [
                             {
                               "name": "trace",
                               "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-eeecc-mo-when-demo-button-clicked-chromium\\trace.zip"
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-eeecc-mo-when-demo-button-clicked-chromium-auth\\trace.zip"
                             }
                           ]
                         }
@@ -399,7 +835,87 @@
                       "status": "expected"
                     }
                   ],
-                  "id": "d318381359a9b96acb1e-8c496c8b73b16aedb31e",
+                  "id": "d318381359a9b96acb1e-21cc9f8e2347d1fe77d2",
+                  "file": "home.spec.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should navigate to registration when CTA clicked",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-no-auth",
+                      "projectName": "chromium-no-auth",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 7,
+                          "status": "passed",
+                          "duration": 2903,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-20T20:57:56.667Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-8f0e3-gistration-when-CTA-clicked-chromium-no-auth\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d318381359a9b96acb1e-5c4e22caf7c2ea1a1f97",
+                  "file": "home.spec.ts",
+                  "line": 88,
+                  "column": 5
+                },
+                {
+                  "title": "should navigate to demo when demo button clicked",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-no-auth",
+                      "projectName": "chromium-no-auth",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 1691,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-20T20:58:00.247Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-eeecc-mo-when-demo-button-clicked-chromium-no-auth\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d318381359a9b96acb1e-68444c664526f3d51baf",
                   "file": "home.spec.ts",
                   "line": 97,
                   "column": 5
@@ -413,11 +929,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-01-20T20:35:34.650Z",
-    "duration": 6668.183000000019,
-    "expected": 8,
+    "startTime": "2026-01-20T20:57:53.962Z",
+    "duration": 17381.561999999976,
+    "expected": 15,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
   }
 }

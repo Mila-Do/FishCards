@@ -27,13 +27,34 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Setup project for authentication
     {
-      name: "chromium",
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    // Main testing project with auth
+    {
+      name: "chromium-auth",
       use: {
         ...devices["Desktop Chrome"],
-        // Use browser contexts for isolating test environments
+        // Use prepared auth state (only if file exists)
+        storageState: "playwright/.auth/user.json",
         contextOptions: {
-          // Ignore HTTPS errors for local development
+          ignoreHTTPSErrors: true,
+        },
+      },
+      dependencies: ["setup"],
+    },
+
+    // Project for tests without auth
+    {
+      name: "chromium-no-auth",
+      use: {
+        ...devices["Desktop Chrome"],
+        // No auth state
+        storageState: { cookies: [], origins: [] },
+        contextOptions: {
           ignoreHTTPSErrors: true,
         },
       },
