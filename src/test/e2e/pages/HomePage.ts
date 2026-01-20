@@ -3,25 +3,39 @@ import type { Page, Locator } from "@playwright/test";
 
 export class HomePage {
   readonly page: Page;
-  readonly title: Locator;
-  readonly navigation: Locator;
+  readonly header: Locator;
+  readonly logo: Locator;
+  readonly authButtons: Locator;
   readonly heroSection: Locator;
-  readonly ctaButton: Locator;
+  readonly mainHeading: Locator;
+  readonly ctaButtons: Locator;
+  readonly ctaRegister: Locator;
+  readonly ctaDemo: Locator;
+  readonly featuresGrid: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.title = page.getByRole("heading", { level: 1 });
-    this.navigation = page.getByRole("navigation");
+    this.header = page.getByTestId("landing-header");
+    this.logo = page.getByTestId("logo");
+    this.authButtons = page.getByTestId("auth-buttons");
     this.heroSection = page.getByTestId("hero-section");
-    this.ctaButton = page.getByRole("button", { name: /get started/i });
+    this.mainHeading = page.getByTestId("main-heading");
+    this.ctaButtons = page.getByTestId("cta-buttons");
+    this.ctaRegister = page.getByTestId("cta-register");
+    this.ctaDemo = page.getByTestId("cta-demo");
+    this.featuresGrid = page.getByTestId("features-grid");
   }
 
   async goto() {
     await this.page.goto("/");
   }
 
-  async clickCTA() {
-    await this.ctaButton.click();
+  async clickRegisterCTA() {
+    await this.ctaRegister.click();
+  }
+
+  async clickDemoCTA() {
+    await this.ctaDemo.click();
   }
 
   async waitForLoad() {
@@ -29,12 +43,17 @@ export class HomePage {
   }
 
   async expectToBeVisible() {
-    await expect(this.title).toBeVisible();
-    await expect(this.navigation).toBeVisible();
+    await expect(this.header).toBeVisible();
+    await expect(this.logo).toBeVisible();
+    await expect(this.heroSection).toBeVisible();
+    await expect(this.mainHeading).toBeVisible();
+    await expect(this.ctaButtons).toBeVisible();
+    await expect(this.featuresGrid).toBeVisible();
   }
 
-  async expectTitle(expectedTitle: string) {
-    await expect(this.title).toHaveText(expectedTitle);
+  async expectMainHeading() {
+    await expect(this.mainHeading).toContainText("Twórz fiszki");
+    await expect(this.mainHeading).toContainText("błyskawicznie");
   }
 
   async takeScreenshot(name: string) {

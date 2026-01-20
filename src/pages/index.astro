@@ -24,10 +24,10 @@ if (user && user.email) {
   <!-- Hero Section -->
   <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
     <!-- Header with Logo and Auth Buttons -->
-    <header class="container mx-auto px-4 py-6">
+    <header class="container mx-auto px-4 py-6" data-testid="landing-header">
       <div class="flex items-center justify-between">
         <!-- Logo -->
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-3" data-testid="logo">
           <div class="h-12 w-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
             <span class="text-primary-foreground font-bold text-xl">FC</span>
           </div>
@@ -38,7 +38,7 @@ if (user && user.email) {
         </div>
 
         <!-- Auth Buttons -->
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-4" data-testid="auth-buttons">
           <a
             href="/auth/login"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
@@ -56,10 +56,10 @@ if (user && user.email) {
     </header>
 
     <!-- Main Hero Content -->
-    <main class="container mx-auto px-4 py-16">
+    <main class="container mx-auto px-4 py-16" data-testid="hero-section">
       <div class="max-w-4xl mx-auto text-center">
         <!-- Main Heading -->
-        <h2 class="text-4xl md:text-6xl font-bold text-foreground mb-6">
+        <h2 class="text-4xl md:text-6xl font-bold text-foreground mb-6" data-testid="main-heading">
           Twórz fiszki
           <span class="text-primary">błyskawicznie</span>
           <br />z pomocą AI
@@ -72,23 +72,25 @@ if (user && user.email) {
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" data-testid="cta-buttons">
           <a
             href="/auth/register"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 w-full sm:w-auto"
+            data-testid="cta-register"
           >
             Rozpocznij za darmo
           </a>
           <a
             href="/demo"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8 py-3 w-full sm:w-auto"
+            data-testid="cta-demo"
           >
             Zobacz demo
           </a>
         </div>
 
         <!-- Features Preview -->
-        <div class="grid md:grid-cols-3 gap-8 mt-16">
+        <div class="grid md:grid-cols-3 gap-8 mt-16" data-testid="features-grid">
           <!-- Feature 1 -->
           <div class="bg-card rounded-xl p-6 shadow-sm border">
             <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">

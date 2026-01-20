@@ -213,7 +213,7 @@ Niniejszy plan testów określa strategię, zakres i metodologię testowania apl
 **Narzędzia:** Playwright  
 
 **Scenariusze testowe:**
-- Rejestracja → Logowanie → Tworzenie fiszki → Wylogowanie
+- Rejestracja → Logowanie → Tworzenie reczne fiszki → Wylogowanie
 - Generowanie fiszek AI → Edycja → Zapisanie
 - Zarządzanie biblioteką fiszek
 - Responsywność interfejsu

@@ -19,16 +19,18 @@ test.describe("Home Page", () => {
 
     // Check page title
     await expect(page).toHaveTitle(/FishCards/);
+
+    // Check main heading content
+    await homePage.expectMainHeading();
   });
 
-  test("should have working navigation", async ({ page }) => {
-    // Verify navigation is present
-    const navigation = homePage.navigation;
-    await expect(navigation).toBeVisible();
+  test("should have working auth buttons", async ({ page }) => {
+    // Verify auth buttons are present
+    await expect(homePage.authButtons).toBeVisible();
 
-    // Test navigation items (adjust selectors based on your actual nav)
-    const navItems = page.getByRole("navigation").getByRole("link");
-    await expect(navItems.first()).toBeVisible();
+    // Test auth button links
+    await expect(page.getByRole("link", { name: /zaloguj się/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /zarejestruj się/i })).toBeVisible();
   });
 
   test("should handle responsive design", async ({ page }) => {
@@ -46,18 +48,17 @@ test.describe("Home Page", () => {
   });
 
   test("should have accessible elements", async ({ page }) => {
-    // Check for proper heading structure
-    const headings = page.getByRole("heading");
-    await expect(headings.first()).toBeVisible();
+    // Check for proper heading structure - main heading is h2
+    await expect(homePage.mainHeading).toBeVisible();
+    await expect(homePage.mainHeading).toHaveRole("heading");
 
-    // Check for alt text on images (if any)
-    const images = page.getByRole("img");
-    const imageCount = await images.count();
+    // Check for proper button accessibility
+    await expect(homePage.ctaRegister).toHaveAttribute("href", "/auth/register");
+    await expect(homePage.ctaDemo).toHaveAttribute("href", "/demo");
 
-    for (let i = 0; i < imageCount; i++) {
-      const image = images.nth(i);
-      await expect(image).toHaveAttribute("alt");
-    }
+    // Check for SVG icons in feature cards (they have proper structure)
+    const featureIcons = page.locator("svg");
+    await expect(featureIcons.first()).toBeVisible();
   });
 
   test("should load without console errors", async ({ page }) => {
@@ -83,26 +84,27 @@ test.describe("Home Page", () => {
     });
   });
 
-  test.describe("API Integration", () => {
-    test("should handle API responses correctly", async ({ page }) => {
-      // Mock API response
-      await page.route("/api/test", async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify({
-            message: "Test successful",
-            data: { id: 1, name: "Test" },
-          }),
-        });
-      });
+  test.describe("CTA Functionality", () => {
+    test("should navigate to registration when CTA clicked", async ({ page }) => {
+      // Test register CTA navigation
+      await homePage.ctaRegister.click();
+      await page.waitForLoadState();
 
-      // Trigger API call (adjust based on your actual implementation)
-      await page.goto("/");
+      // Should navigate to registration page
+      expect(page.url()).toContain("/auth/register");
+    });
 
-      // Verify API interaction
-      const response = await page.waitForResponse("/api/test");
-      expect(response.status()).toBe(200);
+    test("should navigate to demo when demo button clicked", async ({ page }) => {
+      // First go back to home page
+      await homePage.goto();
+      await homePage.waitForLoad();
+
+      // Test demo CTA navigation
+      await homePage.ctaDemo.click();
+      await page.waitForLoadState();
+
+      // Should navigate to demo page
+      expect(page.url()).toContain("/demo");
     });
   });
 });
