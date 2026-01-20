@@ -114,10 +114,10 @@
               "projectName": "setup",
               "results": [
                 {
-                  "workerIndex": 17,
+                  "workerIndex": 64,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8940,
+                  "duration": 9692,
                   "errors": [],
                   "stdout": [
                     {
@@ -133,10 +133,10 @@
                       "text": "⚠️ Login failed, trying registration...\n"
                     },
                     {
-                      "text": "📝 Registering new user: test-1768942813126@example.com\n"
+                      "text": "📝 Registering new user: test-1768943065003@example.com\n"
                     },
                     {
-                      "text": "✅ Registration successful for: test-1768942813126@example.com\n"
+                      "text": "✅ Registration successful for: test-1768943065003@example.com\n"
                     },
                     {
                       "text": "🔍 Final verification - checking authenticated state...\n"
@@ -156,7 +156,7 @@
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-01-20T21:00:08.242Z",
+                  "startTime": "2026-01-20T21:04:19.547Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -203,15 +203,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 25,
+                      "workerIndex": 72,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2120,
+                      "duration": 2638,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:19.135Z",
+                      "startTime": "2026-01-20T21:04:31.489Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -243,15 +243,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 26,
+                      "workerIndex": 73,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1956,
+                      "duration": 2116,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:19.169Z",
+                      "startTime": "2026-01-20T21:04:31.474Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -283,15 +283,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 27,
+                      "workerIndex": 74,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2273,
+                      "duration": 2881,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:19.135Z",
+                      "startTime": "2026-01-20T21:04:31.489Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -323,15 +323,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 28,
+                      "workerIndex": 75,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1929,
+                      "duration": 2570,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:19.135Z",
+                      "startTime": "2026-01-20T21:04:31.507Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -363,15 +363,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 29,
+                      "workerIndex": 76,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 2458,
+                      "duration": 2819,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:19.153Z",
+                      "startTime": "2026-01-20T21:04:31.523Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -397,50 +397,38 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
-                        "line": 83,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium-auth",
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 77,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2589,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:17.792Z",
-                      "annotations": [
+                      "startTime": "2026-01-20T21:04:31.555Z",
+                      "annotations": [],
+                      "attachments": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
-                            "line": 83,
-                            "column": 8
-                          }
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-auth\\trace.zip"
                         }
-                      ],
-                      "attachments": []
+                      ]
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "d318381359a9b96acb1e-64645e21c0cdb530de1f",
               "file": "home.spec.ts",
               "line": 83,
-              "column": 8
+              "column": 3
             },
             {
               "title": "should display home page correctly",
@@ -455,15 +443,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 18,
+                      "workerIndex": 65,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2885,
+                      "duration": 3592,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:08.245Z",
+                      "startTime": "2026-01-20T21:04:19.565Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -495,15 +483,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 19,
+                      "workerIndex": 66,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2816,
+                      "duration": 3584,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:08.244Z",
+                      "startTime": "2026-01-20T21:04:19.547Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -535,15 +523,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 20,
+                      "workerIndex": 67,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3038,
+                      "duration": 3582,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:08.274Z",
+                      "startTime": "2026-01-20T21:04:19.565Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -575,15 +563,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 21,
+                      "workerIndex": 68,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 2849,
+                      "duration": 3567,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:08.259Z",
+                      "startTime": "2026-01-20T21:04:19.567Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -615,15 +603,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 22,
+                      "workerIndex": 69,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 3243,
+                      "duration": 3703,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:08.257Z",
+                      "startTime": "2026-01-20T21:04:19.566Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -649,50 +637,38 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
-                        "line": 83,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium-no-auth",
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 70,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 3436,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-20T21:00:06.733Z",
-                      "annotations": [
+                      "startTime": "2026-01-20T21:04:19.638Z",
+                      "annotations": [],
+                      "attachments": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\home.spec.ts",
-                            "line": 83,
-                            "column": 8
-                          }
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\trace.zip"
                         }
-                      ],
-                      "attachments": []
+                      ]
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "d318381359a9b96acb1e-a9f2dfb0f825aa876218",
               "file": "home.spec.ts",
               "line": 83,
-              "column": 8
+              "column": 3
             }
           ],
           "suites": [
@@ -715,15 +691,15 @@
                       "projectName": "chromium-auth",
                       "results": [
                         {
-                          "workerIndex": 30,
+                          "workerIndex": 78,
                           "parallelIndex": 6,
                           "status": "passed",
-                          "duration": 2032,
+                          "duration": 2643,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T21:00:19.214Z",
+                          "startTime": "2026-01-20T21:04:31.522Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -755,15 +731,15 @@
                       "projectName": "chromium-auth",
                       "results": [
                         {
-                          "workerIndex": 31,
+                          "workerIndex": 79,
                           "parallelIndex": 7,
                           "status": "passed",
-                          "duration": 2444,
+                          "duration": 2931,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T21:00:19.168Z",
+                          "startTime": "2026-01-20T21:04:31.556Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -795,15 +771,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 23,
+                          "workerIndex": 71,
                           "parallelIndex": 7,
                           "status": "passed",
-                          "duration": 2743,
+                          "duration": 3588,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T21:00:08.305Z",
+                          "startTime": "2026-01-20T21:04:19.613Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -835,15 +811,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 24,
-                          "parallelIndex": 6,
+                          "workerIndex": 66,
+                          "parallelIndex": 2,
                           "status": "passed",
-                          "duration": 3081,
+                          "duration": 1684,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-20T21:00:08.289Z",
+                          "startTime": "2026-01-20T21:04:23.648Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -871,10 +847,10 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-01-20T21:00:05.608Z",
-    "duration": 16425.826,
-    "expected": 15,
-    "skipped": 2,
+    "startTime": "2026-01-20T21:04:16.769Z",
+    "duration": 18333.26000000001,
+    "expected": 17,
+    "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   }
