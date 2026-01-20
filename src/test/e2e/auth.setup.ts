@@ -1,13 +1,9 @@
 import { test as setup } from "@playwright/test";
 import path from "path";
-import { fileURLToPath } from "url";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 
-// ES module equivalent of __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const authFile = path.resolve(process.cwd(), "playwright/.auth/user.json");
 
 // Test user credentials - fallback to known test user
