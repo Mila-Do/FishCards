@@ -1,0 +1,112 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "FC FishCards" [ref=e7] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e9]: FC
+        - generic [ref=e10]: FishCards
+      - navigation "Nawigacja główna" [ref=e11]:
+        - link "Generator" [ref=e12] [cursor=pointer]:
+          - /url: /generator
+        - link "Moje Fiszki" [ref=e13] [cursor=pointer]:
+          - /url: /flashcards
+        - link "Sesja Nauki" [ref=e14] [cursor=pointer]:
+          - /url: /learning
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e19]: T
+          - generic [ref=e20]: test-1768991301239@example.com
+        - button "Wyloguj" [ref=e21]
+  - main [ref=e22]:
+    - main [ref=e23]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - heading "Dashboard" [level=1] [ref=e27]
+          - paragraph [ref=e28]: Przegląd Twojej nauki i szybki dostęp do funkcji aplikacji
+        - generic [ref=e29]:
+          - region "Statystyki dashboard" [ref=e30]:
+            - generic [ref=e31]:
+              - heading "Twoje statystyki" [level=2] [ref=e32]
+              - paragraph [ref=e33]: Przegląd postępów w nauce i aktywności
+            - generic [ref=e34]:
+              - button "Zobacz szczegóły dla Fiszki do powtórki dziś" [ref=e35] [cursor=pointer]:
+                - generic [ref=e37]:
+                  - generic [ref=e38]:
+                    - heading "Fiszki do powtórki dziś" [level=3] [ref=e39]
+                    - img [ref=e41]
+                  - generic [ref=e45]: "0"
+                  - paragraph [ref=e46]: Świetnie! Wszystko na bieżąco
+              - button "Zobacz szczegóły dla Wszystkie fiszki" [ref=e47] [cursor=pointer]:
+                - generic [ref=e49]:
+                  - generic [ref=e50]:
+                    - heading "Wszystkie fiszki" [level=3] [ref=e51]
+                    - img [ref=e53]
+                  - generic [ref=e56]: "0"
+                  - paragraph [ref=e57]: Rozpocznij swoją naukę
+              - button "Zobacz szczegóły dla Wskaźnik akceptacji AI" [ref=e58] [cursor=pointer]:
+                - generic [ref=e60]:
+                  - generic [ref=e61]:
+                    - heading "Wskaźnik akceptacji AI" [level=3] [ref=e62]
+                    - img [ref=e64]
+                  - generic [ref=e73]: 0%
+                  - paragraph [ref=e74]: Brak generacji AI
+              - button "Zobacz szczegóły dla Ostatnia aktywność" [ref=e75] [cursor=pointer]:
+                - generic [ref=e77]:
+                  - generic [ref=e78]:
+                    - heading "Ostatnia aktywność" [level=3] [ref=e79]
+                    - img [ref=e81]
+                  - generic [ref=e85]: Brak aktywności
+                  - paragraph [ref=e86]: Jeszcze brak generacji
+          - region "Szybkie akcje" [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - heading "Szybkie akcje" [level=2] [ref=e90]
+                - paragraph [ref=e91]: Dostęp do najważniejszych funkcji aplikacji
+              - generic [ref=e92]:
+                - 'button "Start Nauki: Rozpocznij sesję nauki z fiszkami do powtórki" [ref=e93]':
+                  - generic [ref=e94]:
+                    - generic [ref=e95]:
+                      - img
+                    - generic [ref=e96]: Start Nauki
+                  - paragraph [ref=e97]: Rozpocznij sesję nauki z fiszkami do powtórki
+                - 'button "Nowy Generator: Wygeneruj nowe fiszki z tekstu przy użyciu AI" [ref=e98]':
+                  - generic [ref=e99]:
+                    - generic [ref=e100]:
+                      - img
+                    - generic [ref=e101]: Nowy Generator
+                  - paragraph [ref=e102]: Wygeneruj nowe fiszki z tekstu przy użyciu AI
+                - 'button "Moje Fiszki: Przeglądaj i zarządzaj swoimi fiszkami" [ref=e103]':
+                  - generic [ref=e104]:
+                    - generic [ref=e105]:
+                      - img
+                    - generic [ref=e106]: Moje Fiszki
+                  - paragraph [ref=e107]: Przeglądaj i zarządzaj swoimi fiszkami
+                - 'button "Historia Generowania: Zobacz historię generacji AI i statystyki" [ref=e108]':
+                  - generic [ref=e109]:
+                    - generic [ref=e110]:
+                      - img
+                    - generic [ref=e111]: Historia Generowania
+                  - paragraph [ref=e112]: Zobacz historię generacji AI i statystyki
+          - generic [ref=e114]:
+            - heading "Witaj w FishCards! 🎉" [level=3] [ref=e115]
+            - paragraph [ref=e116]: Rozpocznij swoją przygodę z nauką tworząc pierwsze fiszki. Użyj generatora AI lub stwórz je ręcznie.
+            - generic [ref=e117]:
+              - button "Generuj z AI" [ref=e118]
+              - button "Stwórz ręcznie" [ref=e119]
+  - generic [ref=e122]:
+    - button "Menu" [ref=e123]:
+      - img [ref=e125]
+      - generic: Menu
+    - button "Inspect" [ref=e129]:
+      - img [ref=e131]
+      - generic: Inspect
+    - button "Audit" [ref=e133]:
+      - img [ref=e135]
+      - generic: Audit
+    - button "Settings" [ref=e138]:
+      - img [ref=e140]
+      - generic: Settings
+```

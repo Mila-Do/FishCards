@@ -91,8 +91,59 @@ setup("authenticate", async ({ page }) => {
 
   // Save authentication state
   console.log("💾 Saving authentication state to:", authFile);
+
+  // Debug: Check current page and localStorage
+  console.log("🔍 Current URL:", page.url());
+  const localStorageKeys = await page.evaluate(() => Object.keys(localStorage));
+  console.log("🔍 LocalStorage keys:", localStorageKeys);
+
+  // Get both cookies and localStorage
   const storageState = await page.context().storageState({ path: authFile });
+
+  // Also save localStorage manually (Supabase might use localStorage)
+  const localStorageData = await page.evaluate(() => {
+    const data: Record<string, string | null> = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) data[key] = localStorage.getItem(key);
+    }
+    return data;
+  });
+
+  // Add localStorage to origins if it exists
+  if (Object.keys(localStorageData).length > 0) {
+    const origin = new URL(page.url()).origin;
+    const existingOrigin = storageState.origins.find((o) => o.origin === origin);
+
+    if (existingOrigin) {
+      existingOrigin.localStorage = existingOrigin.localStorage || [];
+      Object.entries(localStorageData).forEach(([name, value]) => {
+        if (value !== null) {
+          existingOrigin.localStorage.push({ name, value });
+        }
+      });
+    } else {
+      storageState.origins.push({
+        origin,
+        localStorage: Object.entries(localStorageData)
+          .filter(([, value]) => value !== null)
+          .map(([name, value]) => ({ name, value: value as string })),
+      });
+    }
+
+    // Write updated storage state
+    await page.context().storageState({ path: authFile });
+  }
   console.log("✅ Storage state saved with", storageState.cookies.length, "cookies");
+  console.log("✅ Storage state saved with", storageState.origins.length, "origins");
+
+  // Debug: Log some cookie info (without sensitive data)
+  if (storageState.cookies.length > 0) {
+    const cookieNames = storageState.cookies.map((c) => c.name);
+    console.log("🍪 Cookie names:", cookieNames);
+  } else {
+    console.log("⚠️ No cookies found - auth might not be working properly");
+  }
 
   console.log("💾 Authentication state saved to:", authFile);
   /* eslint-enable no-console */
