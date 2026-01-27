@@ -21,7 +21,7 @@ export class DashboardPage {
     this.navigation = page.getByRole("navigation"); // <nav role="navigation">
     this.userAvatar = page.locator('[data-testid="user-avatar"]');
     this.userEmail = page.locator('[data-testid="user-email"]');
-    this.logoutButton = page.getByRole("link", { name: /wyloguj|logout/i });
+    this.logoutButton = page.getByRole("button", { name: /wyloguj|logout/i });
 
     // Navigation links
     this.generatorLink = page.getByRole("link", { name: /generator/i });

@@ -10,9 +10,7 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 1
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -36,31 +34,13 @@
         "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 1
-        },
-        "id": "setup",
-        "name": "setup",
-        "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
-        "testIgnore": [],
-        "testMatch": [
-          "/.*\\.setup\\.ts/"
-        ],
-        "timeout": 30000
-      },
-      {
-        "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
-        "repeatEach": 1,
-        "retries": 0,
-        "metadata": {
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "chromium-auth",
         "name": "chromium-auth",
         "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
         "testIgnore": [],
         "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+          "/.*\\.authenticated\\.spec\\.ts/"
         ],
         "timeout": 30000
       },
@@ -68,15 +48,13 @@
         "outputDir": "D:/priv/programowanie/10xdev2/programs/mainProject/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "chromium-no-auth",
         "name": "chromium-no-auth",
         "testDir": "D:/priv/programowanie/10xdev2/programs/mainProject/src/test/e2e",
         "testIgnore": [],
         "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+          "/home\\.spec\\.ts|auth\\.setup\\.ts|auth-flow\\.spec\\.ts/"
         ],
         "timeout": 30000
       }
@@ -94,95 +72,17 @@
       "timeout": 120000
     }
   },
-  "suites": [
+  "suites": [],
+  "errors": [
     {
-      "title": "auth.setup.ts",
-      "file": "auth.setup.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "authenticate",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "setup",
-              "projectName": "setup",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 5099,
-                  "errors": [],
-                  "stdout": [
-                    {
-                      "text": "🔐 Starting authentication setup...\n"
-                    },
-                    {
-                      "text": "🔑 Attempting to login with existing user...\n"
-                    },
-                    {
-                      "text": "📧 Logging in as: testuser01@gmail.com\n"
-                    },
-                    {
-                      "text": "✅ Login successful!\n"
-                    },
-                    {
-                      "text": "🔍 Final verification - checking authenticated state...\n"
-                    },
-                    {
-                      "text": "✅ Authentication verified - saving state\n"
-                    },
-                    {
-                      "text": "💾 Saving authentication state to: D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\playwright\\.auth\\user.json\n"
-                    },
-                    {
-                      "text": "🔍 Current URL: http://localhost:3000/dashboard\n"
-                    },
-                    {
-                      "text": "🔍 LocalStorage keys: []\n"
-                    },
-                    {
-                      "text": "✅ Storage state saved with \u001b[33m0\u001b[39m cookies\n"
-                    },
-                    {
-                      "text": "✅ Storage state saved with \u001b[33m0\u001b[39m origins\n"
-                    },
-                    {
-                      "text": "⚠️ No cookies found - auth might not be working properly\n"
-                    },
-                    {
-                      "text": "💾 Authentication state saved to: D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\playwright\\.auth\\user.json\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-01-27T20:25:58.716Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "17e3fe6f4d9d8bd79c6b-60f085b113a677673906",
-          "file": "auth.setup.ts",
-          "line": 15,
-          "column": 1
-        }
-      ]
+      "message": "Error: Timed out waiting 120000ms from config.webServer.",
+      "stack": "Error: Timed out waiting 120000ms from config.webServer."
     }
   ],
-  "errors": [],
   "stats": {
-    "startTime": "2026-01-27T20:25:57.075Z",
-    "duration": 6938.0160000000005,
-    "expected": 1,
+    "startTime": "2026-01-27T22:02:03.848Z",
+    "duration": 120375.459,
+    "expected": 0,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

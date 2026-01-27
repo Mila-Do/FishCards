@@ -1,9 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { HomePage } from "./pages/HomePage";
 
-// Home page tests should run without authentication
-test.use({ storageState: { cookies: [], origins: [] } });
-
 test.describe("Home Page", () => {
   let homePage: HomePage;
 

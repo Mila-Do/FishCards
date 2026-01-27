@@ -36,9 +36,24 @@ export class RegisterPage {
   }
 
   async register(email: string, password: string, confirmPassword?: string) {
+    // Wait for form to be ready
+    await this.emailInput.waitFor({ state: "visible" });
+
+    // Fill and trigger change events for React form validation
+    await this.emailInput.click(); // Focus input
     await this.emailInput.fill(email);
+    await this.emailInput.blur(); // Trigger validation
+
+    await this.passwordInput.click();
     await this.passwordInput.fill(password);
+    await this.passwordInput.blur();
+
+    await this.confirmPasswordInput.click();
     await this.confirmPasswordInput.fill(confirmPassword || password);
+    await this.confirmPasswordInput.blur();
+
+    // Wait for validation to complete
+    await this.page.waitForTimeout(800);
 
     // Accept terms if checkbox exists
     const termsVisible = await this.termsCheckbox.isVisible().catch(() => false);
@@ -76,7 +91,8 @@ export class RegisterPage {
 
   async expectSuccessfulRegistration() {
     // After successful registration, should be redirected to generator or dashboard
-    await this.page.waitForURL(/(dashboard|generator)/);
+    // Note: RegisterForm has 2s delay before redirect
+    await this.page.waitForURL(/(dashboard|generator)/, { timeout: 15000 });
   }
 
   async expectPasswordStrength(strength: "weak" | "medium" | "strong") {

@@ -1,146 +1,26 @@
-import { test as setup } from "@playwright/test";
-import path from "path";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
+/**
+ * Authentication setup test
+ * This file tests that the login flow works correctly.
+ * It does NOT create shared auth state for other tests - each test logs in independently.
+ */
+
+import { test, expect } from "@playwright/test";
+import { loginAsTestUser, TEST_USER } from "./helpers/auth-helpers";
 import { DashboardPage } from "./pages/DashboardPage";
 
-const authFile = path.resolve(process.cwd(), "playwright/.auth/user.json");
+test.describe("Authentication Setup", () => {
+  test("should authenticate test user successfully", async ({ page }) => {
+    // Test that login flow works
+    await loginAsTestUser(page);
 
-// Test user credentials - fallback to known test user
-const TEST_USER = {
-  email: process.env.E2E_USERNAME || "testuser01@gmail.com",
-  password: process.env.E2E_PASSWORD || "testUser01",
-};
+    // Verify we're on dashboard
+    expect(page.url()).toContain("/dashboard");
 
-setup("authenticate", async ({ page }) => {
-  /* eslint-disable no-console */
-  console.log("🔐 Starting authentication setup...");
+    // Verify dashboard is visible
+    const dashboardPage = new DashboardPage(page);
+    await dashboardPage.expectToBeVisible();
 
-  const loginPage = new LoginPage(page);
-  const registerPage = new RegisterPage(page);
-  const dashboardPage = new DashboardPage(page);
-
-  // Strategy: Try to login first, if it fails, register new user
-  try {
-    console.log("🔑 Attempting to login with existing user...");
-
-    // Navigate to login page
-    await loginPage.goto();
-    await loginPage.waitForLoad();
-    await loginPage.expectToBeVisible();
-
-    console.log(`📧 Logging in as: ${TEST_USER.email}`);
-
-    // Try to login
-    await loginPage.login(TEST_USER.email, TEST_USER.password);
-
-    // Wait a bit for potential redirect or error
-    await page.waitForTimeout(2000);
-
-    // Check if we're on dashboard (successful login)
-    if (!page.url().includes("/dashboard")) {
-      throw new Error("Login failed - will try registration");
-    }
-    console.log("✅ Login successful!");
-  } catch {
-    console.log("⚠️ Login failed, trying registration...");
-
-    // Generate unique email for registration
-    const timestamp = Date.now();
-    const registerEmail = `test-${timestamp}@example.com`;
-    const registerPassword = "TestPassword123!";
-
-    console.log(`📝 Registering new user: ${registerEmail}`);
-
-    // Navigate to registration page
-    await registerPage.goto();
-    await registerPage.waitForLoad();
-    await registerPage.expectToBeVisible();
-
-    // Register new user
-    await registerPage.register(registerEmail, registerPassword);
-
-    // Wait for successful registration
-    await page.waitForTimeout(3000);
-
-    // Should redirect to dashboard after registration
-    if (!page.url().includes("/dashboard") && !page.url().includes("/generator")) {
-      // If not redirected, navigate manually
-      await dashboardPage.goto();
-    }
-
-    await dashboardPage.waitForLoad();
-    console.log(`✅ Registration successful for: ${registerEmail}`);
-  }
-
-  // Final verification
-  console.log("🔍 Final verification - checking authenticated state...");
-
-  // Ensure we're on dashboard
-  if (!page.url().includes("/dashboard")) {
-    await dashboardPage.goto();
-    await dashboardPage.waitForLoad();
-  }
-
-  await dashboardPage.expectToBeVisible();
-  console.log("✅ Authentication verified - saving state");
-
-  // Save authentication state
-  console.log("💾 Saving authentication state to:", authFile);
-
-  // Debug: Check current page and localStorage
-  console.log("🔍 Current URL:", page.url());
-  const localStorageKeys = await page.evaluate(() => Object.keys(localStorage));
-  console.log("🔍 LocalStorage keys:", localStorageKeys);
-
-  // Get both cookies and localStorage
-  const storageState = await page.context().storageState({ path: authFile });
-
-  // Also save localStorage manually (Supabase might use localStorage)
-  const localStorageData = await page.evaluate(() => {
-    const data: Record<string, string | null> = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) data[key] = localStorage.getItem(key);
-    }
-    return data;
+    // Log success for debugging
+    console.log(`✅ Test user authenticated successfully: ${TEST_USER.email}`);
   });
-
-  // Add localStorage to origins if it exists
-  if (Object.keys(localStorageData).length > 0) {
-    const origin = new URL(page.url()).origin;
-    const existingOrigin = storageState.origins.find((o) => o.origin === origin);
-
-    if (existingOrigin) {
-      existingOrigin.localStorage = existingOrigin.localStorage || [];
-      Object.entries(localStorageData).forEach(([name, value]) => {
-        if (value !== null) {
-          existingOrigin.localStorage.push({ name, value });
-        }
-      });
-    } else {
-      storageState.origins.push({
-        origin,
-        localStorage: Object.entries(localStorageData)
-          .filter(([, value]) => value !== null)
-          .map(([name, value]) => ({ name, value: value as string })),
-      });
-    }
-
-    // Write updated storage state
-    await page.context().storageState({ path: authFile });
-  }
-  console.log("✅ Storage state saved with", storageState.cookies.length, "cookies");
-  console.log("✅ Storage state saved with", storageState.origins.length, "origins");
-
-  // Debug: Log some cookie info (without sensitive data)
-  if (storageState.cookies.length > 0) {
-    const cookieNames = storageState.cookies.map((c) => c.name);
-    console.log("🍪 Cookie names:", cookieNames);
-  } else {
-    console.log("⚠️ No cookies found - auth might not be working properly");
-  }
-
-  console.log("💾 Authentication state saved to:", authFile);
-  /* eslint-enable no-console */
 });
