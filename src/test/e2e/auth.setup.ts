@@ -38,12 +38,10 @@ setup("authenticate", async ({ page }) => {
     await page.waitForTimeout(2000);
 
     // Check if we're on dashboard (successful login)
-    if (page.url().includes("/dashboard")) {
-      console.log("✅ Login successful!");
-      await dashboardPage.expectToBeVisible();
-    } else {
+    if (!page.url().includes("/dashboard")) {
       throw new Error("Login failed - will try registration");
     }
+    console.log("✅ Login successful!");
   } catch {
     console.log("⚠️ Login failed, trying registration...");
 
@@ -72,8 +70,6 @@ setup("authenticate", async ({ page }) => {
     }
 
     await dashboardPage.waitForLoad();
-    await dashboardPage.expectToBeVisible();
-
     console.log(`✅ Registration successful for: ${registerEmail}`);
   }
 

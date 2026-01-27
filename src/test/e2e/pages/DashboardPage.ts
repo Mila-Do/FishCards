@@ -17,7 +17,7 @@ export class DashboardPage {
   constructor(page: Page) {
     this.page = page;
     // Header and navigation - using actual selectors from Layout.astro
-    this.header = page.locator("header"); // <header class="...">
+    this.header = page.getByRole("banner"); // Semantic header - more specific than locator("header")
     this.navigation = page.getByRole("navigation"); // <nav role="navigation">
     this.userAvatar = page.locator('[data-testid="user-avatar"]');
     this.userEmail = page.locator('[data-testid="user-email"]');
