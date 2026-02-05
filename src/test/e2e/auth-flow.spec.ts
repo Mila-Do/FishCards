@@ -8,31 +8,29 @@ import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { createMailtrapHelper } from "./helpers/email-helpers";
 
 test.describe("Authentication Flow - Unauthenticated", () => {
   test.describe("Login and Registration", () => {
     // Reset storage state for these tests to test unauthenticated flow
     test.use({ storageState: { cookies: [], origins: [] } });
 
-    test("should complete full registration to login flow", async ({ page }) => {
-      // ⚠️ NOTE: This test requires Supabase email confirmation to be DISABLED
-      // Otherwise it will fail because the test email won't be confirmed.
-      //
-      // To disable in Supabase Dashboard:
-      // Authentication → Email Auth → Disable "Confirm email"
-      //
-      // If you can't disable it, consider using test.skip() or expect the test to fail
-      // until email is confirmed via Mailinator.
-
+    test("should complete full registration with email verification", async ({ page }) => {
       const homePage = new HomePage(page);
       const registerPage = new RegisterPage(page);
       const loginPage = new LoginPage(page);
       const dashboardPage = new DashboardPage(page);
+      const mailtrapHelper = createMailtrapHelper();
 
-      // Using @mailinator.com - prevents bounce emails in Supabase
-      // Mailinator is a free test email service that accepts all emails
-      const testEmail = `test-e2e-${Date.now()}@mailinator.com`;
+      // Using Mailtrap for automated email verification
+      const testEmail = `test-e2e-${Date.now()}@example.com`;
       const testPassword = "TestPassword123!";
+
+      // eslint-disable-next-line no-console
+      console.log(`🧪 Testing with email: ${testEmail}`);
+
+      // Clear inbox before test
+      await mailtrapHelper.clearInbox();
 
       // Start from home page
       await homePage.goto();
@@ -51,23 +49,64 @@ test.describe("Authentication Flow - Unauthenticated", () => {
       // Wait for success message to appear
       await page.waitForTimeout(1000);
 
-      // Check if we got an error
-      const hasError = await registerPage.errorMessage.isVisible().catch(() => false);
-      if (hasError) {
-        const errorText = await registerPage.errorMessage.textContent();
-        console.error("Registration error:", errorText);
-        throw new Error(`Registration failed: ${errorText}`);
+      // Check if we got a message (could be success or error)
+      const hasMessage = await registerPage.errorMessage.isVisible().catch(() => false);
+      if (hasMessage) {
+        const messageText = await registerPage.errorMessage.textContent();
+        // eslint-disable-next-line no-console
+        console.log("Registration message:", messageText);
+
+        // Only throw error if it's actually an error message, not a success message
+        if (
+          messageText &&
+          !messageText.includes("pomyślna") &&
+          !messageText.includes("successful") &&
+          !messageText.includes("zalogowany")
+        ) {
+          // eslint-disable-next-line no-console
+          console.error("Registration error:", messageText);
+          throw new Error(`Registration failed: ${messageText}`);
+        } else {
+          // eslint-disable-next-line no-console
+          console.log("✅ Registration successful:", messageText);
+        }
       }
 
-      // Wait for redirect (RegisterForm has 2s delay before redirect)
-      await page.waitForURL(/\/(dashboard|generator|login)/, { timeout: 15000 });
-      console.log("After registration redirect, URL:", page.url());
+      // Wait for verification email and extract link
+      // eslint-disable-next-line no-console
+      console.log("📧 Waiting for verification email...");
+      const verificationLink = await mailtrapHelper.waitForVerificationEmail(testEmail, 60000);
 
-      // If redirected to login, registration succeeded but auto-login failed
-      // This is expected behavior - let's login manually
-      if (page.url().includes("/auth/login")) {
-        console.log("⚠️ Auto-login after registration didn't work - logging in manually");
-        const loginPage = new LoginPage(page);
+      if (!verificationLink) {
+        throw new Error("No verification email received within 60 seconds");
+      }
+
+      // Navigate to verification link
+      // eslint-disable-next-line no-console
+      console.log("🔗 Clicking verification link...");
+      await page.goto(verificationLink);
+
+      // Wait for verification to complete (might redirect to login or dashboard)
+      await page.waitForTimeout(3000);
+
+      // Check where we ended up and handle accordingly
+      const currentUrl = page.url();
+      // eslint-disable-next-line no-console
+      console.log("📍 After verification, URL:", currentUrl);
+
+      if (currentUrl.includes("/auth/login")) {
+        // eslint-disable-next-line no-console
+        console.log("✅ Verification successful, redirected to login");
+        // Login with verified account
+        await loginPage.login(testEmail, testPassword);
+        await loginPage.expectSuccessfulLogin();
+      } else if (currentUrl.includes("/dashboard") || currentUrl.includes("/generator")) {
+        // eslint-disable-next-line no-console
+        console.log("✅ Verification successful, automatically logged in");
+      } else {
+        // eslint-disable-next-line no-console
+        console.log("⚠️ Unusual redirect after verification, trying to login manually");
+        await loginPage.goto();
         await loginPage.login(testEmail, testPassword);
         await loginPage.expectSuccessfulLogin();
       }
@@ -75,14 +114,14 @@ test.describe("Authentication Flow - Unauthenticated", () => {
       // Should now be authenticated
       await dashboardPage.expectUserAuthenticated(testEmail);
 
-      // Logout to test login flow
+      // Logout to test login flow with verified account
       await dashboardPage.logout();
 
       // Go to login page
       await loginPage.goto();
       await loginPage.expectToBeVisible();
 
-      // Login with the same credentials
+      // Login with the verified credentials
       await loginPage.login(testEmail, testPassword);
 
       // Should redirect back to dashboard

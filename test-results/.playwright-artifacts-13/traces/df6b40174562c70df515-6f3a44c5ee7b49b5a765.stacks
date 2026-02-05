@@ -1,1 +1,0 @@
-{"files":["D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\HomePage.ts","D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\auth-flow.spec.ts"],"stacks":[[8,[[0,30,21,"HomePage.goto"],[1,38,22,""]]],[10,[[0,42,21,"HomePage.waitForLoad"],[1,39,22,""]]],[14,[[0,34,28,"HomePage.clickRegisterCTA"],[1,42,22,""]]]]}

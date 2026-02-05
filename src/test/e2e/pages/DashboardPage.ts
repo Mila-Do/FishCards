@@ -55,10 +55,16 @@ export class DashboardPage {
     const dashboardTitle = this.page.getByRole("heading", { name: /dashboard/i });
     await expect(dashboardTitle).toBeVisible();
 
-    // Check if user is logged in (logout button visible) - optional
+    // Check if logout button is visible (confirms user is logged in)
     const logoutVisible = await this.logoutButton.isVisible().catch(() => false);
-    if (logoutVisible && email) {
-      await expect(this.userEmail).toContainText(email);
+    expect(logoutVisible).toBeTruthy();
+
+    // Optional: check email in user menu if it exists
+    if (email) {
+      const userEmailVisible = await this.userEmail.isVisible().catch(() => false);
+      if (userEmailVisible) {
+        await expect(this.userEmail).toContainText(email);
+      }
     }
   }
 

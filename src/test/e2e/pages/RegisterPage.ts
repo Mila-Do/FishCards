@@ -52,14 +52,14 @@ export class RegisterPage {
     await this.confirmPasswordInput.fill(confirmPassword || password);
     await this.confirmPasswordInput.blur();
 
-    // Wait for validation to complete
-    await this.page.waitForTimeout(800);
-
     // Accept terms if checkbox exists
     const termsVisible = await this.termsCheckbox.isVisible().catch(() => false);
     if (termsVisible) {
       await this.termsCheckbox.check();
     }
+
+    // Wait for button to be enabled (validation passed)
+    await expect(this.registerButton).toBeEnabled({ timeout: 10000 });
 
     await this.registerButton.click();
   }
