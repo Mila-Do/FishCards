@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - link "FC FishCards" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: FC
+        - generic [ref=e9]: FishCards
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Zarejestruj się
+          - generic [ref=e14]: Stwórz nowe konto, aby rozpocząć naukę z fiszkami
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - text: Adres email
+              - textbox "Adres email" [ref=e18]:
+                - /placeholder: twoj@email.com
+                - text: test-e2e-1770324825910@example.com
+            - generic [ref=e19]:
+              - text: Hasło
+              - textbox "Hasło" [ref=e20]:
+                - /placeholder: Minimum 8 znaków
+                - text: TestPassword123!
+              - generic [ref=e21]: Hasło musi zawierać co najmniej 8 znaków, małą i wielką literę oraz cyfrę
+            - generic [ref=e22]:
+              - text: Potwierdź hasło
+              - textbox "Potwierdź hasło" [ref=e23]:
+                - /placeholder: Powtórz hasło
+                - text: TestPassword123!
+          - generic [ref=e24]:
+            - button "Zarejestruj się" [disabled]
+            - generic [ref=e25]: Rejestrując się, akceptujesz nasze warunki korzystania z serwisu
+            - generic [ref=e26]:
+              - text: Masz już konto?
+              - link "Zaloguj się" [ref=e27] [cursor=pointer]:
+                - /url: /auth/login
+      - generic [ref=e28]:
+        - heading "Co zyskujesz dzięki kontu:" [level=3] [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e34]: Nieograniczone generowanie fiszek AI
+          - generic [ref=e35]:
+            - img [ref=e36]
+            - generic [ref=e38]: Synchronizacja postępów między urządzeniami
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e42]: Statystyki nauki i śledzenie postępów
+          - generic [ref=e43]:
+            - img [ref=e44]
+            - generic [ref=e46]: Bezpieczna kopia zapasowa Twoich fiszek
+      - generic [ref=e47]:
+        - link "← Powrót na stronę główną" [ref=e49] [cursor=pointer]:
+          - /url: /
+        - paragraph [ref=e51]:
+          - text: Rejestrując się, wyrażasz zgodę na nasze
+          - link "Warunki Korzystania" [ref=e52] [cursor=pointer]:
+            - /url: /terms
+          - text: i
+          - link "Politykę Prywatności" [ref=e53] [cursor=pointer]:
+            - /url: /privacy
+  - generic [ref=e56]:
+    - button "Menu" [ref=e57]:
+      - img [ref=e59]
+      - generic: Menu
+    - button "Inspect" [ref=e63]:
+      - img [ref=e65]
+      - generic: Inspect
+    - button "Audit" [ref=e67]:
+      - img [ref=e69]
+      - generic: Audit
+    - button "Settings" [ref=e72]:
+      - img [ref=e74]
+      - generic: Settings
+```

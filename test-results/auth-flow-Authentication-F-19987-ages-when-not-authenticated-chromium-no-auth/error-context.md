@@ -1,0 +1,54 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - link "FC FishCards" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: FC
+        - generic [ref=e9]: FishCards
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Zaloguj się
+          - generic [ref=e14]: Wprowadź swoje dane, aby uzyskać dostęp do konta
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - text: Adres email
+              - textbox "Adres email" [ref=e18]:
+                - /placeholder: twoj@email.com
+            - generic [ref=e19]:
+              - text: Hasło
+              - textbox "Hasło" [ref=e20]:
+                - /placeholder: Twoje hasło
+          - generic [ref=e21]:
+            - button "Zaloguj się" [disabled]
+            - generic [ref=e22]:
+              - link "Zapomniałeś hasła?" [ref=e24] [cursor=pointer]:
+                - /url: /auth/forgot-password
+              - generic [ref=e25]:
+                - text: Nie masz konta?
+                - link "Zarejestruj się" [ref=e26] [cursor=pointer]:
+                  - /url: /auth/register
+      - generic [ref=e27]:
+        - link "← Powrót na stronę główną" [ref=e29] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: Chcesz wypróbować aplikację?
+          - link "Tryb demo (bez rejestracji)" [ref=e32] [cursor=pointer]:
+            - /url: /demo
+  - generic [ref=e35]:
+    - button "Menu" [ref=e36]:
+      - img [ref=e38]
+      - generic: Menu
+    - button "Inspect" [ref=e42]:
+      - img [ref=e44]
+      - generic: Inspect
+    - button "Audit" [ref=e46]:
+      - img [ref=e48]
+      - generic: Audit
+    - button "Settings" [ref=e51]:
+      - img [ref=e53]
+      - generic: Settings
+```

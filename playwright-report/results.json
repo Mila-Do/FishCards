@@ -105,15 +105,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 11,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6659,
+                      "duration": 9042,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:33:54.883Z",
+                      "startTime": "2026-02-05T20:53:45.043Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -145,15 +145,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 12,
+                      "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 10586,
+                      "duration": 13193,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:33:54.856Z",
+                      "startTime": "2026-02-05T20:53:45.003Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -185,15 +185,15 @@
                   "projectName": "chromium-auth",
                   "results": [
                     {
-                      "workerIndex": 13,
+                      "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 7224,
+                      "duration": 10373,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:33:54.916Z",
+                      "startTime": "2026-02-05T20:53:45.029Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -238,7 +238,7 @@
               "specs": [
                 {
                   "title": "should complete full registration with email verification",
-                  "ok": true,
+                  "ok": false,
                   "tags": [],
                   "tests": [
                     {
@@ -249,14 +249,33 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 14,
+                          "workerIndex": 3,
                           "parallelIndex": 3,
-                          "status": "passed",
-                          "duration": 15304,
-                          "errors": [],
+                          "status": "failed",
+                          "duration": 14838,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: /zarejestruj/i })\nExpected: enabled\nReceived: disabled\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: /zarejestruj/i })\u001b[22m\n\u001b[2m    13 × locator resolved to <button disabled type=\"submit\" data-slot=\"button\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-pr…>Zarejestruj się</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: /zarejestruj/i })\nExpected: enabled\nReceived: disabled\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: /zarejestruj/i })\u001b[22m\n\u001b[2m    13 × locator resolved to <button disabled type=\"submit\" data-slot=\"button\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-pr…>Zarejestruj się</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n\n    at RegisterPage.register (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\RegisterPage.ts:62:39)\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\auth-flow.spec.ts:47:7",
+                            "location": {
+                              "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\RegisterPage.ts",
+                              "column": 39,
+                              "line": 62
+                            },
+                            "snippet": "\u001b[90m   at \u001b[39mpages\\RegisterPage.ts:62\n\n\u001b[0m \u001b[90m 60 |\u001b[39m\n \u001b[90m 61 |\u001b[39m     \u001b[90m// Wait for button to be enabled (validation passed)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 62 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mregisterButton)\u001b[33m.\u001b[39mtoBeEnabled({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mregisterButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 65 |\u001b[39m   }\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\RegisterPage.ts",
+                                "column": 39,
+                                "line": 62
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: /zarejestruj/i })\nExpected: enabled\nReceived: disabled\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: /zarejestruj/i })\u001b[22m\n\u001b[2m    13 × locator resolved to <button disabled type=\"submit\" data-slot=\"button\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-pr…>Zarejestruj się</button>\u001b[22m\n\u001b[2m       - unexpected value \"disabled\"\u001b[22m\n\n\n\u001b[90m   at \u001b[39mpages\\RegisterPage.ts:62\n\n\u001b[0m \u001b[90m 60 |\u001b[39m\n \u001b[90m 61 |\u001b[39m     \u001b[90m// Wait for button to be enabled (validation passed)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 62 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mregisterButton)\u001b[33m.\u001b[39mtoBeEnabled({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 63 |\u001b[39m\n \u001b[90m 64 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mregisterButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 65 |\u001b[39m   }\u001b[0m\n\u001b[2m    at RegisterPage.register (D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\RegisterPage.ts:62:39)\u001b[22m\n\u001b[2m    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\auth-flow.spec.ts:47:7\u001b[22m"
+                            }
+                          ],
                           "stdout": [
                             {
-                              "text": "🧪 Testing with email: test-e2e-1770240835192@example.com\n"
+                              "text": "🧪 Testing with email: test-e2e-1770324825910@example.com\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
@@ -266,82 +285,37 @@
                             },
                             {
                               "text": "🗑️ Cleared 1 messages from inbox\n"
-                            },
-                            {
-                              "text": "Registration message: Rejestracja pomyślna! Zostałeś automatycznie zalogowany. Przekierowywanie...\n"
-                            },
-                            {
-                              "text": "✅ Registration successful: Rejestracja pomyślna! Zostałeś automatycznie zalogowany. Przekierowywanie...\n"
-                            },
-                            {
-                              "text": "📧 Waiting for verification email...\n"
-                            },
-                            {
-                              "text": "🔍 Waiting for verification email to test-e2e-1770240835192@example.com...\n"
-                            },
-                            {
-                              "text": "🔄 Attempt 1: Looking for email to test-e2e-1770240835192@example.com...\n"
-                            },
-                            {
-                              "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
-                            },
-                            {
-                              "text": "📧 Found 1 messages in inbox\n"
-                            },
-                            {
-                              "text": "📨 Available emails: test-e2e-1770240835192@example.com (Confirm Your Signup)\n"
-                            },
-                            {
-                              "text": "✅ Found matching email: Confirm Your Signup (ID: 5323156490)\n"
-                            },
-                            {
-                              "text": "📩 Fetching message metadata from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages/5323156490\n"
-                            },
-                            {
-                              "text": "📄 Fetching HTML body...\n"
-                            },
-                            {
-                              "text": "✅ Got HTML body: 330 characters\n"
-                            },
-                            {
-                              "text": "📄 Fetching text body...\n"
-                            },
-                            {
-                              "text": "📄 Fetching raw body...\n"
-                            },
-                            {
-                              "text": "✅ Got raw body: 567 characters\n"
-                            },
-                            {
-                              "text": "✅ Found email: \"Confirm Your Signup\" sent at 2026-02-04T21:34:00.000Z\n"
-                            },
-                            {
-                              "text": "🔗 Extracted verification link: https://bdmhdsziwzezmepxvvus.supabase.co/auth/v1/verify?token=d6ed4cd579df8d1d59...\n"
-                            },
-                            {
-                              "text": "🔗 Clicking verification link...\n"
-                            },
-                            {
-                              "text": "📍 After verification, URL: http://localhost:3000/#access_token=eyJhbGciOiJFUzI1NiIsImtpZCI6IjlkZjQyOTY1LWZmMDEtNGFiNi05ODVlLWNlODZkOGI3MTc0MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2JkbWhkc3ppd3plem1lcHh2dnVzLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIxZDg5NWMwZC0xZjI5LTRkZjMtODJjZS0yYmI1MzBlNTBkMWIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcwMjQ0NDQxLCJpYXQiOjE3NzAyNDA4NDEsImVtYWlsIjoidGVzdC1lMmUtMTc3MDI0MDgzNTE5MkBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJ0ZXN0LWUyZS0xNzcwMjQwODM1MTkyQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiMWQ4OTVjMGQtMWYyOS00ZGYzLTgyY2UtMmJiNTMwZTUwZDFiIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib3RwIiwidGltZXN0YW1wIjoxNzcwMjQwODQxfV0sInNlc3Npb25faWQiOiIyMTUxMzE0ZC1mNTliLTRjYjYtYTY3ZC1jMTZmMDhiYTMyMTAiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.kL3VbySTIeOLb_A5A9AQQ4_PNJab6QuFBboZPorHLgmzQV0Nu74EprZ20qsmTpBmSyis5ZKmYVJL-S0Ayq6Eyw&expires_at=1770244441&expires_in=3600&refresh_token=npphujokokha&token_type=bearer&type=signup\n"
-                            },
-                            {
-                              "text": "⚠️ Unusual redirect after verification, trying to login manually\n"
                             }
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:33:54.869Z",
+                          "startTime": "2026-02-05T20:53:45.057Z",
                           "annotations": [],
                           "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-c5735-ion-with-email-verification-chromium-no-auth\\test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-c5735-ion-with-email-verification-chromium-no-auth\\error-context.md"
+                            },
                             {
                               "name": "trace",
                               "contentType": "application/zip",
                               "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-c5735-ion-with-email-verification-chromium-no-auth\\trace.zip"
                             }
-                          ]
+                          ],
+                          "errorLocation": {
+                            "file": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\pages\\RegisterPage.ts",
+                            "column": 39,
+                            "line": 62
+                          }
                         }
                       ],
-                      "status": "expected"
+                      "status": "unexpected"
                     }
                   ],
                   "id": "df6b40174562c70df515-4f3cf37ff6030c14b837",
@@ -362,15 +336,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 15,
+                          "workerIndex": 4,
                           "parallelIndex": 4,
                           "status": "passed",
-                          "duration": 5275,
+                          "duration": 7300,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:33:54.918Z",
+                          "startTime": "2026-02-05T20:53:45.124Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -402,15 +376,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 16,
+                          "workerIndex": 5,
                           "parallelIndex": 5,
                           "status": "passed",
-                          "duration": 6291,
+                          "duration": 5283,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:33:54.934Z",
+                          "startTime": "2026-02-05T20:53:45.090Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -442,15 +416,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 17,
+                          "workerIndex": 6,
                           "parallelIndex": 6,
                           "status": "passed",
-                          "duration": 2129,
+                          "duration": 2666,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:33:54.932Z",
+                          "startTime": "2026-02-05T20:53:45.090Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -482,10 +456,10 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 18,
+                          "workerIndex": 7,
                           "parallelIndex": 7,
                           "status": "failed",
-                          "duration": 5166,
+                          "duration": 5205,
                           "error": {
                             "message": "Error: page.goto: net::ERR_ABORTED at http://localhost:3000/generator\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/generator\", waiting until \"load\"\u001b[22m\n",
                             "stack": "Error: page.goto: net::ERR_ABORTED at http://localhost:3000/generator\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/generator\", waiting until \"load\"\u001b[22m\n\n    at D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\src\\test\\e2e\\auth-flow.spec.ts:193:20",
@@ -509,7 +483,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:33:54.962Z",
+                          "startTime": "2026-02-05T20:53:45.122Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -575,10 +549,10 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 17,
+                      "workerIndex": 6,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 4921,
+                      "duration": 6717,
                       "errors": [],
                       "stdout": [
                         {
@@ -587,7 +561,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:33:57.672Z",
+                      "startTime": "2026-02-05T20:53:48.186Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -636,15 +610,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 15,
-                      "parallelIndex": 4,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1580,
+                      "duration": 1661,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:01.587Z",
+                      "startTime": "2026-02-05T20:53:50.994Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -676,15 +650,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 19,
+                      "workerIndex": 8,
                       "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 1361,
+                      "duration": 1320,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:04.241Z",
+                      "startTime": "2026-02-05T20:53:53.867Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -716,15 +690,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 16,
+                      "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1724,
+                      "duration": 1664,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:02.236Z",
+                      "startTime": "2026-02-05T20:53:52.803Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -756,15 +730,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 20,
-                      "parallelIndex": 0,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1286,
+                      "duration": 1371,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:04.762Z",
+                      "startTime": "2026-02-05T20:53:53.080Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -796,15 +770,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 21,
-                      "parallelIndex": 2,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1671,
+                      "duration": 1882,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:05.389Z",
+                      "startTime": "2026-02-05T20:53:54.654Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -836,15 +810,15 @@
                   "projectName": "chromium-no-auth",
                   "results": [
                     {
-                      "workerIndex": 17,
-                      "parallelIndex": 6,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1735,
+                      "duration": 1563,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-04T21:34:03.034Z",
+                      "startTime": "2026-02-05T20:53:54.667Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -884,15 +858,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 15,
-                          "parallelIndex": 4,
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 1566,
+                          "duration": 1238,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:34:03.432Z",
+                          "startTime": "2026-02-05T20:53:56.832Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -924,15 +898,15 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 16,
-                          "parallelIndex": 5,
+                          "workerIndex": 6,
+                          "parallelIndex": 6,
                           "status": "passed",
-                          "duration": 1845,
+                          "duration": 1826,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-04T21:34:04.113Z",
+                          "startTime": "2026-02-05T20:53:55.371Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -960,11 +934,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-04T21:33:52.231Z",
-    "duration": 18601.13599999994,
-    "expected": 16,
+    "startTime": "2026-02-05T20:53:42.458Z",
+    "duration": 18095.984,
+    "expected": 15,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 2,
     "flaky": 0
   }
 }
