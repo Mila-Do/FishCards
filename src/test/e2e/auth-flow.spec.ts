@@ -192,10 +192,17 @@ test.describe("Authentication Flow - Unauthenticated", () => {
       for (const url of protectedUrls) {
         await page.goto(url);
 
-        // Should be redirected to login or home page
-        // (depends on your middleware implementation)
+        // Wait for redirect to complete (client-side or server-side)
+        await page.waitForURL(
+          (currentUrl) => {
+            return currentUrl.pathname.includes("/auth/login") || currentUrl.pathname === "/";
+          },
+          { timeout: 10000 }
+        );
+
+        // Verify we were redirected away from protected page
         const currentUrl = page.url();
-        const isRedirected = currentUrl.includes("/auth/login") || currentUrl.includes("/");
+        const isRedirected = currentUrl.includes("/auth/login") || currentUrl === new URL(page.url()).origin + "/";
 
         expect(isRedirected).toBeTruthy();
       }

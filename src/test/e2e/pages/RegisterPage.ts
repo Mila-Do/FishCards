@@ -59,6 +59,7 @@ export class RegisterPage {
     }
 
     // Wait for button to be enabled (validation passed)
+    // expect().toBeEnabled() has built-in auto-waiting for React state updates
     await expect(this.registerButton).toBeEnabled({ timeout: 10000 });
 
     await this.registerButton.click();

@@ -24,6 +24,7 @@ export const GET: APIRoute = async ({ url, locals, redirect }) => {
       });
 
       if (error) {
+        // eslint-disable-next-line no-console
         console.error("Email verification error:", error);
         return redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
       }
@@ -32,6 +33,7 @@ export const GET: APIRoute = async ({ url, locals, redirect }) => {
       const { error } = await supabase.auth.exchangeCodeForSession(token);
 
       if (error) {
+        // eslint-disable-next-line no-console
         console.error("Token exchange error:", error);
         return redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
       }
@@ -40,6 +42,7 @@ export const GET: APIRoute = async ({ url, locals, redirect }) => {
     // Verification successful - redirect to next page
     return redirect(next);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Callback error:", error);
     return redirect("/auth/login?error=verification_failed");
   }
