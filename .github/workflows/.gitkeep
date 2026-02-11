@@ -1,0 +1,2 @@
+# This file ensures the workflows directory is tracked by Git
+# GitHub Actions workflow files will be placed here
