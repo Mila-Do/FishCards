@@ -26,3 +26,8 @@ pnpm-debug.log*
 
 # playwright auth states (potentially sensitive)
 playwright/.auth
+
+# test artifacts
+playwright-report/
+test-results/
+coverage/
