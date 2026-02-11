@@ -9,7 +9,6 @@ import { cn } from "../../lib/utils";
 import type { QuickAction } from "../../types";
 import { Play, Plus, Library, History } from "lucide-react";
 
-/* eslint-disable react/prop-types */
 interface QuickActionButtonsProps {
   /** Array of quick action configurations */
   actions: QuickAction[];

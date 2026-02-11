@@ -16,7 +16,6 @@ interface DashboardViewProps {
   className?: string;
 }
 
-/* eslint-disable react/prop-types */
 const DashboardView = memo<DashboardViewProps>(function DashboardView({ className }) {
   // Memoized error handler to prevent infinite re-renders
   const handleStatsError = useCallback((error: string) => {

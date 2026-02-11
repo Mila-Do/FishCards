@@ -10,7 +10,7 @@ import { VALIDATION_LIMITS } from "./types";
  * Supports acceptance, editing, and rejection with full validation
  * Memoized to prevent unnecessary re-renders when proposal data unchanged
  */
-/* eslint-disable react/prop-types */
+
 const ProposalCard: React.FC<ProposalCardProps> = memo(({ proposal, onAccept, onEdit, onReject, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editFront, setEditFront] = useState(proposal.front);

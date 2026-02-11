@@ -265,10 +265,7 @@ const StepProgress = forwardRef<HTMLDivElement, StepProgressProps>(
       }
     };
 
-    const getConnectorStyles = (
-      currentStatus: StepProgressProps["steps"][0]["status"],
-      nextStatus: StepProgressProps["steps"][0]["status"]
-    ) => {
+    const getConnectorStyles = (currentStatus: StepProgressProps["steps"][0]["status"]) => {
       if (currentStatus === "completed") {
         return "bg-green-500";
       }
@@ -318,7 +315,7 @@ const StepProgress = forwardRef<HTMLDivElement, StepProgressProps>(
               <div
                 className={cn(
                   orientation === "horizontal" ? "h-px flex-1" : "w-px h-8 ml-4",
-                  getConnectorStyles(step.status, steps[index + 1]?.status)
+                  getConnectorStyles(step.status)
                 )}
                 aria-hidden="true"
               />

@@ -9,7 +9,6 @@ import { cn } from "../../lib/utils";
 import type { DashboardStats } from "../../types";
 import { BookOpen, Brain, CheckCircle, Clock } from "lucide-react";
 
-/* eslint-disable react/prop-types */
 interface StatsOverviewProps {
   /** Dashboard statistics data */
   stats: DashboardStats | null;

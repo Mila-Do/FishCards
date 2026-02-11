@@ -36,12 +36,12 @@ export class LoginPage {
   async login(email: string, password: string) {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
-    
+
     // Wait for button to be enabled (validation passed)
     // LoginForm has real-time validation that disables button until form is valid
     // expect().toBeEnabled() has built-in auto-waiting for React state updates
     await expect(this.loginButton).toBeEnabled({ timeout: 5000 });
-    
+
     await this.loginButton.click();
   }
 

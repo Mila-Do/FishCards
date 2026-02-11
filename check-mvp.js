@@ -144,7 +144,7 @@ class MVPChecker {
           message: "✓ No security issues found",
         });
         deps.score += 3;
-      } catch (error) {
+      } catch {
         deps.checks.push({
           name: "Security Audit",
           status: "warning",
@@ -163,7 +163,7 @@ class MVPChecker {
           message: outdatedCount === 0 ? "✓ All packages up to date" : `⚠ ${outdatedCount} packages outdated`,
         });
         deps.score += outdatedCount === 0 ? 2 : 1;
-      } catch (error) {
+      } catch {
         deps.checks.push({
           name: "Package Updates",
           status: "warning",
@@ -171,7 +171,7 @@ class MVPChecker {
         });
         deps.score += 1;
       }
-    } catch (error) {
+    } catch {
       deps.checks.push({
         name: "Package.json",
         status: "fail",
@@ -203,7 +203,7 @@ class MVPChecker {
         message: "✓ Builds successfully",
       });
       build.score += 10;
-    } catch (error) {
+    } catch {
       build.checks.push({
         name: "Production Build",
         status: "fail",
@@ -213,14 +213,14 @@ class MVPChecker {
 
     // Check if dev server starts
     try {
-      const devProcess = execSync("timeout 5 npm run dev", { stdio: "pipe" });
+      execSync("timeout 5 npm run dev", { stdio: "pipe" });
       build.checks.push({
         name: "Development Server",
         status: "pass",
         message: "✓ Dev server starts",
       });
       build.score += 5;
-    } catch (error) {
+    } catch {
       build.checks.push({
         name: "Development Server",
         status: "warning",
@@ -266,8 +266,8 @@ class MVPChecker {
         message: "✓ No linting errors",
       });
       quality.score += 5;
-    } catch (error) {
-      const output = error.stdout?.toString() || error.stderr?.toString() || "";
+    } catch (err) {
+      const output = err.stdout?.toString() || err.stderr?.toString() || "";
       const errorCount = (output.match(/error/g) || []).length;
       quality.checks.push({
         name: "ESLint",
@@ -286,7 +286,7 @@ class MVPChecker {
         message: "✓ No type errors",
       });
       quality.score += 5;
-    } catch (error) {
+    } catch {
       quality.checks.push({
         name: "TypeScript",
         status: "fail",
@@ -298,7 +298,7 @@ class MVPChecker {
     // Check for TODO comments
     try {
       const todoFiles = execSync(
-        'grep -r "TODO\|FIXME\|HACK" src/ --include="*.ts" --include="*.tsx" --include="*.astro" || true',
+        'grep -r "TODO|FIXME|HACK" src/ --include="*.ts" --include="*.tsx" --include="*.astro" || true',
         { encoding: "utf8" }
       );
       const todoCount = todoFiles.split("\n").filter((line) => line.trim()).length;
@@ -308,7 +308,7 @@ class MVPChecker {
         message: todoCount === 0 ? "✓ No TODO comments" : `⚠ ${todoCount} TODO comments found`,
       });
       quality.score += todoCount === 0 ? 3 : 1;
-    } catch (error) {
+    } catch {
       quality.checks.push({
         name: "Technical Debt",
         status: "warning",
@@ -320,7 +320,7 @@ class MVPChecker {
     // Check for console.log statements
     try {
       const consoleLogs = execSync(
-        'grep -r "console\." src/ --include="*.ts" --include="*.tsx" --include="*.astro" || true',
+        'grep -r "console." src/ --include="*.ts" --include="*.tsx" --include="*.astro" || true',
         { encoding: "utf8" }
       );
       const consoleCount = consoleLogs
@@ -332,7 +332,7 @@ class MVPChecker {
         message: consoleCount === 0 ? "✓ No debug console statements" : `⚠ ${consoleCount} console statements found`,
       });
       quality.score += consoleCount === 0 ? 2 : 1;
-    } catch (error) {
+    } catch {
       quality.checks.push({
         name: "Debug Code",
         status: "warning",
@@ -437,7 +437,7 @@ class MVPChecker {
           });
           performance.score += sizeMB < 1 ? 4 : sizeMB < 2 ? 2 : 1;
         }
-      } catch (error) {
+      } catch {
         performance.checks.push({
           name: "Bundle Size",
           status: "warning",
@@ -535,7 +535,7 @@ class MVPChecker {
     try {
       const result = execSync(`grep -r "${pattern}" ${dir} || true`, { encoding: "utf8" });
       return result.trim().length > 0;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

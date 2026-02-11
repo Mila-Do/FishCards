@@ -17,6 +17,12 @@ const gitignorePath = path.resolve(__dirname, ".gitignore");
 
 const baseConfig = tseslint.config({
   extends: [eslint.configs.recommended, tseslint.configs.strict, tseslint.configs.stylistic],
+  languageOptions: {
+    globals: {
+      process: "readonly",
+      console: "readonly",
+    },
+  },
   rules: {
     "no-console": "warn",
     "no-unused-vars": "off",
@@ -52,6 +58,7 @@ const reactConfig = tseslint.config({
   rules: {
     ...eslintPluginReactHooks.configs.recommended.rules,
     "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off", // TypeScript handles prop validation
     "react-compiler/react-compiler": "error",
   },
 });

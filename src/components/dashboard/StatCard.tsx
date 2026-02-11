@@ -9,7 +9,6 @@ import { Skeleton } from "../ui/skeleton";
 import { cn } from "../../lib/utils";
 import type { StatCardProps } from "../../types";
 
-/* eslint-disable react/prop-types */
 export const StatCard = memo<StatCardProps>(function StatCard({
   title,
   value,
