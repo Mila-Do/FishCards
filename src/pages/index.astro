@@ -1,11 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getAuthenticatedRedirect } from "../lib/auth/routes-config";
+import { isFeatureEnabled } from "@/features";
 
 const title = "FishCards - Inteligentne Fiszki AI";
 
 // Check if user is authenticated (from middleware) - redirect to generator if logged in
 const user = Astro.locals.user;
+
+// Check feature flags
+const isLoginEnabled = isFeatureEnabled("auth.login");
+const isRegisterEnabled = isFeatureEnabled("auth.register");
 
 // Debug info (remove in production)
 console.log("[DEBUG] Landing page auth check:", {
@@ -39,18 +44,26 @@ if (user && user.email) {
 
         <!-- Auth Buttons -->
         <div class="flex items-center space-x-4" data-testid="auth-buttons">
-          <a
-            href="/auth/login"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
-          >
-            Zaloguj się
-          </a>
-          <a
-            href="/auth/register"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
-          >
-            Zarejestruj się
-          </a>
+          {
+            isLoginEnabled && (
+              <a
+                href="/auth/login"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
+              >
+                Zaloguj się
+              </a>
+            )
+          }
+          {
+            isRegisterEnabled && (
+              <a
+                href="/auth/register"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+              >
+                Zarejestruj się
+              </a>
+            )
+          }
         </div>
       </div>
     </header>
@@ -73,13 +86,17 @@ if (user && user.email) {
 
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" data-testid="cta-buttons">
-          <a
-            href="/auth/register"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 w-full sm:w-auto"
-            data-testid="cta-register"
-          >
-            Rozpocznij za darmo
-          </a>
+          {
+            isRegisterEnabled && (
+              <a
+                href="/auth/register"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 py-3 w-full sm:w-auto"
+                data-testid="cta-register"
+              >
+                Rozpocznij za darmo
+              </a>
+            )
+          }
           <a
             href="/demo"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8 py-3 w-full sm:w-auto"

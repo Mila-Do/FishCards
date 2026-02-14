@@ -1,9 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { RegisterForm } from "../../components/auth/RegisterForm";
+import { isFeatureEnabled } from "@/features";
 
 const title = "Zarejestruj się | FishCards";
 const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
+
+// Check if register feature is enabled
+if (!isFeatureEnabled("auth.register")) {
+  return Astro.redirect("/");
+}
 
 // Check if user is already authenticated (from middleware)
 const user = Astro.locals.user;

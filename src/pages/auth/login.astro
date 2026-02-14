@@ -1,9 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { LoginForm } from "../../components/auth/LoginForm";
+import { isFeatureEnabled } from "@/features";
 
 const title = "Zaloguj się | FishCards";
 const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
+
+// Check if login feature is enabled
+if (!isFeatureEnabled("auth.login")) {
+  return Astro.redirect("/");
+}
 
 // Check if user is already authenticated (from middleware)
 const user = Astro.locals.user;

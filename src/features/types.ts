@@ -34,7 +34,6 @@ export interface Features {
   auth: AuthFeatures;
   collections: CollectionsFeatures;
 }
-
 /**
  * Feature flags configuration per environment
  */

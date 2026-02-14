@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { isFeatureEnabled } from "@/features";
 
 interface AuthButtonProps {
   isAuthenticated: boolean;
@@ -16,6 +17,14 @@ interface AuthButtonProps {
 export function AuthButton({ isAuthenticated, userEmail = "", onLogout, onDeleteAccount }: AuthButtonProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Check if login feature is enabled
+  const isLoginEnabled = isFeatureEnabled("auth.login");
+
+  // If login is disabled, don't render anything
+  if (!isLoginEnabled) {
+    return null;
+  }
 
   const handleLogout = async () => {
     try {

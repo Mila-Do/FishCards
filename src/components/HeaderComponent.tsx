@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from "react";
 import { authService } from "../lib/auth/auth-service";
 import type { AuthState } from "../lib/auth/auth-service";
+import { isFeatureEnabled } from "@/features";
 
 interface HeaderComponentProps {
   currentPath?: string;
@@ -101,30 +102,34 @@ export function HeaderComponent({ currentPath = "/" }: HeaderComponentProps) {
 
           {/* Auth Section (right) */}
           <div className="flex items-center">
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <div className="h-6 w-6 bg-primary rounded-full flex items-center justify-center">
-                    <span className="text-primary-foreground text-xs font-medium">
-                      {userEmail.charAt(0).toUpperCase()}
-                    </span>
+            {isFeatureEnabled("auth.login") && (
+              <>
+                {isAuthenticated ? (
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="h-6 w-6 bg-primary rounded-full flex items-center justify-center">
+                        <span className="text-primary-foreground text-xs font-medium">
+                          {userEmail.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="text-sm font-medium">{userEmail}</span>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1"
+                    >
+                      Wyloguj
+                    </button>
                   </div>
-                  <span className="text-sm font-medium">{userEmail}</span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1"
-                >
-                  Wyloguj
-                </button>
-              </div>
-            ) : (
-              <a
-                href="/auth/login"
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
-              >
-                Zaloguj się
-              </a>
+                ) : (
+                  <a
+                    href="/auth/login"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+                  >
+                    Zaloguj się
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>
