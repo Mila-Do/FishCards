@@ -99,7 +99,7 @@ Check if a feature is enabled for the current environment.
 
 **Returns:**
 - `true` if feature is enabled
-- `false` if disabled or undefined
+- `false` if disabled, undefined, or environment not set
 
 **Example:**
 ```typescript
@@ -113,7 +113,9 @@ isFeatureEnabled('collections.read')  // true/false
 
 Get all feature flags for the current environment.
 
-**Returns:** Complete feature configuration object
+**Returns:** 
+- Complete feature configuration object for current environment
+- If environment is not set (null/undefined), returns all flags as `false`
 
 **Example:**
 ```typescript
@@ -132,8 +134,8 @@ Check if a feature flag exists in the configuration.
 - `featureKey` - Feature flag key to check
 
 **Returns:**
-- `true` if feature exists
-- `false` otherwise
+- `true` if feature exists in config
+- `false` otherwise or if environment not set
 
 **Example:**
 ```typescript
@@ -144,16 +146,22 @@ if (featureExists('auth.login')) {
 
 ---
 
-### `getEnvironment(): Environment`
+### `getEnvironment(): Environment | null`
 
 Get the current environment name.
 
-**Returns:** `'local'` | `'integration'` | `'prod'`
+**Returns:** 
+- `'local'` | `'integration'` | `'prod'` - if environment is properly set
+- `null` - if `ENV_NAME` is not defined or invalid
 
 **Example:**
 ```typescript
 const env = getEnvironment();
-console.log(`Running in ${env} environment`);
+if (env) {
+  console.log(`Running in ${env} environment`);
+} else {
+  console.log('Environment not defined - all flags are disabled');
+}
 ```
 
 ## 🏗️ Available Feature Flags
@@ -208,7 +216,11 @@ The module reads `ENV_NAME` variable:
 
 **Valid values:** `local`, `integration`, `prod`
 
-**Default:** `local` (if not set or invalid)
+**Behavior when ENV_NAME is not set or invalid:**
+- All feature flags return `false` (safe default)
+- `getEnvironment()` returns `null`
+- No exceptions thrown - fail-safe design
+- Warning logged to console for diagnostics
 
 ### Setting Environment Variable
 
@@ -231,14 +243,16 @@ The module logs all feature flag checks for diagnostics:
 [FeatureFlag] Checking 'auth.login' in 'local': true
 [FeatureFlag] Checking 'collections.create' in 'prod': false
 [FeatureFlag] Feature "unknown.feature" not found in "local" environment, returning false
+[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning false for "auth.login"
 ```
 
 ## 🛡️ Error Handling
 
 - **Undefined flag:** Returns `false` + warning log
-- **Invalid ENV_NAME:** Defaults to `local` + warning log
-- **Missing ENV_NAME:** Defaults to `local` + warning log
-- **No exceptions thrown:** Fail-safe design
+- **Invalid ENV_NAME:** All flags return `false` + warning log
+- **Missing ENV_NAME:** All flags return `false` + warning log  
+- **Null environment:** `getEnvironment()` returns `null`, all flags are `false`
+- **No exceptions thrown:** Fail-safe design ensures application continues to work
 
 ## ✅ Benefits
 
@@ -248,6 +262,8 @@ The module logs all feature flag checks for diagnostics:
 - ✅ Easy to test different configurations
 - ✅ Safe rollback (just change flag value)
 - ✅ No runtime dependencies
+- ✅ **Safe by default:** Undefined environment = all features disabled
+- ✅ **Fail-safe design:** Never breaks application, always returns valid values
 
 ## ⚠️ Limitations
 

@@ -19,11 +19,21 @@ import type { Environment, Features } from "./types";
 
 /**
  * Get current environment from ENV_NAME variable
- * Defaults to "local" if not set or invalid
+ * Returns null if not set or invalid
  */
-function getCurrentEnvironment(): Environment {
-  const currentEnv: Environment = (import.meta.env.ENV_NAME as Environment) || "local";
-  return currentEnv;
+function getCurrentEnvironment(): Environment | null {
+  const envValue = import.meta.env.ENV_NAME as string;
+
+  if (!envValue) {
+    return null;
+  }
+
+  const validEnvironments: Environment[] = ["local", "integration", "prod"];
+  if (validEnvironments.includes(envValue as Environment)) {
+    return envValue as Environment;
+  }
+
+  return null;
 }
 
 /**
@@ -50,7 +60,7 @@ function getNestedValue(obj: Features, path: string): boolean | undefined {
  * Check if a feature is enabled for the current environment
  *
  * @param featureKey - Feature flag key in dot notation (e.g., "auth.login", "collections.create")
- * @returns `true` if feature is enabled, `false` if disabled or undefined
+ * @returns `true` if feature is enabled, `false` if disabled, undefined, or environment not set
  *
  * @example
  * ```typescript
@@ -67,6 +77,15 @@ function getNestedValue(obj: Features, path: string): boolean | undefined {
  */
 export function isFeatureEnabled(featureKey: string): boolean {
   const env = getCurrentEnvironment();
+
+  if (env === null) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning false for "${featureKey}"`
+    );
+    return false;
+  }
+
   const features = featureConfig[env];
 
   if (!features) {
@@ -91,7 +110,7 @@ export function isFeatureEnabled(featureKey: string): boolean {
 /**
  * Get all feature flags for the current environment
  *
- * @returns Complete feature configuration for current environment
+ * @returns Complete feature configuration for current environment. If environment is not set, returns all flags as false.
  *
  * @example
  * ```typescript
@@ -101,6 +120,26 @@ export function isFeatureEnabled(featureKey: string): boolean {
  */
 export function getAllFeatures(): Features {
   const env = getCurrentEnvironment();
+
+  if (env === null) {
+    // eslint-disable-next-line no-console
+    console.warn(`[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning all flags as false`);
+    return {
+      auth: {
+        login: false,
+        register: false,
+        resetPassword: false,
+      },
+      collections: {
+        create: false,
+        read: false,
+        update: false,
+        delete: false,
+        visibility: false,
+      },
+    };
+  }
+
   return featureConfig[env];
 }
 
@@ -108,7 +147,7 @@ export function getAllFeatures(): Features {
  * Check if a feature flag exists in the configuration
  *
  * @param featureKey - Feature flag key to check
- * @returns `true` if feature exists in config, `false` otherwise
+ * @returns `true` if feature exists in config, `false` otherwise or if environment not set
  *
  * @example
  * ```typescript
@@ -119,6 +158,11 @@ export function getAllFeatures(): Features {
  */
 export function featureExists(featureKey: string): boolean {
   const env = getCurrentEnvironment();
+
+  if (env === null) {
+    return false;
+  }
+
   const features = featureConfig[env];
 
   if (!features) {
@@ -132,15 +176,19 @@ export function featureExists(featureKey: string): boolean {
 /**
  * Get the current environment name
  *
- * @returns Current environment ("local", "integration", or "prod")
+ * @returns Current environment ("local", "integration", or "prod"), or null if not set
  *
  * @example
  * ```typescript
  * const env = getEnvironment();
- * console.log(`Running in ${env} environment`);
+ * if (env) {
+ *   console.log(`Running in ${env} environment`);
+ * } else {
+ *   console.log('Environment not defined');
+ * }
  * ```
  */
-export function getEnvironment(): Environment {
+export function getEnvironment(): Environment | null {
   return getCurrentEnvironment();
 }
 

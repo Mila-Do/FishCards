@@ -54,6 +54,7 @@ isFeatureEnabled(featureKey: string): boolean
 **Zachowanie**:
 - Pobiera wartość flagi dla aktualnego środowiska
 - Zwraca `false` dla niezdefiniowanych flag (fail-safe)
+- Zwraca `false` gdy środowisko nie jest zdefiniowane (`ENV_NAME` = null/undefined)
 - Loguje każde odpytanie o wartość flagi (diagnostyka)
 
 **Przykłady użycia**:
@@ -74,16 +75,17 @@ if (isFeatureEnabled('collections.visibility')) {
 }
 ```
 
-#### Dodatkowe funkcje pomocnicze (opcjonalnie)
+#### Dodatkowe funkcje pomocnicze
 ```typescript
 // Pobranie wszystkich flag dla środowiska
-getAllFeatures(): Record<string, boolean>
+// Zwraca wszystkie flagi jako false gdy środowisko nie jest zdefiniowane
+getAllFeatures(): Features
 
 // Sprawdzenie czy flaga istnieje w konfiguracji
 featureExists(featureKey: string): boolean
 
-// Pobranie aktualnego środowiska
-getCurrentEnvironment(): 'local' | 'integration' | 'prod'
+// Pobranie aktualnego środowiska (może zwrócić null jeśli ENV_NAME nie jest ustawiony)
+getEnvironment(): Environment | null
 ```
 
 ### 6. Mechanizmy Wsparcia
@@ -98,12 +100,16 @@ Przykład logu:
 [FeatureFlag] Checking 'auth.login' in 'local': true
 [FeatureFlag] Checking 'collections.create' in 'prod': false
 [FeatureFlag] Checking 'unknown.feature' in 'integration': false (undefined)
+[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning false for "auth.login"
+[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning all flags as false
 ```
 
 #### Obsługa Błędów
-- Brak niepoprawnej zmiennej `ENV_NAME` → domyślnie `local` + warning
+- Brak lub niepoprawna zmienna `ENV_NAME` → **wszystkie flagi zwracają `false`** (bezpieczny domyślny stan)
+- `getEnvironment()` zwraca `null` gdy środowisko nie jest zdefiniowane
 - Niezdefiniowana flaga → zwraca `false` + log z informacją
 - Brak rzucania wyjątków - bezpieczne działanie aplikacji
+- **Fail-safe design:** aplikacja nigdy się nie wywróci z powodu flag funkcjonalności
 
 ### 7. Uniwersalność (Frontend + Backend)
 - **Jeden moduł** dla całej aplikacji
@@ -196,6 +202,8 @@ const features = {
 - ✅ Łatwy rollback (zmiana flagi zamiast revert kodu)
 - ✅ A/B testing (przyszłość)
 - ✅ Stopniowe udostępnianie funkcjonalności
+- ✅ **Safe by default:** Niezdefiniowane środowisko = wszystkie funkcje wyłączone
+- ✅ **Fail-safe design:** Brak wyjątków, zawsze zwracane są prawidłowe wartości
 
 ## Ograniczenia
 
@@ -206,5 +214,6 @@ const features = {
 
 ---
 
-**Status**: ✅ Plan gotowy do implementacji
-**Następny krok**: Implementacja modułu `src/features/`
+**Status**: ✅ Zaimplementowano  
+**Data implementacji**: 2026-02-14  
+**Wersja**: 1.0.0
