@@ -22,21 +22,8 @@ import type { Environment, Features } from "./types";
  * Defaults to "local" if not set or invalid
  */
 function getCurrentEnvironment(): Environment {
-  const envName = import.meta.env.ENV_NAME || process.env.ENV_NAME;
-
-  if (!envName) {
-    console.warn('[FeatureFlag] ENV_NAME not set, defaulting to "local"');
-    return "local";
-  }
-
-  const normalizedEnv = envName.toLowerCase().trim();
-
-  if (normalizedEnv === "local" || normalizedEnv === "integration" || normalizedEnv === "prod") {
-    return normalizedEnv;
-  }
-
-  console.warn(`[FeatureFlag] Invalid ENV_NAME "${envName}", defaulting to "local"`);
-  return "local";
+  const currentEnv: Environment = (import.meta.env.ENV_NAME as Environment) || "local";
+  return currentEnv;
 }
 
 /**
