@@ -13,9 +13,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables - ignore ALL .env files except .env.example
+# environment variables - ignore ALL .env files except examples and public configs
 .env*
 !.env.example
+!.env*.example
+!.env.production.public
 
 # macOS-specific files
 .DS_Store
