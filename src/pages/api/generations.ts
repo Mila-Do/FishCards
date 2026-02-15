@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { performance } from "node:perf_hooks";
 
 import type { ErrorResponse } from "../../types";
 import { createGenerationSchema, generationQuerySchema } from "../../lib/validation/generation";
@@ -67,7 +66,7 @@ export const POST: APIRoute = async (context) => {
   }
 
   const sourceText = parsed.data.source_text;
-  const sourceTextHash = hashSourceText(sourceText);
+  const sourceTextHash = await hashSourceText(sourceText);
   const sourceTextLength = sourceText.length;
 
   // Get environment variables from runtime or fallback to import.meta.env

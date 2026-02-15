@@ -6,9 +6,6 @@
  * and structured logging.
  */
 
-import { createHash } from "node:crypto";
-import { performance } from "node:perf_hooks";
-
 import type { SupabaseClient } from "../../db/supabase.client";
 import type {
   FlashcardProposal,
@@ -78,8 +75,12 @@ interface FlashcardGenerationResponse {
 // Utility Functions
 // ============================================================================
 
-export function hashSourceText(sourceText: string): string {
-  return createHash("sha256").update(sourceText, "utf8").digest("hex");
+export async function hashSourceText(sourceText: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(sourceText);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 /**
@@ -459,7 +460,7 @@ export async function createGeneration(options: {
 }): Promise<GenerationProposalsResponse> {
   const { supabase, userId, sourceText, model, apiKey, requestId } = options;
 
-  const sourceTextHash = hashSourceText(sourceText);
+  const sourceTextHash = await hashSourceText(sourceText);
   const sourceTextLength = sourceText.length;
 
   const { proposals, generationDurationMs } = await generateFlashcardsFromText({
