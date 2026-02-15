@@ -3,6 +3,10 @@ compatibility_date = "2026-02-15"
 compatibility_flags = ["nodejs_compat"]
 main = "./dist/_worker.js"
 
+# Static assets configuration
+[site]
+bucket = "./dist"
+
 [vars]
 ENV_NAME = "prod"
 SUPABASE_URL = "https://fkgvlcetqvzazcctzsfi.supabase.co"

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Test validation schemas for Flashcards API

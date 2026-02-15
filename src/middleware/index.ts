@@ -47,6 +47,23 @@ function authErrorResponse(status: number, code: string, message: string, path: 
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  const pathname = context.url.pathname;
+  // Skip middleware for static assets
+  if (
+    pathname.startsWith("/_astro/") ||
+    pathname.startsWith("/fonts/") ||
+    pathname.startsWith("/images/") ||
+    pathname.endsWith(".png") ||
+    pathname.endsWith(".jpg") ||
+    pathname.endsWith(".jpeg") ||
+    pathname.endsWith(".gif") ||
+    pathname.endsWith(".svg") ||
+    pathname.endsWith(".ico") ||
+    pathname.endsWith(".webp")
+  ) {
+    return next();
+  }
+
   // Unified Bearer token authentication for all routes
   return handleUnifiedBearerAuth(context, next);
 });
