@@ -97,13 +97,6 @@ jobs:
 
       - name: Build
         run: bun run build
-        env:
-          ENV_NAME: ${{ secrets.ENV_NAME }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          MOCK_AI_GENERATION: ${{ secrets.MOCK_AI_GENERATION }}
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
