@@ -3,7 +3,7 @@
  * Fetches and aggregates data from multiple API endpoints for dashboard display
  */
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useApiCall } from "./useApiCall";
 import type { DashboardStats, PaginatedFlashcardsResponse, PaginatedGenerationsResponse } from "../../types";
 
@@ -49,6 +49,19 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
     onError,
   } = options;
 
+  // Use refs for callbacks to avoid adding them to dependencies
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  // Update refs when callbacks change
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
   const [state, setState] = useState<DashboardStatsState>({
     stats: null,
     loading: false,
@@ -79,7 +92,7 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
         error: null,
         lastFetched: new Date(cachedData.timestamp),
       }));
-      onSuccess?.(cachedData.data);
+      onSuccessRef.current?.(cachedData.data);
       return cachedData.data;
     }
 
@@ -150,7 +163,7 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
         lastFetched: new Date(),
       }));
 
-      onSuccess?.(stats);
+      onSuccessRef.current?.(stats);
       return stats;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to fetch dashboard stats";
@@ -161,10 +174,10 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
         error: errorMessage,
       }));
 
-      onError?.(errorMessage);
+      onErrorRef.current?.(errorMessage);
       return null;
     }
-  }, [fetchFlashcards, fetchReviewFlashcards, fetchGenerations, isCacheValid]); // Removed onSuccess, onError from deps to stabilize
+  }, [fetchFlashcards, fetchReviewFlashcards, fetchGenerations, isCacheValid]);
 
   // Refresh stats (bypass cache)
   const refetchStats = useCallback(async () => {
@@ -173,12 +186,12 @@ export function useDashboardStats(options: UseDashboardStatsOptions = {}) {
     return await fetchStats();
   }, [fetchStats]);
 
-  // Auto-fetch on mount - removed fetchStats from dependencies to prevent infinite loop
+  // Auto-fetch on mount
   useEffect(() => {
     if (autoFetch) {
       fetchStats();
     }
-  }, [autoFetch]); // Only depend on autoFetch, fetchStats is stable due to useCallback
+  }, [autoFetch, fetchStats]);
 
   // Clear cache when component unmounts
   useEffect(() => {
