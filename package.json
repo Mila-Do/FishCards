@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build --mode production",
+    "prepare:cf-assets": "bun run scripts/prepare-cloudflare-assets.mjs",
     "build:preview": "astro build",
     "preview": "astro preview",
     "astro": "astro",

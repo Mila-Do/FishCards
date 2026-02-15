@@ -1,11 +1,11 @@
 name = "fishcards"
 compatibility_date = "2026-02-15"
 compatibility_flags = ["nodejs_compat"]
-main = "./dist/_worker.js"
+main = "./dist/_worker.js/index.js"
 
 # Static assets configuration for module workers
 [assets]
-directory = "./dist"
+directory = "./dist/public-assets"
 binding = "ASSETS"
 
 [vars]
