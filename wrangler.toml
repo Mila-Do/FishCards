@@ -1,0 +1,6 @@
+name = "fishcards"
+compatibility_date = "2026-02-15"
+main = "./dist/_worker.js"
+
+[site]
+bucket = "./dist"
