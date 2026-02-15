@@ -20,7 +20,7 @@ import type { Environment, Features } from "./types";
 /**
  * Get current environment from ENV_NAME variable
  * Returns null if not set or invalid
- * 
+ *
  * Note: This works for build-time feature flags. For runtime checks in API routes,
  * use context.locals.runtime.env.ENV_NAME instead.
  */
