@@ -28,6 +28,12 @@ function getCurrentEnvironment(): Environment | null {
   // Try PUBLIC_ prefixed first (runtime), then legacy (build-time)
   const envValue = (import.meta.env.PUBLIC_ENV_NAME || import.meta.env.ENV_NAME) as string;
 
+  // Safety fallback: production build without explicit ENV_NAME should use "prod"
+  // to avoid accidentally disabling features in Cloudflare deployments.
+  if (!envValue && import.meta.env.PROD) {
+    return "prod";
+  }
+
   if (!envValue) {
     return null;
   }
