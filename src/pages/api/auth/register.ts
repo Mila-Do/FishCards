@@ -42,14 +42,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
       PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY,
     };
 
+    // Get origin from request for email redirect
+    const origin = new URL(request.url).origin;
+
     // Use regular Supabase client for authentication
     // Session management is handled by the frontend auth service
     const { data, error } = await createSupabaseClient(env).auth.signUp({
       email,
       password,
       options: {
-        // No email confirmation required - user will be automatically signed in
-        emailRedirectTo: undefined,
+        // Email confirmation redirect - redirects to dashboard after verification
+        emailRedirectTo: `${origin}/dashboard`,
       },
     });
 

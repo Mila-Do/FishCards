@@ -84,10 +84,10 @@ test.describe("Authentication Flow - Unauthenticated", () => {
       // Navigate to verification link
       // eslint-disable-next-line no-console
       console.log("🔗 Clicking verification link...");
-      await page.goto(verificationLink);
+      await page.goto(verificationLink, { waitUntil: "networkidle" });
 
-      // Wait for verification to complete (might redirect to login or dashboard)
-      await page.waitForTimeout(3000);
+      // Wait for page to fully load after redirect
+      await page.waitForLoadState("domcontentloaded");
 
       // Check where we ended up and handle accordingly
       const currentUrl = page.url();
@@ -97,6 +97,8 @@ test.describe("Authentication Flow - Unauthenticated", () => {
       if (currentUrl.includes("/auth/login")) {
         // eslint-disable-next-line no-console
         console.log("✅ Verification successful, redirected to login");
+        // Wait a bit for Supabase to fully process the verification
+        await page.waitForTimeout(2000);
         // Login with verified account
         await loginPage.login(testEmail, testPassword);
         await loginPage.expectSuccessfulLogin();

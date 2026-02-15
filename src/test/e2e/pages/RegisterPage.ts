@@ -39,19 +39,20 @@ export class RegisterPage {
     // Wait for form to be ready
     await this.emailInput.waitFor({ state: "visible" });
 
-    // Clear and type email (triggers React onChange properly)
-    await this.emailInput.clear();
-    await this.emailInput.pressSequentially(email, { delay: 10 });
+    // Fill fields using fill() and trigger input/change events manually
+    await this.emailInput.fill(email);
+    await this.emailInput.dispatchEvent("input");
+    await this.emailInput.dispatchEvent("change");
     await expect(this.emailInput).toHaveValue(email);
 
-    // Clear and type password
-    await this.passwordInput.clear();
-    await this.passwordInput.pressSequentially(password, { delay: 10 });
+    await this.passwordInput.fill(password);
+    await this.passwordInput.dispatchEvent("input");
+    await this.passwordInput.dispatchEvent("change");
     await expect(this.passwordInput).toHaveValue(password);
 
-    // Clear and type confirm password
-    await this.confirmPasswordInput.clear();
-    await this.confirmPasswordInput.pressSequentially(confirmPassword || password, { delay: 10 });
+    await this.confirmPasswordInput.fill(confirmPassword || password);
+    await this.confirmPasswordInput.dispatchEvent("input");
+    await this.confirmPasswordInput.dispatchEvent("change");
     await expect(this.confirmPasswordInput).toHaveValue(confirmPassword || password);
 
     // Accept terms if checkbox exists

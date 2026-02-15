@@ -34,14 +34,15 @@ export class LoginPage {
   }
 
   async login(email: string, password: string) {
-    // Clear and type email (triggers React onChange properly)
-    await this.emailInput.clear();
-    await this.emailInput.pressSequentially(email, { delay: 10 });
+    // Fill fields and trigger events manually
+    await this.emailInput.fill(email);
+    await this.emailInput.dispatchEvent("input");
+    await this.emailInput.dispatchEvent("change");
     await expect(this.emailInput).toHaveValue(email);
 
-    // Clear and type password
-    await this.passwordInput.clear();
-    await this.passwordInput.pressSequentially(password, { delay: 10 });
+    await this.passwordInput.fill(password);
+    await this.passwordInput.dispatchEvent("input");
+    await this.passwordInput.dispatchEvent("change");
     await expect(this.passwordInput).toHaveValue(password);
 
     // Wait for button to be enabled - validation passed (expect auto-waits)

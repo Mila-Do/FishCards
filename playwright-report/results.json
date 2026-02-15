@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 8
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "reporter": [
@@ -37,7 +37,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 1
         },
         "id": "chromium-auth",
         "name": "chromium-auth",
@@ -53,7 +53,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 1
         },
         "id": "chromium-no-auth",
         "name": "chromium-no-auth",
@@ -79,143 +79,6 @@
     }
   },
   "suites": [
-    {
-      "title": "auth-flow.authenticated.spec.ts",
-      "file": "auth-flow.authenticated.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Authentication Flow - Authenticated",
-          "file": "auth-flow.authenticated.spec.ts",
-          "line": 11,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should access dashboard when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-auth",
-                  "projectName": "chromium-auth",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 9918,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:24.181Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow.authenticated-Au-7857d-ashboard-when-authenticated-chromium-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "df707db272c374fa009b-703b9c939e4ad32f819b",
-              "file": "auth-flow.authenticated.spec.ts",
-              "line": 17,
-              "column": 3
-            },
-            {
-              "title": "should navigate between authenticated pages",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-auth",
-                  "projectName": "chromium-auth",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 13720,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:24.166Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow.authenticated-Au-9c6c0-between-authenticated-pages-chromium-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "df707db272c374fa009b-f8e17302e6a84ea00cbf",
-              "file": "auth-flow.authenticated.spec.ts",
-              "line": 26,
-              "column": 3
-            },
-            {
-              "title": "should logout successfully",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-auth",
-                  "projectName": "chromium-auth",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 11422,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:24.261Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow.authenticated-Au-04a42--should-logout-successfully-chromium-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "df707db272c374fa009b-45843ff9423d425160dd",
-              "file": "auth-flow.authenticated.spec.ts",
-              "line": 50,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
     {
       "title": "auth-flow.spec.ts",
       "file": "auth-flow.spec.ts",
@@ -249,23 +112,23 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
+                          "workerIndex": 10,
+                          "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 29111,
+                          "duration": 14206,
                           "errors": [],
                           "stdout": [
                             {
-                              "text": "🧪 Testing with email: test-e2e-1771175304521@example.com\n"
+                              "text": "🧪 Testing with email: test-e2e-1771175800191@example.com\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
                             },
                             {
-                              "text": "📧 Found 1 messages in inbox\n"
+                              "text": "📧 Found 0 messages in inbox\n"
                             },
                             {
-                              "text": "🗑️ Cleared 1 messages from inbox\n"
+                              "text": "🗑️ Cleared 0 messages from inbox\n"
                             },
                             {
                               "text": "Registration message: Rejestracja pomyślna! Zostałeś automatycznie zalogowany. Przekierowywanie...\n"
@@ -277,10 +140,22 @@
                               "text": "📧 Waiting for verification email...\n"
                             },
                             {
-                              "text": "🔍 Waiting for verification email to test-e2e-1771175304521@example.com...\n"
+                              "text": "🔍 Waiting for verification email to test-e2e-1771175800191@example.com...\n"
                             },
                             {
-                              "text": "🔄 Attempt 1: Looking for email to test-e2e-1771175304521@example.com...\n"
+                              "text": "🔄 Attempt 1: Looking for email to test-e2e-1771175800191@example.com...\n"
+                            },
+                            {
+                              "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
+                            },
+                            {
+                              "text": "📧 Found 0 messages in inbox\n"
+                            },
+                            {
+                              "text": "⏳ No match found, waiting 2s before retry...\n"
+                            },
+                            {
+                              "text": "🔄 Attempt 2: Looking for email to test-e2e-1771175800191@example.com...\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
@@ -289,19 +164,19 @@
                               "text": "📧 Found 1 messages in inbox\n"
                             },
                             {
-                              "text": "📨 Available emails: test-e2e-1771175304521@example.com (Confirm Your Signup)\n"
+                              "text": "📨 Available emails: test-e2e-1771175800191@example.com (Confirm Your Signup)\n"
                             },
                             {
-                              "text": "✅ Found matching email: Confirm Your Signup (ID: 5340475871)\n"
+                              "text": "✅ Found matching email: Confirm Your Signup (ID: 5340480007)\n"
                             },
                             {
-                              "text": "📩 Fetching message metadata from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages/5340475871\n"
+                              "text": "📩 Fetching message metadata from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages/5340480007\n"
                             },
                             {
                               "text": "📄 Fetching HTML body...\n"
                             },
                             {
-                              "text": "✅ Got HTML body: 330 characters\n"
+                              "text": "✅ Got HTML body: 340 characters\n"
                             },
                             {
                               "text": "📄 Fetching text body...\n"
@@ -310,27 +185,27 @@
                               "text": "📄 Fetching raw body...\n"
                             },
                             {
-                              "text": "✅ Got raw body: 567 characters\n"
+                              "text": "✅ Got raw body: 579 characters\n"
                             },
                             {
-                              "text": "✅ Found email: \"Confirm Your Signup\" sent at 2026-02-15T17:08:36.000Z\n"
+                              "text": "✅ Found email: \"Confirm Your Signup\" sent at 2026-02-15T17:16:42.000Z\n"
                             },
                             {
-                              "text": "🔗 Extracted verification link: https://bdmhdsziwzezmepxvvus.supabase.co/auth/v1/verify?token=1b566b7dd1ee62efce...\n"
+                              "text": "🔗 Extracted verification link: https://bdmhdsziwzezmepxvvus.supabase.co/auth/v1/verify?token=295328dc73b4da0dfc...\n"
                             },
                             {
                               "text": "🔗 Clicking verification link...\n"
                             },
                             {
-                              "text": "📍 After verification, URL: http://localhost:3000/#access_token=eyJhbGciOiJFUzI1NiIsImtpZCI6IjlkZjQyOTY1LWZmMDEtNGFiNi05ODVlLWNlODZkOGI3MTc0MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2JkbWhkc3ppd3plem1lcHh2dnVzLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZjBhNGJlYy02N2YwLTQ1NDQtYjAzNy1iYWJmMzExNDYxYzYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcxMTc4OTE4LCJpYXQiOjE3NzExNzUzMTgsImVtYWlsIjoidGVzdC1lMmUtMTc3MTE3NTMwNDUyMUBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJ0ZXN0LWUyZS0xNzcxMTc1MzA0NTIxQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiOWYwYTRiZWMtNjdmMC00NTQ0LWIwMzctYmFiZjMxMTQ2MWM2In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib3RwIiwidGltZXN0YW1wIjoxNzcxMTc1MzE4fV0sInNlc3Npb25faWQiOiIxMjA3ZmUxNS00NTc5LTRjMjUtYTllNy0yNGQ3ODFlNGY3YzgiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.tq130MEcWDo0BOPno91065iL-ysqZOk96SxMetDHXz64ED9QLI_Ul0LoRxFN9b_abe1sZfsZB2spcsAeLASvDw&expires_at=1771178918&expires_in=3600&refresh_token=ac4bucycrq42&sb=&token_type=bearer&type=signup\n"
+                              "text": "📍 After verification, URL: http://localhost:3000/auth/login\n"
                             },
                             {
-                              "text": "⚠️ Unusual redirect after verification, trying to login manually\n"
+                              "text": "✅ Verification successful, redirected to login\n"
                             }
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-15T17:08:24.199Z",
+                          "startTime": "2026-02-15T17:16:39.994Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -348,574 +223,6 @@
                   "file": "auth-flow.spec.ts",
                   "line": 18,
                   "column": 5
-                },
-                {
-                  "title": "should handle login with invalid credentials",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 4,
-                          "parallelIndex": 4,
-                          "status": "passed",
-                          "duration": 7817,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:24.229Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-f51a4-in-with-invalid-credentials-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "df6b40174562c70df515-cd0910ee1920ed59e3cf",
-                  "file": "auth-flow.spec.ts",
-                  "line": 132,
-                  "column": 5
-                },
-                {
-                  "title": "should handle registration with invalid data",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 5,
-                          "parallelIndex": 5,
-                          "status": "passed",
-                          "duration": 5752,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:24.263Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-290bd-istration-with-invalid-data-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "df6b40174562c70df515-73bdcad9783943e7cd90",
-                  "file": "auth-flow.spec.ts",
-                  "line": 149,
-                  "column": 5
-                },
-                {
-                  "title": "should redirect authenticated users away from auth pages",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 6,
-                          "parallelIndex": 6,
-                          "status": "passed",
-                          "duration": 1631,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:24.262Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-a3ccd--users-away-from-auth-pages-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "df6b40174562c70df515-7b65cc1a966f4efb6e4f",
-                  "file": "auth-flow.spec.ts",
-                  "line": 174,
-                  "column": 5
-                },
-                {
-                  "title": "should prevent access to protected pages when not authenticated",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 7,
-                          "parallelIndex": 7,
-                          "status": "passed",
-                          "duration": 10284,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:24.246Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth-flow-Authentication-F-19987-ages-when-not-authenticated-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "df6b40174562c70df515-0ced5d70683c7b427e75",
-                  "file": "auth-flow.spec.ts",
-                  "line": 188,
-                  "column": 5
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "auth.setup.ts",
-      "file": "auth.setup.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Authentication Setup",
-          "file": "auth.setup.ts",
-          "line": 11,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should authenticate test user successfully",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 7624,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "✅ Test user authenticated successfully: testuser01@gmail.com\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:26.290Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\auth.setup.ts-Authenticati-a3b6b-cate-test-user-successfully-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "17e3fe6f4d9d8bd79c6b-92f5e8bcbeb8752e8e2a",
-              "file": "auth.setup.ts",
-              "line": 12,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "home.spec.ts",
-      "file": "home.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Home Page",
-          "file": "home.spec.ts",
-          "line": 4,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should display home page correctly",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 2044,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:31.207Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-display-home-page-correctly-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-8a4bee3c8134c15a6866",
-              "file": "home.spec.ts",
-              "line": 16,
-              "column": 3
-            },
-            {
-              "title": "should have working auth buttons",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 1426,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:32.659Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-working-auth-buttons-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-70809db5135f4c4910d7",
-              "file": "home.spec.ts",
-              "line": 27,
-              "column": 3
-            },
-            {
-              "title": "should handle responsive design",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 2173,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:33.469Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-handle-responsive-design-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-4aa0203022fc9253c60b",
-              "file": "home.spec.ts",
-              "line": 36,
-              "column": 3
-            },
-            {
-              "title": "should have accessible elements",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 1449,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:34.210Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-have-accessible-elements-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-5cae29a2504466101344",
-              "file": "home.spec.ts",
-              "line": 50,
-              "column": 3
-            },
-            {
-              "title": "should load without console errors",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 1967,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:34.311Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-load-without-console-errors-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-806d1c73a24284fe4016",
-              "file": "home.spec.ts",
-              "line": 64,
-              "column": 3
-            },
-            {
-              "title": "should pass visual regression test",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium-no-auth",
-                  "projectName": "chromium-no-auth",
-                  "results": [
-                    {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1298,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-02-15T17:08:37.281Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-should-pass-visual-regression-test-chromium-no-auth\\trace.zip"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-a9f2dfb0f825aa876218",
-              "file": "home.spec.ts",
-              "line": 80,
-              "column": 3
-            }
-          ],
-          "suites": [
-            {
-              "title": "CTA Functionality",
-              "file": "home.spec.ts",
-              "line": 88,
-              "column": 8,
-              "specs": [
-                {
-                  "title": "should navigate to registration when CTA clicked",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 7,
-                          "parallelIndex": 7,
-                          "status": "passed",
-                          "duration": 1515,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:35.361Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-8f0e3-gistration-when-CTA-clicked-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "d318381359a9b96acb1e-5c4e22caf7c2ea1a1f97",
-                  "file": "home.spec.ts",
-                  "line": 89,
-                  "column": 5
-                },
-                {
-                  "title": "should navigate to demo when demo button clicked",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium-no-auth",
-                      "projectName": "chromium-no-auth",
-                      "results": [
-                        {
-                          "workerIndex": 4,
-                          "parallelIndex": 4,
-                          "status": "passed",
-                          "duration": 1720,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-02-15T17:08:35.903Z",
-                          "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "trace",
-                              "contentType": "application/zip",
-                              "path": "D:\\priv\\programowanie\\10xdev2\\programs\\mainProject\\test-results\\home-Home-Page-CTA-Functio-eeecc-mo-when-demo-button-clicked-chromium-no-auth\\trace.zip"
-                            }
-                          ]
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "d318381359a9b96acb1e-68444c664526f3d51baf",
-                  "file": "home.spec.ts",
-                  "line": 98,
-                  "column": 5
                 }
               ]
             }
@@ -926,9 +233,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-15T17:08:21.783Z",
-    "duration": 32276.322,
-    "expected": 17,
+    "startTime": "2026-02-15T17:16:37.725Z",
+    "duration": 17092.195,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
