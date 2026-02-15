@@ -38,13 +38,13 @@ export const featureConfig: FeatureConfig = {
     auth: {
       login: true,
       register: true,
-      resetPassword: false, // Testing without password reset
+      resetPassword: true, // Testing without password reset
     },
     collections: {
       create: true,
       read: true,
       update: true,
-      delete: false, // No deletion on integration
+      delete: true, // No deletion on integration
       visibility: true,
     },
   },
@@ -56,14 +56,14 @@ export const featureConfig: FeatureConfig = {
   prod: {
     auth: {
       login: true,
-      register: false, // Registration disabled in production
+      register: true, // Registration disabled in production
       resetPassword: true,
     },
     collections: {
-      create: false, // Collection creation disabled
+      create: true, // Collection creation disabled
       read: true,
-      update: false, // Updates disabled
-      delete: false, // Deletion disabled
+      update: true, // Updates disabled
+      delete: true, // Deletion disabled
       visibility: true,
     },
   },
