@@ -1,8 +1,8 @@
-name: Deploy to Cloudflare Pages
+name: Master Branch CI
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
 
 jobs:
   lint:
@@ -18,6 +18,14 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: [lint]
+    environment: fishcards_production
+    env:
+      ENV_NAME: ${{ secrets.ENV_NAME }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      MOCK_AI_GENERATION: ${{ secrets.MOCK_AI_GENERATION }}
     steps:
       - uses: ./.github/actions/setup-bun
 
@@ -31,25 +39,5 @@ jobs:
           path: coverage/
           retention-days: 7
 
-  deploy:
-    name: Deploy to Cloudflare Pages
-    runs-on: ubuntu-latest
-    needs: [lint, unit-test]
-    environment: fishcards_production
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-    steps:
-      - uses: ./.github/actions/setup-bun
-
-      - name: Build
-        run: bun run build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          packageManager: bun
+  # Deployment is handled automatically by Cloudflare Git integration
+  # No manual deployment step needed
