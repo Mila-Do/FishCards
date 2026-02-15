@@ -3,20 +3,29 @@ import type { SupabaseClient as SupabaseJsClient } from "@supabase/supabase-js";
 import type { Database } from "../db/database.types.ts";
 
 /**
+ * Environment variables needed for Supabase client
+ */
+interface SupabaseEnv {
+  SUPABASE_URL: string;
+  SUPABASE_KEY: string;
+}
+
+/**
  * Factory function to create Supabase client with optional auth token.
  * Używana TYLKO po stronie serwera (middleware, API endpoints).
  *
+ * @param env - Environment variables (from context.locals.runtime.env or import.meta.env)
  * @param authToken - Optional Bearer token for authenticated requests
  * @returns Configured Supabase client
  */
-export function createSupabaseClient(authToken?: string) {
+export function createSupabaseClient(env: SupabaseEnv, authToken?: string) {
   // Sprawdzenie czy jesteśmy po stronie serwera
   if (typeof window !== "undefined") {
     throw new Error("Klient Supabase nie może być tworzony po stronie przeglądarki. Użyj API endpoints.");
   }
 
-  const supabaseUrl = import.meta.env.SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
+  const supabaseUrl = env.SUPABASE_URL;
+  const supabaseAnonKey = env.SUPABASE_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error("Wymagane zmienne środowiskowe SUPABASE_URL i SUPABASE_KEY nie są ustawione.");

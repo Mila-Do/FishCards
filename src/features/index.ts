@@ -20,9 +20,13 @@ import type { Environment, Features } from "./types";
 /**
  * Get current environment from ENV_NAME variable
  * Returns null if not set or invalid
+ * 
+ * Note: This works for build-time feature flags. For runtime checks in API routes,
+ * use context.locals.runtime.env.ENV_NAME instead.
  */
 function getCurrentEnvironment(): Environment | null {
-  const envValue = import.meta.env.ENV_NAME as string;
+  // Try PUBLIC_ prefixed first (runtime), then legacy (build-time)
+  const envValue = (import.meta.env.PUBLIC_ENV_NAME || import.meta.env.ENV_NAME) as string;
 
   if (!envValue) {
     return null;

@@ -61,6 +61,14 @@ async function handleUnifiedBearerAuth(
   const pathname = context.url.pathname;
   const isApiRoute = pathname.startsWith("/api/");
 
+  // Get runtime env from Cloudflare or fallback to import.meta.env
+  const runtimeEnv = context.locals.runtime?.env;
+  const env = {
+    SUPABASE_URL: runtimeEnv?.SUPABASE_URL || import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || "",
+    SUPABASE_KEY: runtimeEnv?.SUPABASE_KEY || import.meta.env.SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY || "",
+    ENV_NAME: runtimeEnv?.ENV_NAME || import.meta.env.ENV_NAME || import.meta.env.PUBLIC_ENV_NAME || "local",
+  };
+
   // Skip auth check for public routes
   if (isApiRoute && isPublicApiRoute(pathname)) {
     return next();
@@ -70,12 +78,13 @@ async function handleUnifiedBearerAuth(
   const token = extractBearerToken(context.request.headers.get("authorization"));
 
   // Log authentication attempts for debugging
-  if (process.env.NODE_ENV === "development") {
+  if (env.ENV_NAME === "local" || import.meta.env.DEV) {
     console.log(`🔍 [${pathname}] Auth check:`, {
       hasAuthHeader: !!context.request.headers.get("authorization"),
       hasToken: !!token,
       isApiRoute,
       isClientProtected: isClientProtectedRoute(pathname),
+      env: env.ENV_NAME,
     });
   }
 
@@ -86,7 +95,7 @@ async function handleUnifiedBearerAuth(
   if (token) {
     try {
       // Create anonymous client for token validation
-      const anonymousSupabase = createSupabaseClient();
+      const anonymousSupabase = createSupabaseClient(env);
 
       // Validate token with Supabase
       const { data, error } = await anonymousSupabase.auth.getUser(token);
@@ -102,7 +111,7 @@ async function handleUnifiedBearerAuth(
           user = data.user;
 
           // Create authenticated Supabase client for RLS
-          authenticatedSupabase = createSupabaseClient(token);
+          authenticatedSupabase = createSupabaseClient(env, token);
 
           // ALWAYS store user info in context.locals (for Layout.astro)
           context.locals.user = {
@@ -165,7 +174,7 @@ async function handleUnifiedBearerAuth(
 
   // Set default supabase client if no authenticated one
   if (!context.locals.supabase) {
-    context.locals.supabase = createSupabaseClient();
+    context.locals.supabase = createSupabaseClient(env);
   }
 
   return next();

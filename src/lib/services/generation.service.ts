@@ -199,8 +199,8 @@ export async function generateFlashcardsFromText(options: {
   const { sourceText, model, apiKey, userId, requestId } = options;
   const timeoutMs = options.timeoutMs ?? 30_000;
 
-  // Check if mock mode is enabled
-  const mockMode = import.meta.env.MOCK_AI_GENERATION === "true";
+  // Check if mock mode is enabled (apiKey === "mock")
+  const mockMode = apiKey === "mock";
 
   if (mockMode) {
     const startedAt = performance.now();

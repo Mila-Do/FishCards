@@ -306,6 +306,7 @@ class AuthService {
 
   /**
    * Get authenticated Supabase client with current token
+   * Note: This runs client-side, so uses PUBLIC_ prefixed env vars
    */
   async getAuthenticatedClient(): Promise<ReturnType<typeof createClient<Database>> | null> {
     try {
@@ -315,7 +316,15 @@ class AuthService {
         return null;
       }
 
-      return createClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY || import.meta.env.SUPABASE_KEY;
+
+      if (!supabaseUrl || !supabaseKey) {
+        console.error("Missing Supabase configuration");
+        return null;
+      }
+
+      return createClient<Database>(supabaseUrl, supabaseKey, {
         global: {
           headers: {
             Authorization: `Bearer ${token}`,
