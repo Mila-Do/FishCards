@@ -11,8 +11,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { config } from "dotenv";
 
-// Load environment variables from .env.test
-config({ path: ".env.test" });
+// Load public test vars first, then secrets/non-public overrides
+config({ path: ".env.test.public", override: true });
+config({ path: ".env.test", override: true });
 
 async function globalTeardown() {
   // eslint-disable-next-line no-console
@@ -23,7 +24,7 @@ async function globalTeardown() {
 
   if (!supabaseUrl || !serviceRoleKey) {
     // eslint-disable-next-line no-console
-    console.error("❌ Missing PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.test");
+    console.error("❌ Missing PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.test / .env.test.public");
     // eslint-disable-next-line no-console
     console.error("⚠️  Skipping database cleanup");
     return;
@@ -44,7 +45,9 @@ async function globalTeardown() {
 
     if (!predefinedTestUserId) {
       // eslint-disable-next-line no-console
-      console.warn("⚠️  E2E_USERNAME_ID not found in .env.test - will only clean dynamic test users");
+      console.warn(
+        "⚠️  E2E_USERNAME_ID not found in .env.test / .env.test.public - will only clean dynamic test users"
+      );
     }
 
     // Step 2: Get all users and filter test users

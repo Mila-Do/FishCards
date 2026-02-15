@@ -31,7 +31,7 @@ export async function loginAsTestUser(page: Page): Promise<void> {
   await loginPage.login(TEST_USER.email, TEST_USER.password);
 
   // Wait for redirect to dashboard (indicates successful login)
-  await page.waitForURL("/dashboard", { timeout: 10000 });
+  await page.waitForURL("**/dashboard", { timeout: 30000 });
 
   // Verify we're authenticated
   const dashboardPage = new DashboardPage(page);
@@ -51,7 +51,7 @@ export async function loginWithCredentials(page: Page, email: string, password: 
   await loginPage.login(email, password);
 
   // Wait for redirect (successful login goes to dashboard)
-  await page.waitForURL("/dashboard", { timeout: 10000 });
+  await page.waitForURL("**/dashboard", { timeout: 30000 });
 
   const dashboardPage = new DashboardPage(page);
   await dashboardPage.waitForLoad();

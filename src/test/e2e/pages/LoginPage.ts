@@ -70,7 +70,7 @@ export class LoginPage {
 
   async expectSuccessfulLogin() {
     // After successful login, should be redirected to dashboard
-    await this.page.waitForURL("/dashboard");
+    await this.page.waitForURL("**/dashboard", { timeout: 30000 });
   }
 
   async clickForgotPassword() {

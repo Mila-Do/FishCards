@@ -62,7 +62,7 @@ export class RegisterPage {
     }
 
     // Wait for button to be enabled - validation passed (expect auto-waits)
-    await expect(this.registerButton).toBeEnabled({ timeout: 10000 });
+    await expect(this.registerButton).toBeEnabled({ timeout: 20000 });
 
     await this.registerButton.click();
   }

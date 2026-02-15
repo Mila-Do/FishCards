@@ -1,8 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 import { config } from "dotenv";
 
-// Load environment variables from .env.test for E2E tests
-config({ path: ".env.test" });
+// Load environment variables for E2E tests (public first, then secrets)
+config({ path: ".env.test.public", override: true });
+config({ path: ".env.test", override: true });
 
 /**
  * @see https://playwright.dev/docs/test-configuration

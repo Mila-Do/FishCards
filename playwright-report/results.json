@@ -112,14 +112,14 @@
                       "projectName": "chromium-no-auth",
                       "results": [
                         {
-                          "workerIndex": 10,
+                          "workerIndex": 9,
                           "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 14206,
+                          "duration": 16128,
                           "errors": [],
                           "stdout": [
                             {
-                              "text": "🧪 Testing with email: test-e2e-1771175800191@example.com\n"
+                              "text": "🧪 Testing with email: test-e2e-1771177717733@example.com\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
@@ -140,10 +140,10 @@
                               "text": "📧 Waiting for verification email...\n"
                             },
                             {
-                              "text": "🔍 Waiting for verification email to test-e2e-1771175800191@example.com...\n"
+                              "text": "🔍 Waiting for verification email to test-e2e-1771177717733@example.com...\n"
                             },
                             {
-                              "text": "🔄 Attempt 1: Looking for email to test-e2e-1771175800191@example.com...\n"
+                              "text": "🔄 Attempt 1: Looking for email to test-e2e-1771177717733@example.com...\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
@@ -155,7 +155,7 @@
                               "text": "⏳ No match found, waiting 2s before retry...\n"
                             },
                             {
-                              "text": "🔄 Attempt 2: Looking for email to test-e2e-1771175800191@example.com...\n"
+                              "text": "🔄 Attempt 2: Looking for email to test-e2e-1771177717733@example.com...\n"
                             },
                             {
                               "text": "📬 Fetching messages from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages\n"
@@ -164,13 +164,13 @@
                               "text": "📧 Found 1 messages in inbox\n"
                             },
                             {
-                              "text": "📨 Available emails: test-e2e-1771175800191@example.com (Confirm Your Signup)\n"
+                              "text": "📨 Available emails: test-e2e-1771177717733@example.com (Confirm Your Signup)\n"
                             },
                             {
-                              "text": "✅ Found matching email: Confirm Your Signup (ID: 5340480007)\n"
+                              "text": "✅ Found matching email: Confirm Your Signup (ID: 5340490331)\n"
                             },
                             {
-                              "text": "📩 Fetching message metadata from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages/5340480007\n"
+                              "text": "📩 Fetching message metadata from: https://mailtrap.io/api/accounts/2597399/inboxes/4348989/messages/5340490331\n"
                             },
                             {
                               "text": "📄 Fetching HTML body...\n"
@@ -188,10 +188,10 @@
                               "text": "✅ Got raw body: 579 characters\n"
                             },
                             {
-                              "text": "✅ Found email: \"Confirm Your Signup\" sent at 2026-02-15T17:16:42.000Z\n"
+                              "text": "✅ Found email: \"Confirm Your Signup\" sent at 2026-02-15T17:48:40.000Z\n"
                             },
                             {
-                              "text": "🔗 Extracted verification link: https://bdmhdsziwzezmepxvvus.supabase.co/auth/v1/verify?token=295328dc73b4da0dfc...\n"
+                              "text": "🔗 Extracted verification link: https://bdmhdsziwzezmepxvvus.supabase.co/auth/v1/verify?token=63c2d23f0c1b5a0691...\n"
                             },
                             {
                               "text": "🔗 Clicking verification link...\n"
@@ -205,7 +205,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-02-15T17:16:39.994Z",
+                          "startTime": "2026-02-15T17:48:37.563Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -233,8 +233,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-15T17:16:37.725Z",
-    "duration": 17092.195,
+    "startTime": "2026-02-15T17:48:35.485Z",
+    "duration": 18781.812000000005,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

@@ -103,12 +103,14 @@ jobs:
       - name: Prepare Cloudflare public assets
         run: bun run prepare:cf-assets
 
-      - name: Build Wrangler public vars from .env.production
+      - name: Build Wrangler public vars from .env.production.public
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -f ".env.production" ]; then
-            echo ".env.production file not found" >&2
+          public_env_file=".env.production.public"
+
+          if [ ! -f "$public_env_file" ]; then
+            echo "$public_env_file file not found" >&2
             exit 1
           fi
 
@@ -123,10 +125,10 @@ jobs:
             if [[ "$key" == PUBLIC_* ]]; then
               args="$args --var ${key}:${value}"
             fi
-          done < .env.production
+          done < "$public_env_file"
 
           if [ -z "$args" ]; then
-            echo "No PUBLIC_* variables found in .env.production" >&2
+            echo "No PUBLIC_* variables found in .env.production.public" >&2
             exit 1
           fi
 
