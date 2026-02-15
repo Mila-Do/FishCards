@@ -5,6 +5,7 @@ Frontend - Astro z React dla komponentów interaktywnych:
 - TypeScript 5 dla statycznego typowania kodu i lepszego wsparcia IDE
 - Tailwind 4 pozwala na wygodne stylowanie aplikacji
 - Shadcn/ui zapewnia bibliotekę dostępnych komponentów React, na których oprzemy UI
+- @astrojs/cloudflare jako adapter dla deploymentu na Cloudflare Pages z wsparciem SSR
 
 Backend - Supabase jako kompleksowe rozwiązanie backendowe:
 
@@ -21,7 +22,7 @@ AI - Komunikacja z modelami przez usługę Openrouter.ai:
 CI/CD i Hosting:
 
 - Github Actions do tworzenia pipeline'ów CI/CD
-- DigitalOcean do hostowania aplikacji za pośrednictwem obrazu docker
+- Cloudflare pages jako hosting aplikacji 
 
 Testowanie:
 
