@@ -3,6 +3,12 @@ compatibility_date = "2026-02-15"
 compatibility_flags = ["nodejs_compat"]
 main = "./dist/_worker.js"
 
+[vars]
+ENV_NAME = "prod"
+SUPABASE_URL = "https://fkgvlcetqvzazcctzsfi.supabase.co"
+SUPABASE_KEY = "sb_publishable_hpWx2WDY54LLI-gvsXXTwA_Ut_c0dcg"
+MOCK_AI_GENERATION = "false"
+
 [observability]
 enabled = true
 
