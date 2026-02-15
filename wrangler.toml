@@ -3,9 +3,10 @@ compatibility_date = "2026-02-15"
 compatibility_flags = ["nodejs_compat"]
 main = "./dist/_worker.js"
 
-# Static assets configuration
-[site]
-bucket = "./dist"
+# Static assets configuration for module workers
+[assets]
+directory = "./dist"
+binding = "ASSETS"
 
 [vars]
 ENV_NAME = "prod"
