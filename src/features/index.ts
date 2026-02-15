@@ -18,17 +18,16 @@ import { featureConfig } from "./config";
 import type { Environment, Features } from "./types";
 
 /**
- * Get current environment from ENV_NAME variable
+ * Get current environment from PUBLIC_ENV_NAME variable
  * Returns null if not set or invalid
  *
  * Note: This works for build-time feature flags. For runtime checks in API routes,
- * use context.locals.runtime.env.ENV_NAME instead.
+ * use context.locals.runtime.env.PUBLIC_ENV_NAME instead.
  */
 function getCurrentEnvironment(): Environment | null {
-  // Try PUBLIC_ prefixed first (runtime), then legacy (build-time)
-  const envValue = (import.meta.env.PUBLIC_ENV_NAME || import.meta.env.ENV_NAME) as string;
+  const envValue = import.meta.env.PUBLIC_ENV_NAME as string;
 
-  // Safety fallback: production build without explicit ENV_NAME should use "prod"
+  // Safety fallback: production build without explicit PUBLIC_ENV_NAME should use "prod"
   // to avoid accidentally disabling features in Cloudflare deployments.
   if (!envValue && import.meta.env.PROD) {
     return "prod";
@@ -91,7 +90,7 @@ export function isFeatureEnabled(featureKey: string): boolean {
   if (env === null) {
     // eslint-disable-next-line no-console
     console.warn(
-      `[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning false for "${featureKey}"`
+      `[FeatureFlag] Environment not defined (PUBLIC_ENV_NAME is null/undefined), returning false for "${featureKey}"`
     );
     return false;
   }
@@ -133,7 +132,9 @@ export function getAllFeatures(): Features {
 
   if (env === null) {
     // eslint-disable-next-line no-console
-    console.warn(`[FeatureFlag] Environment not defined (ENV_NAME is null/undefined), returning all flags as false`);
+    console.warn(
+      `[FeatureFlag] Environment not defined (PUBLIC_ENV_NAME is null/undefined), returning all flags as false`
+    );
     return {
       auth: {
         login: false,

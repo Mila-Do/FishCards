@@ -18,12 +18,12 @@ async function globalTeardown() {
   // eslint-disable-next-line no-console
   console.log("\n🧹 Starting global teardown - cleaning up test data...\n");
 
-  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     // eslint-disable-next-line no-console
-    console.error("❌ Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.test");
+    console.error("❌ Missing PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.test");
     // eslint-disable-next-line no-console
     console.error("⚠️  Skipping database cleanup");
     return;

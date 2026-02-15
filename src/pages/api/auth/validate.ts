@@ -6,7 +6,7 @@
 import type { APIRoute } from "astro";
 import { createSupabaseClient } from "../../../db/supabase.client";
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request, locals }) => {
   try {
     // Extract Bearer token from Authorization header
     const authHeader = request.headers.get("authorization");
@@ -28,8 +28,15 @@ export const GET: APIRoute = async ({ request }) => {
 
     const token = authHeader.substring(7); // Remove "Bearer " prefix
 
+    // Get environment variables from runtime or fallback to import.meta.env
+    const runtimeEnv = locals.runtime?.env;
+    const env = {
+      PUBLIC_SUPABASE_URL: runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL,
+      PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY,
+    };
+
     // Validate token with Supabase
-    const { data, error } = await createSupabaseClient().auth.getUser(token);
+    const { data, error } = await createSupabaseClient(env).auth.getUser(token);
 
     if (error || !data.user) {
       return new Response(

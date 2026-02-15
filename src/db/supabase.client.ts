@@ -6,8 +6,8 @@ import type { Database } from "../db/database.types.ts";
  * Environment variables needed for Supabase client
  */
 interface SupabaseEnv {
-  SUPABASE_URL: string;
-  SUPABASE_KEY: string;
+  PUBLIC_SUPABASE_URL?: string;
+  PUBLIC_SUPABASE_KEY?: string;
 }
 
 /**
@@ -18,17 +18,17 @@ interface SupabaseEnv {
  * @param authToken - Optional Bearer token for authenticated requests
  * @returns Configured Supabase client
  */
-export function createSupabaseClient(env: SupabaseEnv, authToken?: string) {
+export function createSupabaseClient(env?: SupabaseEnv, authToken?: string) {
   // Sprawdzenie czy jesteśmy po stronie serwera
   if (typeof window !== "undefined") {
     throw new Error("Klient Supabase nie może być tworzony po stronie przeglądarki. Użyj API endpoints.");
   }
 
-  const supabaseUrl = env.SUPABASE_URL;
-  const supabaseAnonKey = env.SUPABASE_KEY;
+  const supabaseUrl = env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = env?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Wymagane zmienne środowiskowe SUPABASE_URL i SUPABASE_KEY nie są ustawione.");
+    throw new Error("Wymagane zmienne środowiskowe PUBLIC_SUPABASE_URL i PUBLIC_SUPABASE_KEY nie są ustawione.");
   }
 
   const config = authToken

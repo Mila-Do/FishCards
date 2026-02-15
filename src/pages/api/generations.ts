@@ -71,10 +71,7 @@ export const POST: APIRoute = async (context) => {
 
   // Get environment variables from runtime or fallback to import.meta.env
   const runtimeEnv = context.locals.runtime?.env;
-  const mockMode =
-    (runtimeEnv?.MOCK_AI_GENERATION ||
-      import.meta.env.PUBLIC_MOCK_AI_GENERATION ||
-      import.meta.env.MOCK_AI_GENERATION) === "true";
+  const mockMode = (runtimeEnv?.PUBLIC_MOCK_AI_GENERATION || import.meta.env.PUBLIC_MOCK_AI_GENERATION) === "true";
   const apiKey = mockMode ? "mock" : runtimeEnv?.OPENROUTER_API_KEY || import.meta.env.OPENROUTER_API_KEY;
 
   if (!mockMode && !apiKey) {

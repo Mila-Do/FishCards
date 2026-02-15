@@ -34,12 +34,17 @@ export class LoginPage {
   }
 
   async login(email: string, password: string) {
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
+    // Clear and type email (triggers React onChange properly)
+    await this.emailInput.clear();
+    await this.emailInput.pressSequentially(email, { delay: 10 });
+    await expect(this.emailInput).toHaveValue(email);
 
-    // Wait for button to be enabled (validation passed)
-    // LoginForm has real-time validation that disables button until form is valid
-    // expect().toBeEnabled() has built-in auto-waiting for React state updates
+    // Clear and type password
+    await this.passwordInput.clear();
+    await this.passwordInput.pressSequentially(password, { delay: 10 });
+    await expect(this.passwordInput).toHaveValue(password);
+
+    // Wait for button to be enabled - validation passed (expect auto-waits)
     await expect(this.loginButton).toBeEnabled({ timeout: 5000 });
 
     await this.loginButton.click();

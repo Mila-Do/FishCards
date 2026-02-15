@@ -141,8 +141,8 @@ describe("AuthService", () => {
     vi.stubGlobal("fetch", mockFetch);
 
     // Mock environment variables for Supabase
-    vi.stubEnv("SUPABASE_URL", "https://test.supabase.co");
-    vi.stubEnv("SUPABASE_KEY", "test-anon-key");
+    vi.stubEnv("PUBLIC_SUPABASE_URL", "https://test.supabase.co");
+    vi.stubEnv("PUBLIC_SUPABASE_KEY", "test-anon-key");
 
     // Setup default tokenStorage behavior
     setupDefaultTokenStorageMocks();

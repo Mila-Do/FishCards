@@ -8,7 +8,7 @@ import { createSupabaseClient } from "../../../db/supabase.client";
 import { resetPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Parse and validate request body
     const body = await request.json();
@@ -54,8 +54,15 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Get environment variables from runtime or fallback to import.meta.env
+    const runtimeEnv = locals.runtime?.env;
+    const env = {
+      PUBLIC_SUPABASE_URL: runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL,
+      PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY,
+    };
+
     // Update user password using authenticated client
-    const { data, error } = await createSupabaseClient().auth.updateUser({ password });
+    const { data, error } = await createSupabaseClient(env).auth.updateUser({ password });
 
     if (error || !data.user) {
       const mappedError = mapSupabaseAuthError(error);

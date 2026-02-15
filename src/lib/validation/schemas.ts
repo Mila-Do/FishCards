@@ -287,8 +287,8 @@ export const EnvironmentSchemas = {
   // Environment variables
   envVars: z.object({
     // Database
-    SUPABASE_URL: BaseSchemas.url,
-    SUPABASE_ANON_KEY: BaseSchemas.nonEmptyString,
+    PUBLIC_SUPABASE_URL: BaseSchemas.url,
+    PUBLIC_SUPABASE_KEY: BaseSchemas.nonEmptyString,
     SUPABASE_SERVICE_ROLE_KEY: BaseSchemas.nonEmptyString,
 
     // AI Service

@@ -9,10 +9,8 @@ directory = "./dist/public-assets"
 binding = "ASSETS"
 
 [vars]
-ENV_NAME = "prod"
-SUPABASE_URL = "https://fkgvlcetqvzazcctzsfi.supabase.co"
-SUPABASE_KEY = "sb_publishable_hpWx2WDY54LLI-gvsXXTwA_Ut_c0dcg"
-MOCK_AI_GENERATION = "false"
+PUBLIC_ENV_NAME = "prod"
+PUBLIC_MOCK_AI_GENERATION = "false"
 
 [observability]
 enabled = true

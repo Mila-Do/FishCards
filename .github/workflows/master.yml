@@ -36,12 +36,12 @@ jobs:
     needs: [lint]
     environment: fishcards_production
     env:
-      ENV_NAME: ${{ secrets.ENV_NAME }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      PUBLIC_ENV_NAME: ${{ secrets.PUBLIC_ENV_NAME }}
+      PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+      PUBLIC_SUPABASE_KEY: ${{ secrets.PUBLIC_SUPABASE_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-      MOCK_AI_GENERATION: ${{ secrets.MOCK_AI_GENERATION }}
+      PUBLIC_MOCK_AI_GENERATION: ${{ secrets.PUBLIC_MOCK_AI_GENERATION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -77,7 +77,6 @@ jobs:
     needs: [lint, unit-test]
     environment: fishcards_production
     env:
-      ENV_NAME: prod
       PUBLIC_ENV_NAME: prod
     steps:
       - name: Checkout
@@ -104,9 +103,38 @@ jobs:
       - name: Prepare Cloudflare public assets
         run: bun run prepare:cf-assets
 
+      - name: Build Wrangler public vars from .env.production
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f ".env.production" ]; then
+            echo ".env.production file not found" >&2
+            exit 1
+          fi
+
+          args=""
+          while IFS='=' read -r key value || [ -n "$key" ]; do
+            # Skip empty lines and comments
+            if [ -z "${key// }" ] || [[ "$key" =~ ^[[:space:]]*# ]]; then
+              continue
+            fi
+
+            # Keep only non-secret/public vars
+            if [[ "$key" == PUBLIC_* ]]; then
+              args="$args --var ${key}:${value}"
+            fi
+          done < .env.production
+
+          if [ -z "$args" ]; then
+            echo "No PUBLIC_* variables found in .env.production" >&2
+            exit 1
+          fi
+
+          echo "WRANGLER_DEPLOY_PUBLIC_VARS=${args# }" >> "$GITHUB_ENV"
+
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+          command: deploy ${{ env.WRANGLER_DEPLOY_PUBLIC_VARS }}

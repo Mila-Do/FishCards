@@ -86,9 +86,9 @@ async function handleUnifiedBearerAuth(
   // Get runtime env from Cloudflare or fallback to import.meta.env
   const runtimeEnv = context.locals.runtime?.env;
   const env = {
-    SUPABASE_URL: runtimeEnv?.SUPABASE_URL || import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || "",
-    SUPABASE_KEY: runtimeEnv?.SUPABASE_KEY || import.meta.env.SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY || "",
-    ENV_NAME: runtimeEnv?.ENV_NAME || import.meta.env.ENV_NAME || import.meta.env.PUBLIC_ENV_NAME || "local",
+    PUBLIC_SUPABASE_URL: runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || "",
+    PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY || "",
+    PUBLIC_ENV_NAME: runtimeEnv?.PUBLIC_ENV_NAME || import.meta.env.PUBLIC_ENV_NAME || "local",
   };
 
   // Skip auth check for public routes
@@ -100,13 +100,13 @@ async function handleUnifiedBearerAuth(
   const token = extractBearerToken(context.request.headers.get("authorization"));
 
   // Log authentication attempts for debugging
-  if (env.ENV_NAME === "local" || import.meta.env.DEV) {
+  if (env.PUBLIC_ENV_NAME === "local" || import.meta.env.DEV) {
     console.log(`🔍 [${pathname}] Auth check:`, {
       hasAuthHeader: !!context.request.headers.get("authorization"),
       hasToken: !!token,
       isApiRoute,
       isClientProtected: isClientProtectedRoute(pathname),
-      env: env.ENV_NAME,
+      env: env.PUBLIC_ENV_NAME,
     });
   }
 

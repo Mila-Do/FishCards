@@ -8,7 +8,7 @@ import { createSupabaseClient } from "../../../db/supabase.client";
 import { forgotPasswordSchema } from "../../../lib/validation/auth-schemas";
 import { mapSupabaseAuthError } from "../../../lib/auth/error-mapper";
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Parse and validate request body
     const body = await request.json();
@@ -35,8 +35,15 @@ export const POST: APIRoute = async ({ request }) => {
 
     const { email } = validation.data;
 
+    // Get environment variables from runtime or fallback to import.meta.env
+    const runtimeEnv = locals.runtime?.env;
+    const env = {
+      PUBLIC_SUPABASE_URL: runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL,
+      PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY,
+    };
+
     // Send password reset email using regular Supabase client
-    const { error } = await createSupabaseClient().auth.resetPasswordForEmail(email, {
+    const { error } = await createSupabaseClient(env).auth.resetPasswordForEmail(email, {
       redirectTo: `${new URL(request.url).origin}/auth/reset-password`,
     });
 

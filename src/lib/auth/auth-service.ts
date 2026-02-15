@@ -316,8 +316,8 @@ class AuthService {
         return null;
       }
 
-      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL;
-      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY || import.meta.env.SUPABASE_KEY;
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 
       if (!supabaseUrl || !supabaseKey) {
         console.error("Missing Supabase configuration");

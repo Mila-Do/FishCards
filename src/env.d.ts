@@ -8,10 +8,10 @@ import type { SupabaseClient } from "./db/supabase.client";
  */
 interface CloudflareEnv {
   // Public variables (also available in import.meta.env with PUBLIC_ prefix)
-  ENV_NAME: string;
-  SUPABASE_URL: string;
-  SUPABASE_KEY: string;
-  MOCK_AI_GENERATION: string;
+  PUBLIC_ENV_NAME: string;
+  PUBLIC_SUPABASE_URL: string;
+  PUBLIC_SUPABASE_KEY: string;
+  PUBLIC_MOCK_AI_GENERATION: string;
   // Runtime-only secrets (NOT in import.meta.env)
   SUPABASE_SERVICE_ROLE_KEY: string;
   OPENROUTER_API_KEY: string;
@@ -63,11 +63,6 @@ interface ImportMetaEnv {
   readonly PUBLIC_SUPABASE_KEY?: string;
   readonly PUBLIC_MOCK_AI_GENERATION?: string;
 
-  // Legacy support (for local dev with .env files)
-  readonly ENV_NAME?: string;
-  readonly SUPABASE_URL?: string;
-  readonly SUPABASE_KEY?: string;
-  readonly MOCK_AI_GENERATION?: string;
   readonly OPENROUTER_API_KEY?: string;
   readonly SUPABASE_SERVICE_ROLE_KEY?: string;
 

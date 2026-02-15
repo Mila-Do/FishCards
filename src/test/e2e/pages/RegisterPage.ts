@@ -39,18 +39,20 @@ export class RegisterPage {
     // Wait for form to be ready
     await this.emailInput.waitFor({ state: "visible" });
 
-    // Fill and trigger change events for React form validation
-    await this.emailInput.click(); // Focus input
-    await this.emailInput.fill(email);
-    await this.emailInput.blur(); // Trigger validation
+    // Clear and type email (triggers React onChange properly)
+    await this.emailInput.clear();
+    await this.emailInput.pressSequentially(email, { delay: 10 });
+    await expect(this.emailInput).toHaveValue(email);
 
-    await this.passwordInput.click();
-    await this.passwordInput.fill(password);
-    await this.passwordInput.blur();
+    // Clear and type password
+    await this.passwordInput.clear();
+    await this.passwordInput.pressSequentially(password, { delay: 10 });
+    await expect(this.passwordInput).toHaveValue(password);
 
-    await this.confirmPasswordInput.click();
-    await this.confirmPasswordInput.fill(confirmPassword || password);
-    await this.confirmPasswordInput.blur();
+    // Clear and type confirm password
+    await this.confirmPasswordInput.clear();
+    await this.confirmPasswordInput.pressSequentially(confirmPassword || password, { delay: 10 });
+    await expect(this.confirmPasswordInput).toHaveValue(confirmPassword || password);
 
     // Accept terms if checkbox exists
     const termsVisible = await this.termsCheckbox.isVisible().catch(() => false);
@@ -58,8 +60,7 @@ export class RegisterPage {
       await this.termsCheckbox.check();
     }
 
-    // Wait for button to be enabled (validation passed)
-    // expect().toBeEnabled() has built-in auto-waiting for React state updates
+    // Wait for button to be enabled - validation passed (expect auto-waits)
     await expect(this.registerButton).toBeEnabled({ timeout: 10000 });
 
     await this.registerButton.click();
