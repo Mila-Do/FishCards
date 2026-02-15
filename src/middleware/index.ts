@@ -53,13 +53,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname.startsWith("/_astro/") ||
     pathname.startsWith("/fonts/") ||
     pathname.startsWith("/images/") ||
+    pathname.endsWith(".css") ||
+    pathname.endsWith(".js") ||
     pathname.endsWith(".png") ||
     pathname.endsWith(".jpg") ||
     pathname.endsWith(".jpeg") ||
     pathname.endsWith(".gif") ||
     pathname.endsWith(".svg") ||
     pathname.endsWith(".ico") ||
-    pathname.endsWith(".webp")
+    pathname.endsWith(".webp") ||
+    pathname.endsWith(".woff") ||
+    pathname.endsWith(".woff2") ||
+    pathname.endsWith(".ttf")
   ) {
     return next();
   }
