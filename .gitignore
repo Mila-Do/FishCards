@@ -18,6 +18,8 @@ pnpm-debug.log*
 !.env.example
 !.env*.example
 !.env.production.public
+# Cloudflare local dev secrets (equivalent of .env.local for wrangler platformProxy)
+.dev.vars
 
 # macOS-specific files
 .DS_Store
@@ -32,3 +34,9 @@ playwright/.auth
 playwright-report/
 test-results/
 coverage/
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

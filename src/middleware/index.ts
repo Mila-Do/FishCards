@@ -84,11 +84,24 @@ async function handleUnifiedBearerAuth(
   const isApiRoute = pathname.startsWith("/api/");
 
   // Get runtime env from Cloudflare or fallback to import.meta.env
+  //
+  // Priority strategy:
+  //   DEV  (astro dev, any --mode): Vite wins — import.meta.env is mode-specific
+  //        (.env.local for local, .env.test for test mode, etc.)
+  //   PROD (Cloudflare Workers runtime): runtimeEnv wins — vars come from
+  //        wrangler.toml [vars] / Cloudflare dashboard secrets
   const runtimeEnv = context.locals.runtime?.env;
+  const isDev = import.meta.env.DEV;
   const env = {
-    PUBLIC_SUPABASE_URL: runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || "",
-    PUBLIC_SUPABASE_KEY: runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY || "",
-    PUBLIC_ENV_NAME: runtimeEnv?.PUBLIC_ENV_NAME || import.meta.env.PUBLIC_ENV_NAME || "local",
+    PUBLIC_SUPABASE_URL: isDev
+      ? import.meta.env.PUBLIC_SUPABASE_URL || ""
+      : runtimeEnv?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL || "",
+    PUBLIC_SUPABASE_KEY: isDev
+      ? import.meta.env.PUBLIC_SUPABASE_KEY || ""
+      : runtimeEnv?.PUBLIC_SUPABASE_KEY || import.meta.env.PUBLIC_SUPABASE_KEY || "",
+    PUBLIC_ENV_NAME: isDev
+      ? import.meta.env.PUBLIC_ENV_NAME || "local"
+      : runtimeEnv?.PUBLIC_ENV_NAME || import.meta.env.PUBLIC_ENV_NAME || "local",
   };
 
   // Skip auth check for public routes
