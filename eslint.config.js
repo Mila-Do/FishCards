@@ -24,7 +24,7 @@ const baseConfig = tseslint.config({
     },
   },
   rules: {
-    "no-console": "warn",
+    "no-console": "off",
     "no-unused-vars": "off",
   },
 });
